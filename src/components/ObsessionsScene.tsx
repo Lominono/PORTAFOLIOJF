@@ -178,7 +178,6 @@ export default function ObsessionsScene() {
               paddingRight: "6px",
               WebkitOverflowScrolling: "touch",
               touchAction: "pan-y",
-              overscrollBehavior: "contain",
             }}
           >
             {OBSESSIONS.map((obs, i) => (

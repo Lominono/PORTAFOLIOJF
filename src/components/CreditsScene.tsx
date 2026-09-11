@@ -159,7 +159,6 @@ export default function CreditsScene() {
           height: "100%",
           WebkitOverflowScrolling: "touch",
           touchAction: "pan-y",
-          overscrollBehavior: "contain",
           padding: "clamp(1.5rem, 3.5vh, 4rem) clamp(0.75rem, 3.5vw, 3rem)",
         }}
       >

@@ -345,7 +345,6 @@ export default function TerminalScene() {
               paddingRight: "6px",
               WebkitOverflowScrolling: "touch",
               touchAction: "pan-y",
-              overscrollBehavior: "contain",
             }}
           >
             <div className="flex justify-between items-center px-1 pb-1 text-[0.56rem] font-mono text-[#39D353]/70">
