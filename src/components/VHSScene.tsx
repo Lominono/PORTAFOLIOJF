@@ -305,7 +305,7 @@ export default function VHSScene() {
               letterSpacing: "0.1em",
             }}
           >
-            11-SEP-2026 01:50
+            02-SEP-2026 17:45
           </div>
         </div>
 

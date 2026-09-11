@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 import { audioManager } from "./AudioManager";
 
 const SCENE_LABELS: Record<string, string> = {
-  "scene-opening":    "00 — APERTURA",
-  "scene-ticket":     "01 — AHORA",
-  "scene-brutalism":  "02 — DECLARACIÓN",
-  "scene-terminal":   "03 — TRABAJO",
-  "scene-vhs":        "04 — EL SALTO",
-  "scene-zine":       "05 — ORIGEN",
-  "scene-jazz":       "06 — EL OÍDO",
-  "scene-obsessions": "07 — FUERA DEL CÓDIGO",
-  "scene-credits":    "08 — FIN",
+  "scene-opening":    "00 · APERTURA",
+  "scene-ticket":     "01 · AHORA",
+  "scene-brutalism":  "02 · DECLARACIÓN",
+  "scene-terminal":   "03 · TRABAJO",
+  "scene-vhs":        "04 · EL SALTO",
+  "scene-zine":       "05 · ORIGEN",
+  "scene-jazz":       "06 · EL OÍDO",
+  "scene-obsessions": "07 · PERSONAL",
+  "scene-credits":    "08 · FIN",
 };
 
 export default function SceneHUD() {
@@ -31,7 +31,7 @@ export default function SceneHUD() {
       const current = document.documentElement.dataset.scene ?? "scene-opening";
       setMorphing(true);
       setScene(current);
-      setTimeout(() => setMorphing(false), 260);
+      setTimeout(() => setMorphing(false), 240);
     });
     observer.observe(document.documentElement, {
       attributes: true,
@@ -54,56 +54,104 @@ export default function SceneHUD() {
       className="scene-hud"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(-8px)",
-        transition: "opacity 0.5s ease, transform 0.5s ease, background 0.65s cubic-bezier(0.22,1,0.36,1), border-color 0.65s cubic-bezier(0.22,1,0.36,1), color 0.65s cubic-bezier(0.22,1,0.36,1)",
+        transform: visible ? "translateY(0)" : "translateY(-6px)",
+        transition: "opacity 0.4s ease, transform 0.4s ease",
       }}
-      aria-label="Navegación de escenas"
+      aria-label="Navegación de escenas y audio"
     >
-      {/* Scene indicator with mechanical flip feel */}
+      {/* Scene indicator - ultra-minimal */}
       <span
         aria-live="polite"
         aria-atomic="true"
         style={{
-          opacity: morphing ? 0.35 : 0.85,
-          transform: morphing ? "translateY(-2px) scale(0.97)" : "translateY(0) scale(1)",
-          transition: "opacity 0.22s ease, transform 0.22s cubic-bezier(0.16,1,0.3,1)",
+          opacity: morphing ? 0.3 : 0.88,
+          transform: morphing ? "translateY(-1px) scale(0.98)" : "none",
+          transition: "opacity 0.2s ease, transform 0.2s ease",
           whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          maxWidth: "clamp(90px, 28vw, 180px)",
-          fontWeight: 600,
           fontFamily: "var(--font-space-mono), monospace",
-          fontSize: "0.72rem",
+          fontSize: "0.65rem",
           letterSpacing: "0.08em",
-          display: "block",
+          fontWeight: 600,
         }}
       >
         {SCENE_LABELS[scene] ?? scene}
       </span>
 
       {/* Divider */}
-      <span style={{ opacity: 0.3 }} aria-hidden="true">·</span>
+      <span style={{ opacity: 0.25, fontSize: "0.6rem" }} aria-hidden="true">|</span>
 
-      {/* Mute toggle */}
+      {/* Acoustic Equalizer & Mute toggle */}
       <button
-        className="mute-btn"
         onClick={toggleMute}
-        aria-label={muted ? "Activar sonido" : "Silenciar"}
-        title={muted ? "Activar sonido" : "Silenciar"}
+        aria-label={muted ? "Activar música y audio" : "Silenciar música"}
+        title={muted ? "Música silenciada (clic para activar)" : "Música sonando al 67% (clic para silenciar)"}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "5px",
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          padding: "2px 4px",
+          color: "var(--scene-fg)",
+        }}
       >
-        {muted ? (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-            <line x1="23" y1="9" x2="17" y2="15"/>
-            <line x1="17" y1="9" x2="23" y2="15"/>
-          </svg>
-        ) : (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-          </svg>
-        )}
+        {/* Animated equalizer waves */}
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "flex-end",
+            gap: "2px",
+            height: "10px",
+          }}
+          aria-hidden="true"
+        >
+          <span
+            style={{
+              width: "2px",
+              height: muted ? "3px" : "10px",
+              background: "var(--scene-accent)",
+              borderRadius: "1px",
+              transition: "height 0.2s ease, opacity 0.2s ease",
+              opacity: muted ? 0.35 : 0.9,
+              animation: muted ? "none" : "crtPulse 1.2s ease-in-out infinite",
+            }}
+          />
+          <span
+            style={{
+              width: "2px",
+              height: muted ? "3px" : "6px",
+              background: "var(--scene-accent)",
+              borderRadius: "1px",
+              transition: "height 0.2s ease, opacity 0.2s ease",
+              opacity: muted ? 0.35 : 0.85,
+              animation: muted ? "none" : "crtPulse 0.9s ease-in-out infinite alternate",
+            }}
+          />
+          <span
+            style={{
+              width: "2px",
+              height: muted ? "3px" : "8px",
+              background: "var(--scene-accent)",
+              borderRadius: "1px",
+              transition: "height 0.2s ease, opacity 0.2s ease",
+              opacity: muted ? 0.35 : 0.9,
+              animation: muted ? "none" : "crtPulse 1.5s ease-in-out infinite alternate",
+            }}
+          />
+        </span>
+
+        <span
+          style={{
+            fontFamily: "var(--font-space-mono), monospace",
+            fontSize: "0.58rem",
+            letterSpacing: "0.08em",
+            opacity: muted ? 0.45 : 0.85,
+            textTransform: "uppercase",
+          }}
+        >
+          {muted ? "MUTE" : "AUDIO"}
+        </span>
       </button>
     </div>
   );

@@ -499,33 +499,29 @@ body {
    ========================================================================== */
 
 /* iOS notch / Dynamic Island / home indicator */
+/* iOS notch / Dynamic Island / home indicator */
 @supports (padding-top: env(safe-area-inset-top)) {
   .scene-hud {
-    top: max(clamp(0.75rem, 2.5vw, 1.25rem), env(safe-area-inset-top, 0px));
-    right: max(clamp(0.75rem, 2.5vw, 1.25rem), env(safe-area-inset-right, 0px));
+    top: max(clamp(0.5rem, 2vw, 0.9rem), calc(env(safe-area-inset-top, 0px) + 0.35rem));
+    right: max(clamp(0.5rem, 2vw, 0.9rem), calc(env(safe-area-inset-right, 0px) + 0.35rem));
   }
 
   nav[aria-label="Escenas del portfolio"] {
-    bottom: max(clamp(1.25rem, 4vw, 2rem), calc(env(safe-area-inset-bottom, 0px) + 0.5rem));
+    bottom: max(0.55rem, calc(env(safe-area-inset-bottom, 0px) + 0.35rem));
   }
 }
 
 /* Minimum 44×44px touch targets (Apple HIG / WCAG 2.5.8) */
-.mute-btn {
-  min-width: 44px;
-  min-height: 44px;
-  justify-content: center;
-}
-
 nav[aria-label="Escenas del portfolio"] button {
-  min-height: 44px;
-  padding: 0 4px;
+  min-height: 28px;
+  padding: 0 3px;
 }
 
-/* Prevent horizontal overflow on all scenes */
+/* Prevent horizontal overflow on all scenes & ensure breathing room above bottom nav */
 section[data-scene-id] {
   overflow-x: clip;
   max-width: 100vw;
+  padding-bottom: max(2.5rem, calc(env(safe-area-inset-bottom, 0px) + 1.8rem)) !important;
 }
 
 /* Images inside scenes never overflow */
