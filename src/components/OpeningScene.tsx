@@ -90,7 +90,7 @@ export default function OpeningScene() {
     <section
       ref={sectionRef}
       data-scene-id="opening"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-x-clip"
       style={{
         background: "#000",
         padding: "clamp(1.5rem, 6vw, 6rem) clamp(1rem, 4vw, 4rem)",

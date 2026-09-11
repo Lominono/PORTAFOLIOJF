@@ -97,7 +97,7 @@ export default function ReceiptScene() {
     <section
       ref={sectionRef}
       data-scene-id="ticket"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-x-clip"
       style={{
         background: "#F3EFE6",
         color: "#181715",

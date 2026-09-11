@@ -106,7 +106,7 @@ export default function ZineScene() {
     <section
       ref={sectionRef}
       data-scene-id="zine"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-x-clip"
       style={{
         background: "#E8DFC8",
         color: "#1A1713",

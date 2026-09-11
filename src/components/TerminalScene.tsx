@@ -163,7 +163,7 @@ export default function TerminalScene() {
     <section
       ref={sectionRef}
       data-scene-id="terminal"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden crt-scanlines"
+      className="relative min-h-screen flex items-center justify-center overflow-x-clip crt-scanlines"
       style={{
         background: "#0A0E17",
         color: "#E6EDF3",

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 import FloatingSticker from "./FloatingSticker";
 
 // Escena 02 — Brutalismo editorial
@@ -98,7 +99,7 @@ export default function BrutalismScene() {
     <section
       ref={sectionRef}
       data-scene-id="brutalism"
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col justify-center overflow-x-clip"
       style={{
         background: "#F7F7F7",
         color: "#0A0A0A",
@@ -109,15 +110,29 @@ export default function BrutalismScene() {
       {/* Top border */}
       <div
         ref={borderTopRef}
-        className="brutalism-rule"
+        className="brutalism-rule relative z-10"
         style={{ marginBottom: "clamp(0.85rem, 2vh, 2.5rem)", willChange: "transform" }}
         aria-hidden="true"
       />
 
+      {/* Marco Aurelio Background Bust (Inverted & Multiplied for Editorial Look) */}
+      <div 
+        className="absolute left-[-5%] sm:left-[10%] top-[15%] opacity-15 sm:opacity-25 pointer-events-none z-0"
+        style={{
+           width: "clamp(300px, 50vw, 700px)",
+           aspectRatio: "1/1",
+           mixBlendMode: "multiply",
+           filter: "invert(1) contrast(130%) grayscale(100%)",
+           animation: "floatOrganic 12s ease-in-out infinite",
+        }}
+      >
+        <Image src="/marco-aurelio.png" alt="Busto de Marco Aurelio" fill style={{objectFit: "contain"}} />
+      </div>
+
       {/* Main declaration */}
       <h2
         ref={textRef}
-        className="font-kinetic uppercase select-none"
+        className="font-kinetic uppercase select-none relative z-10"
         style={{
           fontSize: "clamp(1.75rem, 6.2vw, 5.8rem)",
           color: "var(--scene-fg)",

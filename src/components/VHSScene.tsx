@@ -96,7 +96,7 @@ export default function VHSScene() {
     <section
       ref={sectionRef}
       data-scene-id="vhs"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden vhs-frame"
+      className="relative min-h-screen flex items-center justify-center overflow-x-clip vhs-frame"
       style={{
         background: "#0D0C0F",
         color: "#F0EBF4",

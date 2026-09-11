@@ -39,7 +39,7 @@ export default function ReceiptTicket() {
   return (
     <section
       id="sala-ticket"
-      className="relative min-h-screen w-full flex flex-col justify-between items-center px-4 sm:px-8 lg:px-16 pt-20 pb-12 transition-colors duration-700 select-none overflow-hidden"
+      className="relative min-h-screen w-full flex flex-col justify-between items-center px-4 sm:px-8 lg:px-16 pt-20 pb-12 transition-colors duration-700 select-none overflow-x-clip"
     >
       {/* Cinematic Scene Bar */}
       <div className="w-full max-w-6xl flex items-center justify-between font-receipt text-[10px] sm:text-xs text-[var(--scene-muted)] uppercase tracking-widest pb-4 border-b border-[var(--scene-border)]">

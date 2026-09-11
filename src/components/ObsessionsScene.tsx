@@ -80,7 +80,7 @@ export default function ObsessionsScene() {
     <section
       ref={sectionRef}
       data-scene-id="obsessions"
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col justify-center overflow-x-clip"
       style={{
         background: "#F9F6F0",
         color: "#1A1814",

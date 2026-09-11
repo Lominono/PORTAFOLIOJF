@@ -97,7 +97,7 @@ export default function JazzScene() {
     <section
       ref={sectionRef}
       data-scene-id="jazz"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-x-clip"
       style={{
         background: "#0C101C",
         color: "#F4EEDD",
