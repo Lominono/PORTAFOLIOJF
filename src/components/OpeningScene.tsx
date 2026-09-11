@@ -143,7 +143,7 @@ export default function OpeningScene() {
         {TAGLINE}
       </p>
 
-      {/* Editorial scroll prompt — Film cue indicator */}
+      {/* Explicit Editorial scroll prompt */}
       <div
         style={{
           position: "absolute",
@@ -151,29 +151,34 @@ export default function OpeningScene() {
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          gap: "0.75rem",
-          color: "#555",
+          gap: "0.5rem",
+          color: "#888",
           fontFamily: "var(--font-space-mono), monospace",
           fontSize: "clamp(0.55rem, 1.4vw, 0.65rem)",
           letterSpacing: "0.22em",
           textTransform: "uppercase",
-          opacity: 0.85,
+          opacity: 0.9,
         }}
         aria-hidden="true"
       >
-        <span
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: "50%",
-            background: "#DE9F43",
-            display: "inline-block",
-            boxShadow: "0 0 8px rgba(222, 159, 67, 0.4)",
-          }}
-        />
-        <span>BOBINA 00 / PROYECTOR EN MARCHA · DESLIZA</span>
-        <span style={{ transform: "translateY(1px)", display: "inline-block" }}>↓</span>
+        <div className="flex items-center gap-2">
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: "#DE9F43",
+              display: "inline-block",
+              boxShadow: "0 0 8px rgba(222, 159, 67, 0.4)",
+              animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            }}
+          />
+          <span>EXPLORA MI PORTAFOLIO WEB</span>
+        </div>
+        <span style={{ fontSize: "0.5rem", color: "#666", letterSpacing: "0.15em" }}>DESLIZA HACIA ABAJO PARA CONTINUAR</span>
+        <span className="animate-bounce" style={{ marginTop: "0.2rem", display: "inline-block", fontSize: "0.8rem", color: "#DE9F43" }}>↓</span>
       </div>
     </section>
   );

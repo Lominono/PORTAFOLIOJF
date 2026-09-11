@@ -126,7 +126,7 @@ export default function BrutalismScene() {
            animation: "floatOrganic 12s ease-in-out infinite",
         }}
       >
-        <Image src="/marco-aurelio.png" alt="Busto de Marco Aurelio" fill style={{objectFit: "contain"}} />
+        <Image src="/marco-aurelio.jpg" alt="Busto de Marco Aurelio" fill style={{objectFit: "contain"}} />
       </div>
 
       {/* Main declaration */}
