@@ -10,10 +10,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const CREDITS = [
   { role: "creado y programado por", name: "JuanFe", link: null },
-  { role: "perfil en github", name: "github.com/Lominono", link: "https://github.com/Lominono" },
-  { role: "correo de contacto", name: "juanfernandoospina005@gmail.com", link: "mailto:juanfernandoospina005@gmail.com" },
-  { role: "formación técnica", name: "Sistemas Microinformáticos y Redes (SMR)", link: null },
-  { role: "coordenadas", name: "Ginebra (Valle) ➔ Santander (Cantabria)", link: null },
+  { role: "perfil en github",        name: "github.com/Lominono",                  link: "https://github.com/Lominono" },
+  { role: "instagram",               name: "@Juanfer_ost",                          link: "https://instagram.com/Juanfer_ost" },
+  { role: "correo de contacto",      name: "juanfernandoospina005@gmail.com",       link: "mailto:juanfernandoospina005@gmail.com" },
+  { role: "formación técnica",       name: "Sistemas Microinformáticos y Redes (SMR)", link: null },
+  { role: "coordenadas",             name: "Ginebra (Valle) ➔ Santander (Cantabria)", link: null },
 ];
 
 export default function CreditsScene() {
@@ -142,9 +143,11 @@ export default function CreditsScene() {
               style={{
                 fontFamily: "var(--font-fraunces), serif",
                 fontWeight: 700,
-                fontSize: "clamp(1.15rem, 3.8vw, 2.1rem)",
+                fontSize: "clamp(1.05rem, 3.8vw, 2.1rem)",
                 color: "var(--scene-fg)",
                 letterSpacing: "-0.015em",
+                wordBreak: "break-word",
+                overflowWrap: "anywhere",
               }}
             >
               {credit.link ? (

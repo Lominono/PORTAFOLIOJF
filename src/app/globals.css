@@ -149,6 +149,7 @@ html {
     background-color 0.65s cubic-bezier(0.22, 1, 0.36, 1),
     color 0.65s cubic-bezier(0.22, 1, 0.36, 1);
   scroll-behavior: auto;
+  overflow-x: clip;
 }
 
 body {
@@ -160,7 +161,8 @@ body {
   transition:
     background-color 0.65s cubic-bezier(0.22, 1, 0.36, 1),
     color 0.65s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow-x: hidden;
+  overflow-x: clip;
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -194,18 +196,21 @@ body {
 }
 
 /* ==========================================================================
-   Scene: Terminal / CRT
+   Scene: Terminal / CRT & Thermal Media
    ========================================================================== */
 .thermal-photo-dither {
   filter: grayscale(100%) contrast(145%) brightness(95%);
   mix-blend-mode: multiply;
-  transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s ease;
+  transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, filter;
 }
 
 .thermal-photo-dither:hover,
+.thermal-photo-dither:active,
 .thermal-photo-dither.active-color {
   filter: grayscale(0%) contrast(105%) brightness(100%);
   mix-blend-mode: normal;
+  transform: scale(1.025) rotate(-0.5deg);
 }
 
 .crt-scanlines {
@@ -300,21 +305,23 @@ body {
    ========================================================================== */
 .scene-hud {
   position: fixed;
-  top: 1.25rem;
-  right: 1.25rem;
+  top: clamp(0.75rem, 2.5vw, 1.25rem);
+  right: clamp(0.75rem, 2.5vw, 1.25rem);
   z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   background: var(--scene-hud-bg);
   border: 1px solid var(--scene-border);
   border-radius: 9999px;
-  padding: 0.5rem 0.9rem;
+  padding: 0.45rem clamp(0.6rem, 2vw, 0.9rem);
   font-family: var(--font-space-mono), monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
+  font-size: clamp(0.55rem, 1.4vw, 0.65rem);
+  letter-spacing: 0.06em;
   color: var(--scene-fg);
+  max-width: calc(100vw - clamp(1.5rem, 5vw, 2.5rem));
   transition:
     background 0.85s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.85s cubic-bezier(0.16, 1, 0.3, 1),
@@ -360,13 +367,110 @@ body {
 
 .animate-cinematic-float { animation: cinematicFloat 6s ease-in-out infinite; }
 
+/* Three distinct float rhythms — each image gets its own life */
 @keyframes floatOrganic {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33%       { transform: translateY(-8px) rotate(1deg); }
-  66%       { transform: translateY(-4px) rotate(-0.5deg); }
+  0%   { transform: translateY(0px)   rotate(0deg)   skewX(0deg); }
+  20%  { transform: translateY(-9px)  rotate(1.1deg) skewX(0.15deg); }
+  45%  { transform: translateY(-5px)  rotate(-0.4deg) skewX(-0.1deg); }
+  70%  { transform: translateY(-12px) rotate(0.7deg) skewX(0.2deg); }
+  100% { transform: translateY(0px)   rotate(0deg)   skewX(0deg); }
 }
 
-.animate-float { animation: floatOrganic 7s ease-in-out infinite; }
+/* Slow, heavy drift — for larger photo frames */
+@keyframes floatOrganicSlow {
+  0%   { transform: translateY(0px)  rotate(0deg)   scale(1); }
+  25%  { transform: translateY(-6px) rotate(0.5deg) scale(1.004); }
+  55%  { transform: translateY(-3px) rotate(-0.3deg) scale(0.998); }
+  80%  { transform: translateY(-8px) rotate(0.2deg) scale(1.003); }
+  100% { transform: translateY(0px)  rotate(0deg)   scale(1); }
+}
+
+/* Lateral drift — for stickers that sit to the side */
+@keyframes floatOrganicDrift {
+  0%   { transform: translate(0px, 0px)    rotate(0deg); }
+  30%  { transform: translate(3px, -8px)   rotate(1.4deg); }
+  60%  { transform: translate(-2px, -5px)  rotate(-0.6deg); }
+  85%  { transform: translate(4px, -10px)  rotate(0.9deg); }
+  100% { transform: translate(0px, 0px)    rotate(0deg); }
+}
+
+.animate-float      { animation: floatOrganic     7.2s ease-in-out infinite; }
+.animate-float-slow { animation: floatOrganicSlow 9.5s ease-in-out infinite; }
+.animate-float-drift{ animation: floatOrganicDrift 8.1s ease-in-out infinite; }
+
+/* Micro-animaciones analógicas para fotos (Paper, Polaroid, CRT) */
+@keyframes analogPaperFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  35% {
+    transform: translateY(-5px) rotate(0.4deg);
+  }
+  75% {
+    transform: translateY(-2px) rotate(-0.3deg);
+  }
+}
+
+@keyframes polaroidGentleSway {
+  0%, 100% {
+    transform: rotate(-2.5deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-1.5deg) translateY(-7px);
+  }
+}
+
+@keyframes crtPhosphorPulse {
+  0%, 100% {
+    opacity: 0.32;
+    transform: scale(1);
+    filter: grayscale(100%) sepia(50%) hue-rotate(85deg) contrast(140%) brightness(95%);
+  }
+  50% {
+    opacity: 0.44;
+    transform: scale(1.02);
+    filter: grayscale(100%) sepia(55%) hue-rotate(85deg) contrast(150%) brightness(105%);
+  }
+}
+
+@keyframes vhsMagneticDrift {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85), inset 0 0 20px rgba(0, 0, 0, 0.9);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-0.3deg);
+    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.92), 0 0 12px rgba(229, 57, 53, 0.15), inset 0 0 24px rgba(0, 0, 0, 0.95);
+  }
+}
+
+.animate-paper-float {
+  animation: analogPaperFloat 8s ease-in-out infinite;
+}
+
+.animate-polaroid-sway {
+  animation: polaroidGentleSway 7s ease-in-out infinite;
+}
+
+.animate-crt-pulse {
+  animation: crtPhosphorPulse 4.5s ease-in-out infinite;
+}
+
+.animate-vhs-drift {
+  animation: vhsMagneticDrift 8.5s ease-in-out infinite;
+}
+
+/* Touch & hover tactile response for photo frames */
+.tactile-frame {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+}
+
+.tactile-frame:hover,
+.tactile-frame:active {
+  transform: translateY(-4px) scale(1.015);
+}
+
 
 /* ==========================================================================
    Scrollbar
@@ -439,5 +543,53 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Mobile / Touch — Safe areas + tap targets + overflow guards
+   ========================================================================== */
+
+/* iOS notch / Dynamic Island / home indicator */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .scene-hud {
+    top: max(clamp(0.75rem, 2.5vw, 1.25rem), env(safe-area-inset-top, 0px));
+    right: max(clamp(0.75rem, 2.5vw, 1.25rem), env(safe-area-inset-right, 0px));
+  }
+
+  nav[aria-label="Escenas del portfolio"] {
+    bottom: max(clamp(1.25rem, 4vw, 2rem), calc(env(safe-area-inset-bottom, 0px) + 0.5rem));
+  }
+}
+
+/* Minimum 44×44px touch targets (Apple HIG / WCAG 2.5.8) */
+.mute-btn {
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
+
+nav[aria-label="Escenas del portfolio"] button {
+  min-height: 44px;
+  padding: 0 4px;
+}
+
+/* Prevent horizontal overflow on all scenes */
+section[data-scene-id] {
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
+/* Images inside scenes never overflow */
+section[data-scene-id] img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* TerminalScene: status line wraps on mobile instead of overflowing */
+@media (max-width: 480px) {
+  .terminal-status {
+    flex-direction: column;
+    gap: 0.25rem;
   }
 }

@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans, Geist_Mono, Space_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -32,7 +32,10 @@ export const metadata: Metadata = {
   title: "JuanFe — Relato Cinematográfico & Portafolio",
   description:
     "Espacio interactivo de Juan Fernando Ospina (JuanFe). 18 años, de Ginebra (Colombia) a Santander (España). Desarrollo creativo, Linux y jazz.",
-  authors: [{ name: "JuanFe", url: "https://github.com/Lominono" }],
+  authors: [
+    { name: "JuanFe", url: "https://github.com/Lominono" },
+    { name: "Juanfer_ost", url: "https://instagram.com/Juanfer_ost" },
+  ],
   openGraph: {
     title: "JuanFe — Relato Cinematográfico",
     description: "18 años · Ginebra (Valle del Cauca) ➔ Santander (España). Experiencia interactiva conducida por scroll.",
@@ -48,6 +51,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: "#000000",
+  viewportFit: "cover",  // iOS safe-area-inset support
 };
 
 export default function RootLayout({

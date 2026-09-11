@@ -49,6 +49,31 @@ export default function VHSScene() {
           y: 0,
           duration: 0.9,
           ease: "power3.out",
+          onComplete: () => {
+            // Analogue tracking micro-jitter — irregular rhythm, not a loop
+            const jitter = () => {
+              if (!photoFrameRef.current) return;
+              gsap.to(photoFrameRef.current, {
+                x: (Math.random() - 0.5) * 4,
+                filter: `contrast(125%) saturate(130%) hue-rotate(-5deg) brightness(${0.96 + Math.random() * 0.08})`,
+                duration: 0.08 + Math.random() * 0.12,
+                ease: "none",
+                onComplete: () => {
+                  gsap.to(photoFrameRef.current, {
+                    x: 0,
+                    filter: "contrast(125%) saturate(130%) hue-rotate(-5deg) brightness(1)",
+                    duration: 0.1,
+                    ease: "none",
+                    onComplete: () => {
+                      // Next jitter in 3.5–8s
+                      setTimeout(jitter, 3500 + Math.random() * 4500);
+                    },
+                  });
+                },
+              });
+            };
+            setTimeout(jitter, 2000 + Math.random() * 3000);
+          },
         });
       }
     };
@@ -163,15 +188,16 @@ export default function VHSScene() {
           ref={glitchRef}
           className="glitch-text"
           data-text="→ SANTANDER →"
-          style={{ display: "inline-block", margin: "0.5rem 0" }}
+          style={{ display: "inline-block", margin: "0.5rem 0", maxWidth: "100%" }}
         >
           <h2
             className="font-kinetic"
             style={{
-              fontSize: "clamp(2.8rem, 14vw, 10.5rem)",
+              fontSize: "clamp(1.65rem, 8.2vw, 9rem)",
               color: "var(--scene-fg)",
-              lineHeight: 0.88,
-              letterSpacing: "-0.04em",
+              lineHeight: 0.9,
+              letterSpacing: "-0.03em",
+              whiteSpace: "nowrap",
             }}
           >
             → SANTANDER →
@@ -203,11 +229,14 @@ export default function VHSScene() {
             border: "1px solid rgba(255, 255, 255, 0.15)",
             padding: "0.35rem 0.95rem",
             borderRadius: "2px",
-            marginTop: "1.5rem",
+            marginTop: "1.25rem",
             fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "clamp(0.62rem, 1.5vw, 0.72rem)",
+            fontSize: "clamp(0.6rem, 1.5vw, 0.72rem)",
             color: "var(--scene-fg)",
             letterSpacing: "0.18em",
+            maxWidth: "90vw",
+            flexWrap: "wrap",
+            justifyContent: "center",
           }}
         >
           <span style={{ color: "var(--scene-accent)", fontWeight: 700 }}>TRACKING</span>
@@ -215,26 +244,36 @@ export default function VHSScene() {
           <span>8.026 KM EN LÍNEA RECTA</span>
         </div>
 
-        {/* Floating Reaching Emoji Sticker */}
-        <div className="absolute -left-4 sm:-left-12 top-1/2 z-20 hidden md:block">
+        {/* Floating Reaching Emoji Sticker — Adaptive */}
+        <div className="absolute left-2 sm:-left-12 top-1/2 z-20">
           <FloatingSticker
             src="/reaching-emoji.png"
             alt="El salto geográfico"
             label="EL SALTO · 8026KM"
-            width={105}
-            height={105}
+            width={75}
+            height={75}
             initialRotate={-12}
             sound="static"
+            className="scale-85 sm:scale-100"
           />
         </div>
 
-        {/* VHS Tape Frame Photo — CRT monitor bezel */}
+        {/* VHS Tape Frame Photo — CRT monitor bezel with magnetic drift */}
         <div
           ref={photoFrameRef}
+          className="animate-vhs-drift tactile-frame cursor-pointer"
+          onClick={() => {
+            const el = glitchRef.current;
+            if (el) {
+              el.classList.add("glitch-active");
+              setTimeout(() => el?.classList.remove("glitch-active"), 350);
+            }
+          }}
+          title="Toca para distorsión de cinta VHS"
           style={{
-            marginTop: "clamp(1.75rem, 4vw, 2.5rem)",
+            marginTop: "clamp(1.5rem, 4vw, 2.5rem)",
             position: "relative",
-            maxWidth: "clamp(220px, 50vw, 320px)",
+            maxWidth: "clamp(200px, 65vw, 320px)",
             width: "100%",
             aspectRatio: "4/3",
             border: "2px solid rgba(255, 255, 255, 0.2)",

@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { audioManager } from "./AudioManager";
 
 // Escena 05 — Zine / Collage analógico — Colombia, el origen
 // Papel kraft / beige texturizado, polaroid infantil, cinta adhesiva
@@ -71,6 +72,19 @@ export default function ZineScene() {
       ease: "back.out(1.5)",
     }, "-=0.35");
 
+    // Continuous breathe on polaroid after entrance
+    tl.add(() => {
+      gsap.to(polaroidRef.current, {
+        y: "-=7",
+        rotate: "-=0.8",
+        duration: 5.5,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
+    });
+
+
     let hasPlayed = false;
     const checkActive = () => {
       if (document.documentElement.dataset.scene === "scene-zine" && !hasPlayed) {
@@ -129,10 +143,12 @@ export default function ZineScene() {
         {/* Polaroid frame */}
         <div
           ref={polaroidRef}
-          className="zine-polaroid mx-auto"
+          className="zine-polaroid mx-auto animate-polaroid-sway tactile-frame cursor-pointer"
+          onClick={() => audioManager.play("paper-tear")}
+          title="Toca para escuchar el papel analógico"
           style={{
             width: "100%",
-            maxWidth: "clamp(220px, 45vw, 290px)",
+            maxWidth: "clamp(210px, 45vw, 290px)",
             willChange: "opacity, transform",
             position: "relative",
           }}
@@ -235,17 +251,19 @@ export default function ZineScene() {
             {ORIGIN_BODY}
           </p>
 
-          {/* Decorative Salchipapa with organic float */}
+          {/* Decorative Salchipapa with organic float — Contained for mobile */}
           <div
             ref={decoRef}
+            className="tactile-frame cursor-pointer"
+            onClick={() => audioManager.play("pop")}
+            title="Sabor de Ginebra"
             style={{
               position: "absolute",
-              right: "clamp(-1.5rem, -2vw, 0rem)",
-              bottom: "clamp(-2.5rem, -4vw, -3.5rem)",
-              width: "clamp(85px, 18vw, 130px)",
+              right: "clamp(0rem, 2vw, 1.5rem)",
+              bottom: "clamp(-1.8rem, -3vw, -2.8rem)",
+              width: "clamp(80px, 17vw, 130px)",
               aspectRatio: "1",
               willChange: "opacity, transform",
-              pointerEvents: "none",
               animation: "floatOrganic 6s ease-in-out infinite",
               filter: "drop-shadow(2px 6px 12px rgba(0,0,0,0.15))",
             }}

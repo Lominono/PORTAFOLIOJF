@@ -142,12 +142,13 @@ export default function TerminalScene() {
             borderBottom: "1px solid rgba(57, 211, 83, 0.2)",
           }}
         >
-          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", overflow: "hidden", minWidth: 0 }}>
             <span
               style={{
                 display: "inline-block",
                 width: 7,
                 height: 7,
+                flexShrink: 0,
                 background: "var(--scene-accent)",
                 boxShadow: "0 0 6px rgba(57, 211, 83, 0.5)",
               }}
@@ -160,41 +161,71 @@ export default function TerminalScene() {
                 color: "var(--scene-accent)",
                 letterSpacing: "0.12em",
                 fontWeight: 700,
+                flexShrink: 0,
               }}
             >
-              [ TTY1 / ARCH-LINUX ]
+              [ TTY1 ]
             </span>
             <span
+              className="hidden sm:inline"
               style={{
                 fontFamily: "var(--font-space-mono), monospace",
                 fontSize: "clamp(0.65rem, 1.6vw, 0.75rem)",
                 color: "var(--scene-muted)",
                 marginLeft: "0.4rem",
                 letterSpacing: "0.08em",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
               }}
             >
               juanfe@devbox:~/github/Lominono
             </span>
           </div>
 
-          <a
-            href="https://github.com/Lominono"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.6rem, 1.4vw, 0.7rem)",
-              color: "var(--scene-accent)",
-              textDecoration: "none",
-              border: "1px solid var(--scene-accent)",
-              padding: "0.2rem 0.6rem",
-              borderRadius: "2px",
-              opacity: 0.85,
-              transition: "all 0.2s",
-            }}
-          >
-            github/Lominono ↗
-          </a>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", flexWrap: "wrap" }}>
+            <a
+              href="https://github.com/Lominono"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "var(--font-space-mono), monospace",
+                fontSize: "clamp(0.58rem, 1.4vw, 0.7rem)",
+                color: "var(--scene-accent)",
+                textDecoration: "none",
+                border: "1px solid var(--scene-accent)",
+                padding: "0.2rem 0.5rem",
+                borderRadius: "2px",
+                opacity: 0.85,
+                transition: "all 0.2s",
+                whiteSpace: "nowrap",
+              }}
+              className="hover:opacity-100 hover:bg-[#39D353]/10"
+            >
+              github/Lominono ↗
+            </a>
+
+            <a
+              href="https://instagram.com/Juanfer_ost"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "var(--font-space-mono), monospace",
+                fontSize: "clamp(0.58rem, 1.4vw, 0.7rem)",
+                color: "#E5A952",
+                textDecoration: "none",
+                border: "1px solid rgba(229, 169, 82, 0.6)",
+                padding: "0.2rem 0.5rem",
+                borderRadius: "2px",
+                opacity: 0.9,
+                transition: "all 0.2s",
+                whiteSpace: "nowrap",
+              }}
+              className="hover:opacity-100 hover:bg-[#E5A952]/10"
+            >
+              ig/Juanfer_ost ↗
+            </a>
+          </div>
         </div>
 
         {/* Command line */}
@@ -317,20 +348,21 @@ export default function TerminalScene() {
           </div>
         )}
 
-        {/* Green phosphor photo overlay in lower corner */}
+        {/* Green phosphor photo overlay in lower corner — CRT analog pulse */}
         <div
+          className="animate-crt-pulse tactile-frame"
           style={{
             position: "absolute",
             right: 0,
-            bottom: "clamp(-6rem, -10vw, -8rem)",
-            width: "clamp(90px, 16vw, 150px)",
+            bottom: "clamp(-4rem, -8vw, -6rem)",
+            width: "clamp(80px, 16vw, 150px)",
             aspectRatio: "1",
-            opacity: 0.3,
-            filter: "grayscale(100%) sepia(50%) hue-rotate(85deg) contrast(140%)",
-            pointerEvents: "none",
             borderRadius: "4px",
             overflow: "hidden",
+            cursor: "pointer",
           }}
+          onClick={() => audioManager.play("crt")}
+          title="Terminal CRT monitor"
           aria-hidden="true"
         >
           <Image
@@ -343,7 +375,7 @@ export default function TerminalScene() {
         </div>
 
         {/* Floating Tux Sticker — Linux & SMR Easter Egg */}
-        <div className="absolute -right-6 sm:-right-16 -bottom-8 sm:-bottom-12 z-20">
+        <div className="absolute -right-2 sm:-right-16 -bottom-8 sm:-bottom-12 z-20 hidden sm:block">
           <FloatingSticker
             src="/tux-roses.png"
             alt="Tux con rosas"

@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { audioManager } from "./AudioManager";
 
 // Escena 06 — Jazz / Orgánico — El oído
 // Azul noche profundo, visualizador de onda animado por requestAnimationFrame
@@ -135,12 +136,14 @@ export default function JazzScene() {
         <div
           style={{
             fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "clamp(0.6rem, 1.4vw, 0.75rem)",
+            fontSize: "clamp(0.55rem, 1.4vw, 0.75rem)",
             color: "var(--scene-accent)",
-            letterSpacing: "0.25em",
+            letterSpacing: "0.2em",
             textTransform: "uppercase",
             marginBottom: "1.5rem",
             opacity: 0.8,
+            textWrap: "balance",
+            lineHeight: 1.6,
           }}
         >
           {JAZZ_TAG}
@@ -180,7 +183,7 @@ export default function JazzScene() {
           ref={phraseRef}
           className="font-kinetic"
           style={{
-            fontSize: "clamp(2.4rem, 8.5vw, 6.8rem)",
+            fontSize: "clamp(1.95rem, 8vw, 6.8rem)",
             color: "var(--scene-fg)",
             lineHeight: 0.94,
             letterSpacing: "-0.03em",
@@ -192,7 +195,7 @@ export default function JazzScene() {
           <span
             className="block font-serif italic font-light mt-1"
             style={{
-              fontSize: "clamp(1.2rem, 4.5vw, 3rem)",
+              fontSize: "clamp(1.1rem, 4.2vw, 3rem)",
               color: "var(--scene-accent)",
               lineHeight: 1.15,
             }}
@@ -206,7 +209,7 @@ export default function JazzScene() {
           <p
             style={{
               fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.75rem, 1.8vw, 0.9rem)",
+              fontSize: "clamp(0.72rem, 1.8vw, 0.9rem)",
               color: "var(--scene-fg)",
               opacity: 0.75,
               lineHeight: 1.6,
@@ -218,16 +221,18 @@ export default function JazzScene() {
         </div>
       </div>
 
-      {/* Floating Tulip decorative asset */}
+      {/* Floating Tulip decorative asset — Interactive & Organic */}
       <div
+        className="tactile-frame cursor-pointer"
+        onClick={() => audioManager.play("jazz")}
+        title="Notas de jazz"
         style={{
           position: "absolute",
           right: "clamp(1rem, 5vw, 4rem)",
           bottom: "clamp(1.5rem, 4vw, 3.5rem)",
-          width: "clamp(65px, 14vw, 115px)",
+          width: "clamp(60px, 14vw, 115px)",
           aspectRatio: "1",
-          opacity: 0.35,
-          pointerEvents: "none",
+          opacity: 0.45,
           transform: "rotate(14deg)",
           animation: "floatOrganic 7s ease-in-out infinite",
           filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.3))",

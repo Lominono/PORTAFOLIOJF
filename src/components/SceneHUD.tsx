@@ -68,10 +68,14 @@ export default function SceneHUD() {
           transform: morphing ? "translateY(-2px) scale(0.97)" : "translateY(0) scale(1)",
           transition: "opacity 0.22s ease, transform 0.22s cubic-bezier(0.16,1,0.3,1)",
           whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          maxWidth: "clamp(90px, 28vw, 180px)",
           fontWeight: 600,
           fontFamily: "var(--font-space-mono), monospace",
           fontSize: "0.72rem",
           letterSpacing: "0.08em",
+          display: "block",
         }}
       >
         {SCENE_LABELS[scene] ?? scene}

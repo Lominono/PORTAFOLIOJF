@@ -119,7 +119,7 @@ export default function BrutalismScene() {
         ref={textRef}
         className="font-kinetic uppercase select-none"
         style={{
-          fontSize: "clamp(2.4rem, 11.5vw, 9.5rem)",
+          fontSize: "clamp(2.1rem, 10vw, 9.5rem)",
           color: "var(--scene-fg)",
           lineHeight: 0.92,
           letterSpacing: "-0.04em",
@@ -134,24 +134,25 @@ export default function BrutalismScene() {
           style={{
             color: "var(--scene-accent, #c85028)",
             textDecoration: "underline",
-            textDecorationThickness: "clamp(4px, 1vw, 10px)",
-            textUnderlineOffset: "clamp(6px, 1.2vw, 14px)",
+            textDecorationThickness: "clamp(3px, 1vw, 10px)",
+            textUnderlineOffset: "clamp(5px, 1.2vw, 14px)",
           }}
         >
           {LINE_3}
         </span>
       </h2>
 
-      {/* Floating Flex Sticker */}
-      <div className="absolute right-4 sm:right-16 top-1/4 z-20 hidden md:block">
+      {/* Floating Flex Sticker — Adaptive on mobile & desktop */}
+      <div className="absolute right-3 sm:right-16 top-12 sm:top-1/4 z-20">
         <FloatingSticker
           src="/flex-emoji.png"
           alt="Fuerza y criterio"
           label="DISCIPLINA · CRITERIO"
-          width={100}
-          height={100}
+          width={75}
+          height={75}
           initialRotate={-10}
           sound="stamp"
+          className="scale-85 sm:scale-100"
         />
       </div>
 

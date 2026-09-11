@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { audioManager } from "./AudioManager";
 
 // Escena 01 — Recibo térmico
 // Papel térmico impreso en tiempo real al entrar en la escena
@@ -18,6 +19,7 @@ const TICKET_LINES = [
   { type: "item", label: "ORIGEN", value: "Ginebra, CO" },
   { type: "item", label: "AÑO", value: "2026" },
   { type: "item", label: "GITHUB", value: "@Lominono" },
+  { type: "item", label: "INSTAGRAM", value: "@Juanfer_ost" },
   { type: "item", label: "ENFOQUE", value: "Web / Sistemas / Redes" },
   { type: "item", label: "ESTADO", value: "DISPONIBLE" },
   { type: "sep", text: "──────────────────────────" },
@@ -32,6 +34,7 @@ export default function ReceiptScene() {
   const sectionRef = useRef<HTMLElement>(null);
   const linesRef = useRef<HTMLDivElement[]>([]);
   const photoRef = useRef<HTMLDivElement>(null);
+  const [photoColor, setPhotoColor] = useState(false);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -107,7 +110,7 @@ export default function ReceiptScene() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "clamp(2rem, 5vw, 3.5rem)",
+          gap: "clamp(1.5rem, 4vw, 3rem)",
           maxWidth: "600px",
           width: "100%",
           position: "relative",
@@ -119,9 +122,8 @@ export default function ReceiptScene() {
           style={{
             background: "var(--scene-bg)",
             border: "1px solid var(--scene-border)",
-            width: "100%",
-            maxWidth: "350px",
-            padding: "clamp(1.5rem, 4vw, 2.2rem) clamp(1.25rem, 3.5vw, 1.75rem)",
+            width: "min(100%, 350px)",
+            padding: "clamp(1.25rem, 4vw, 2.2rem) clamp(1rem, 3.5vw, 1.75rem)",
             boxShadow: "0 10px 40px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.04)",
             fontFamily: "var(--font-space-mono), monospace",
           }}
@@ -225,17 +227,26 @@ export default function ReceiptScene() {
           })}
         </div>
 
-        {/* Thermal photo with dither filter */}
+        {/* Thermal photo with dither filter and tactile organic animation */}
         <div
           ref={photoRef}
+          className="animate-paper-float tactile-frame cursor-pointer"
+          onClick={() => {
+            setPhotoColor(!photoColor);
+            audioManager.play("thermal");
+          }}
+          title="Toca para revelar emulsión térmica"
           style={{
-            width: "clamp(160px, 42vw, 240px)",
+            width: "clamp(150px, 40vw, 240px)",
             aspectRatio: "3/4",
             position: "relative",
             willChange: "opacity, transform",
             borderRadius: "2px",
             overflow: "hidden",
-            boxShadow: "0 8px 25px rgba(0,0,0,0.12)",
+            boxShadow: photoColor
+              ? "0 12px 32px rgba(224, 135, 50, 0.25), 0 4px 12px rgba(0,0,0,0.15)"
+              : "0 8px 25px rgba(0,0,0,0.12)",
+            transition: "box-shadow 0.4s ease",
           }}
         >
           <Image
@@ -243,8 +254,8 @@ export default function ReceiptScene() {
             alt="JuanFe en Santander"
             fill
             style={{ objectFit: "cover" }}
-            className="thermal-photo-dither"
-            sizes="(max-width: 768px) 42vw, 240px"
+            className={`thermal-photo-dither ${photoColor ? "active-color" : ""}`}
+            sizes="(max-width: 768px) 40vw, 240px"
           />
         </div>
       </div>

@@ -93,7 +93,7 @@ export default function OpeningScene() {
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
       style={{
         background: "#000",
-        padding: "clamp(2rem, 8vw, 6rem)",
+        padding: "clamp(1.5rem, 6vw, 6rem) clamp(1rem, 4vw, 4rem)",
       }}
       aria-label="Escena de apertura"
     >
@@ -101,12 +101,13 @@ export default function OpeningScene() {
       <h1
         className="font-kinetic select-none"
         style={{
-          fontSize: "clamp(3.8rem, 20vw, 17rem)",
+          fontSize: "clamp(2.75rem, 16vw, 17rem)",
           color: "#f5f5f5",
           lineHeight: 0.88,
           mixBlendMode: "normal",
           letterSpacing: "-0.04em",
           textAlign: "center",
+          maxWidth: "100%",
         }}
         aria-label={NAME}
       >
@@ -129,13 +130,14 @@ export default function OpeningScene() {
         ref={taglineRef}
         className="font-receipt"
         style={{
-          fontSize: "clamp(0.65rem, 2vw, 0.95rem)",
+          fontSize: "clamp(0.58rem, 1.8vw, 0.95rem)",
           color: "#666",
-          letterSpacing: "0.26em",
+          letterSpacing: "clamp(0.12em, 0.5vw, 0.26em)",
           textTransform: "uppercase",
           marginTop: "clamp(1.25rem, 3.5vw, 2.2rem)",
           willChange: "opacity, transform",
           textAlign: "center",
+          padding: "0 0.5rem",
         }}
       >
         {TAGLINE}

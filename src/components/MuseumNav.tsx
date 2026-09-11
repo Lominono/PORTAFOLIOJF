@@ -48,12 +48,8 @@ export default function MuseumNav() {
   }, []);
 
   const goTo = (id: string) => {
-    const idx = SCENES.findIndex((s) => s.id === id);
-    if (idx !== -1) {
-      const totalScrollable = document.documentElement.scrollHeight - window.innerHeight;
-      const targetScroll = (idx / (SCENES.length - 1)) * totalScrollable;
-      window.scrollTo({ top: targetScroll, behavior: "smooth" });
-    }
+    const el = document.querySelector(`[data-scene-id="${id}"]`);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -61,13 +57,13 @@ export default function MuseumNav() {
       aria-label="Escenas del portfolio"
       style={{
         position: "fixed",
-        bottom: "clamp(1.25rem, 4vw, 2rem)",
+        bottom: "max(1.1rem, calc(env(safe-area-inset-bottom, 0px) + 0.6rem))",
         left: "50%",
         zIndex: 900,
         display: "flex",
         alignItems: "center",
-        gap: "clamp(0.35rem, 1.2vw, 0.6rem)",
-        padding: "0.5rem clamp(0.8rem, 2vw, 1.1rem)",
+        gap: "clamp(0.25rem, 1.2vw, 0.6rem)",
+        padding: "0.45rem clamp(0.7rem, 2vw, 1.1rem)",
         background: "var(--scene-hud-bg)",
         border: "1px solid var(--scene-border)",
         borderRadius: "9999px",
@@ -77,6 +73,7 @@ export default function MuseumNav() {
         transform: `translateX(-50%) translateY(${visible ? 0 : 8}px)`,
         transition: "opacity 0.5s ease, transform 0.5s ease, background 0.85s cubic-bezier(0.16,1,0.3,1), border-color 0.85s cubic-bezier(0.16,1,0.3,1)",
         pointerEvents: visible ? "auto" : "none",
+        maxWidth: "calc(100vw - 2rem)",
       }}
     >
       {SCENES.map(({ id, label }) => {
@@ -89,16 +86,19 @@ export default function MuseumNav() {
             aria-current={isActive ? "true" : undefined}
             title={label}
             style={{
-              width: isActive ? "clamp(20px, 4vw, 28px)" : "clamp(5px, 1.2vw, 7px)",
-              height: "clamp(5px, 1.2vw, 7px)",
+              width: isActive ? "clamp(20px, 4vw, 28px)" : "clamp(6px, 1.4vw, 8px)",
+              height: "clamp(6px, 1.4vw, 8px)",
               borderRadius: "9999px",
               background: isActive ? "var(--scene-accent)" : "var(--scene-muted)",
               border: "none",
-              padding: 0,
+              padding: "8px 2px",
+              backgroundClip: "content-box",
+              boxSizing: "content-box",
               cursor: "pointer",
               opacity: isActive ? 1 : 0.5,
               transition: "width 0.35s cubic-bezier(0.16,1,0.3,1), background 0.85s ease, opacity 0.3s ease",
               flexShrink: 0,
+              touchAction: "manipulation",
             }}
           />
         );
