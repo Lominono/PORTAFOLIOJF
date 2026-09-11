@@ -38,13 +38,18 @@ export const SCENES: SceneConfig[] = [
 // Scroll budget per scene (in vh)
 // 40% focused reading hold, 60% silky-smooth solid deck curtain slide
 const SLICE_VH = 165;
-const HOLD_THRESHOLD = 0.40;
+const HOLD_THRESHOLD = 0.35;
 
 // Perlin's smootherstep curve: zero 1st & 2nd derivative at both endpoints.
 // Completely eliminates sudden acceleration or deceleration jerk.
 function smootherStep(t: number): number {
   const c = Math.max(0, Math.min(1, t));
   return c * c * c * (c * (6 * c - 15) + 10);
+}
+
+// Extra-smooth S-curve: smootherstep applied twice for ultra-premium feel
+function ultraSmooth(t: number): number {
+  return smootherStep(smootherStep(t));
 }
 
 export default function CinematicDeck() {
@@ -92,8 +97,8 @@ export default function CinematicDeck() {
         }
       }
 
-      // Ultra-smooth eased progress with Perlin smootherstep
-      const eased = smootherStep(rawT);
+      // Ultra-smooth double-eased progress
+      const eased = ultraSmooth(rawT);
 
       // Dominant scene determination for HUD, audio & color theme
       const dominantIndex = isTransitioning && eased >= 0.5 ? clampedIndex + 1 : clampedIndex;
@@ -216,6 +221,7 @@ export default function CinematicDeck() {
                 overflowY: "auto",
                 overflowX: "hidden",
                 WebkitOverflowScrolling: "touch",
+                contain: "layout style paint",
               }}
               data-lenis-prevent="true"
             >

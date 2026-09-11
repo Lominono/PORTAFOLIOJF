@@ -361,7 +361,7 @@ export const audioManager = {
   unmute: () => {
     muted = false;
     if (bgAudio?.paused) bgAudio.play().catch(() => {});
-    fadeVolumeTo(TARGET_VOLUME, 1200);
+    fadeVolumeTo(TARGET_VOLUME, 4000);
   },
   toggle: () => {
     muted = !muted;
@@ -371,7 +371,7 @@ export const audioManager = {
       });
     } else {
       if (bgAudio?.paused) bgAudio.play().catch(() => {});
-      fadeVolumeTo(TARGET_VOLUME, 1200);
+      fadeVolumeTo(TARGET_VOLUME, 4000);
     }
     return muted;
   },

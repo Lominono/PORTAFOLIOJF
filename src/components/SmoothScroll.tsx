@@ -22,15 +22,15 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     }
 
     const lenis = new Lenis({
-      duration: 1.25,
+      duration: 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 0.85,
-      touchMultiplier: 1.1,
+      wheelMultiplier: 0.8,
+      touchMultiplier: 1.0,
       syncTouch: true,
-      syncTouchLerp: 0.08,
+      syncTouchLerp: 0.06,
       autoRaf: false,
     });
 
