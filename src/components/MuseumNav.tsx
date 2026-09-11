@@ -47,9 +47,16 @@ export default function MuseumNav() {
     };
   }, []);
 
-  const goTo = (id: string) => {
-    const el = document.querySelector(`[data-scene-id="${id}"]`);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+  const goTo = (id: string, index: number) => {
+    const lenis = (window as unknown as { lenis?: { scrollTo: (target: number, opts?: { duration?: number }) => void } }).lenis;
+    const vh = window.innerHeight;
+    const targetY = index * vh * 1.65;
+    if (lenis?.scrollTo) {
+      lenis.scrollTo(targetY, { duration: 1.2 });
+    } else {
+      const el = document.querySelector(`[data-scene-id="${id}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -76,12 +83,12 @@ export default function MuseumNav() {
         maxWidth: "calc(100vw - 2rem)",
       }}
     >
-      {SCENES.map(({ id, label }) => {
+      {SCENES.map(({ id, label }, index) => {
         const isActive = active === id;
         return (
           <button
             key={id}
-            onClick={() => goTo(id)}
+            onClick={() => goTo(id, index)}
             aria-label={`Ir a escena ${label}`}
             aria-current={isActive ? "true" : undefined}
             title={label}

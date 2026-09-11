@@ -9,6 +9,10 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    if (typeof window !== "undefined" && "scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+
     gsap.registerPlugin(ScrollTrigger);
 
     // Respect reduced motion settings

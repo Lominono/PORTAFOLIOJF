@@ -21,9 +21,9 @@ const TICKET_LINES = [
   { type: "item", label: "GITHUB", value: "@Lominono" },
   { type: "item", label: "INSTAGRAM", value: "@Juanfer_ost" },
   { type: "item", label: "ENFOQUE", value: "Web / Sistemas / Redes" },
-  { type: "item", label: "ESTADO", value: "DISPONIBLE" },
+  { type: "item", label: "ESTADO", value: "PUE' BIEN" },
   { type: "sep", text: "──────────────────────────" },
-  { type: "note", text: "BITÁCORA TÉCNICA · JUANFE" },
+  { type: "note", text: "BITACORA · JUANFE" },
   { type: "note", text: "SISTEMAS, REDES & FRONTEND CREATIVO" },
   { type: "sep", text: "──────────────────────────" },
   { type: "barcode", text: "|||||||||||||||||||||||||||||||" },
@@ -120,8 +120,8 @@ export default function ReceiptScene() {
         {/* Receipt paper container */}
         <div
           style={{
-            background: "var(--scene-bg)",
-            border: "1px solid var(--scene-border)",
+            background: "#F3EFE6",
+            border: "1px solid rgba(24, 23, 21, 0.14)",
             width: "min(100%, 330px)",
             padding: "clamp(0.65rem, 1.8vh, 1.5rem) clamp(0.75rem, 2.5vw, 1.25rem)",
             boxShadow: "0 10px 40px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.04)",
