@@ -483,58 +483,6 @@ body {
 }
 
 /* ==========================================================================
-   Focal-Plane Shutter Wipe (Analog 35mm Reel Scene Transition)
-   ========================================================================== */
-.shutter-curtain {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  overflow: hidden;
-}
-
-.shutter-blade-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 52%;
-  background: #08080A;
-  transform-origin: top;
-}
-
-.shutter-blade-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 52%;
-  background: #08080A;
-  transform-origin: bottom;
-}
-
-.film-sprocket-track {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 24px;
-  display: flex;
-  flex-direction: column;
-  justifyContent: space-around;
-  align-items: center;
-  pointer-events: none;
-  opacity: 0.25;
-}
-
-.sprocket-hole {
-  width: 10px;
-  height: 14px;
-  border-radius: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  background: rgba(0, 0, 0, 0.8);
-}
-
-/* ==========================================================================
    prefers-reduced-motion: estética conservada, coreografía eliminada
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
