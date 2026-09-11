@@ -142,145 +142,157 @@ export default function CreditsScene() {
     <section
       ref={sectionRef}
       data-scene-id="credits"
-      className="relative min-h-screen flex flex-col justify-center overflow-x-hidden"
+      className="relative flex flex-col overflow-x-hidden"
       style={{
         background: "radial-gradient(ellipse at 50% 20%, #111111 0%, #050505 70%, #000000 100%)",
         color: "#EDE8D0",
-        padding: "clamp(1.75rem, 4vh, 4rem) clamp(0.85rem, 3.5vw, 3rem)",
-        touchAction: "pan-y",
+        minHeight: "100%",
+        height: "100%",
       }}
       aria-label="Créditos finales de la película interactiva"
     >
+      {/* Scrollable inner container — ensures all content is reachable on mobile */}
       <div
-        ref={containerRef}
-        className="w-full max-w-6xl mx-auto flex flex-col gap-6 md:gap-10 relative z-10"
+        style={{
+          overflowY: "auto",
+          overflowX: "hidden",
+          height: "100%",
+          WebkitOverflowScrolling: "touch",
+          touchAction: "pan-y",
+          overscrollBehavior: "contain",
+          padding: "clamp(1.5rem, 3.5vh, 4rem) clamp(0.75rem, 3.5vw, 3rem)",
+        }}
       >
-        {/* HEADER: Monumental "JuanFe" Typography */}
-        <header className="text-center anim-credit flex flex-col items-center">
-          <div
-            style={{
-              fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.55rem, 1.2vw, 0.72rem)",
-              color: "var(--scene-accent, #E8A87C)",
-              letterSpacing: "0.25em",
-              textTransform: "uppercase",
-              marginBottom: "0.35rem",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-            }}
-          >
-            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--scene-accent, #E8A87C)", display: "inline-block" }} />
-            CRÉDITOS FINALES · DIRECCIÓN & CREACIÓN
-          </div>
-
-          <h1
-            style={{
-              fontFamily: "var(--font-fraunces), serif",
-              fontSize: "clamp(2.6rem, 9.5vw, 6.8rem)",
-              fontWeight: 800,
-              letterSpacing: "-0.04em",
-              lineHeight: 0.95,
-              margin: "0.15rem 0 0.5rem",
-              color: "#FFFBF2",
-              textShadow: "0 0 35px rgba(232, 168, 124, 0.22)",
-            }}
-          >
-            JuanFe
-          </h1>
-
-          <p
-            style={{
-              fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.65rem, 1.4vw, 0.85rem)",
-              color: "#A8A090",
-              maxWidth: "580px",
-              lineHeight: 1.45,
-              letterSpacing: "0.04em",
-            }}
-          >
-            Sistemas Microinformáticos y Redes · Desarrollador Web · Creador de Contenido
-          </p>
-        </header>
-
-        {/* MAIN BODY: Grid with Platform Channels (Left) & TikTok Video Showcase (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-center">
-          
-          {/* LEFT: Social Platform Follow Cards (7 columns on desktop) */}
-          <div className="lg:col-span-7 flex flex-col gap-4 order-2 lg:order-1">
-            <div className="anim-credit mb-2">
-              <span
-                style={{
-                  fontFamily: "var(--font-space-mono), monospace",
-                  fontSize: "clamp(0.65rem, 1.3vw, 0.75rem)",
-                  color: "var(--scene-accent, #E8A87C)",
-                  letterSpacing: "0.25em",
-                  textTransform: "uppercase",
-                  fontWeight: 600,
-                  display: "block",
-                  marginBottom: "4px",
-                }}
-              >
-                CONÉCTATE Y SÍGUEME
-              </span>
-              <h2
-                style={{
-                  fontFamily: "var(--font-fraunces), serif",
-                  fontSize: "clamp(1.25rem, 3vw, 1.85rem)",
-                  color: "#F4EFEA",
-                  fontWeight: 700,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Disponible en todas mis plataformas oficiales
-              </h2>
+        <div
+          ref={containerRef}
+          className="w-full max-w-6xl mx-auto flex flex-col gap-5 md:gap-10 relative z-10"
+        >
+          {/* HEADER: Monumental "JuanFe" Typography */}
+          <header className="text-center anim-credit flex flex-col items-center">
+            <div
+              style={{
+                fontFamily: "var(--font-space-mono), monospace",
+                fontSize: "clamp(0.55rem, 1.2vw, 0.72rem)",
+                color: "var(--scene-accent, #E8A87C)",
+                letterSpacing: "0.25em",
+                textTransform: "uppercase",
+                marginBottom: "0.35rem",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--scene-accent, #E8A87C)", display: "inline-block" }} />
+              CRÉDITOS FINALES · DIRECCIÓN & CREACIÓN
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 anim-credit">
-              {SOCIAL_PLATFORMS.map((platform, idx) => {
-                const Icon = platform.icon;
-                return (
-                  <a
-                    key={idx}
-                    href={platform.link}
-                    target={platform.link.startsWith("http") ? "_blank" : undefined}
-                    rel={platform.link.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-sm active:scale-[0.98] transition-all duration-150"
-                    style={{
-                      background: "rgba(255, 255, 255, 0.03)",
-                      border: "1px solid rgba(255, 255, 255, 0.1)",
-                      textDecoration: "none",
-                      color: "inherit",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "var(--scene-accent, #E8A87C)";
-                      e.currentTarget.style.background = "rgba(232, 168, 124, 0.08)";
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
-                      e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
-                      e.currentTarget.style.transform = "none";
-                    }}
-                    aria-label={`${platform.name}: ${platform.handle}`}
-                  >
-                    <div className="flex items-center justify-between gap-3 mb-2">
-                      <div className="flex items-center gap-3">
+            <h1
+              style={{
+                fontFamily: "var(--font-fraunces), serif",
+                fontSize: "clamp(2.6rem, 9.5vw, 6.8rem)",
+                fontWeight: 800,
+                letterSpacing: "-0.04em",
+                lineHeight: 0.95,
+                margin: "0.15rem 0 0.5rem",
+                color: "#FFFBF2",
+                textShadow: "0 0 35px rgba(232, 168, 124, 0.22)",
+              }}
+            >
+              JuanFe
+            </h1>
+
+            <p
+              style={{
+                fontFamily: "var(--font-space-mono), monospace",
+                fontSize: "clamp(0.65rem, 1.4vw, 0.85rem)",
+                color: "#A8A090",
+                maxWidth: "580px",
+                lineHeight: 1.45,
+                letterSpacing: "0.04em",
+              }}
+            >
+              Sistemas Microinformáticos y Redes · Desarrollador Web · Creador de Contenido
+            </p>
+          </header>
+
+          {/* MAIN BODY: Social Cards + TikTok Video */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 items-start">
+
+            {/* Social Platform Follow Cards — shown FIRST on mobile */}
+            <div className="lg:col-span-7 flex flex-col gap-3 order-1 lg:order-1">
+              <div className="anim-credit mb-1">
+                <span
+                  style={{
+                    fontFamily: "var(--font-space-mono), monospace",
+                    fontSize: "clamp(0.6rem, 1.3vw, 0.75rem)",
+                    color: "var(--scene-accent, #E8A87C)",
+                    letterSpacing: "0.25em",
+                    textTransform: "uppercase",
+                    fontWeight: 600,
+                    display: "block",
+                    marginBottom: "4px",
+                  }}
+                >
+                  CONÉCTATE Y SÍGUEME
+                </span>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-fraunces), serif",
+                    fontSize: "clamp(1.1rem, 3vw, 1.85rem)",
+                    color: "#F4EFEA",
+                    fontWeight: 700,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  Disponible en todas mis plataformas
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 anim-credit">
+                {SOCIAL_PLATFORMS.map((platform, idx) => {
+                  const Icon = platform.icon;
+                  return (
+                    <a
+                      key={idx}
+                      href={platform.link}
+                      target={platform.link.startsWith("http") ? "_blank" : undefined}
+                      rel={platform.link.startsWith("http") ? "noopener noreferrer" : undefined}
+                      className="group relative flex flex-col justify-between p-2.5 sm:p-3.5 rounded-sm active:scale-[0.98] transition-all duration-150"
+                      style={{
+                        background: "rgba(255, 255, 255, 0.03)",
+                        border: "1px solid rgba(255, 255, 255, 0.1)",
+                        textDecoration: "none",
+                        color: "inherit",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "var(--scene-accent, #E8A87C)";
+                        e.currentTarget.style.background = "rgba(232, 168, 124, 0.08)";
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                        e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
+                        e.currentTarget.style.transform = "none";
+                      }}
+                      aria-label={`${platform.name}: ${platform.handle}`}
+                    >
+                      <div className="flex items-center gap-2 mb-1">
                         <div
                           style={{
                             color: "var(--scene-accent, #E8A87C)",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
+                            flexShrink: 0,
                           }}
                         >
                           <Icon />
                         </div>
-                        <div>
+                        <div style={{ minWidth: 0 }}>
                           <span
                             style={{
                               fontFamily: "var(--font-fraunces), serif",
-                              fontSize: "1.05rem",
+                              fontSize: "clamp(0.82rem, 2vw, 1.05rem)",
                               fontWeight: 700,
                               color: "#FFF",
                               display: "block",
@@ -291,220 +303,210 @@ export default function CreditsScene() {
                           <span
                             style={{
                               fontFamily: "var(--font-space-mono), monospace",
-                              fontSize: "0.6rem",
+                              fontSize: "clamp(0.48rem, 1vw, 0.6rem)",
                               color: "#888",
-                              letterSpacing: "0.15em",
+                              letterSpacing: "0.1em",
+                              display: "block",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
                             }}
                           >
                             {platform.badge}
                           </span>
                         </div>
                       </div>
-                      <span
-                        className="opacity-60 group-hover:opacity-100 transition-opacity"
-                        style={{ color: "var(--scene-accent, #E8A87C)", fontSize: "1rem" }}
+
+                      <div
+                        style={{
+                          fontFamily: "var(--font-space-mono), monospace",
+                          fontSize: "clamp(0.6rem, 1.5vw, 0.78rem)",
+                          color: "var(--scene-accent, #E8A87C)",
+                          marginTop: "0.2rem",
+                          wordBreak: "break-all",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
                       >
-                        ↗
-                      </span>
-                    </div>
-
-                    <div
-                      style={{
-                        fontFamily: "var(--font-space-mono), monospace",
-                        fontSize: "0.78rem",
-                        color: "var(--scene-accent, #E8A87C)",
-                        marginTop: "0.4rem",
-                        wordBreak: "break-all",
-                      }}
-                    >
-                      {platform.handle}
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
-
-            {/* Technical metadata pills */}
-            <div
-              className="anim-credit mt-3 p-3.5 rounded-sm flex flex-wrap items-center justify-between gap-3"
-              style={{
-                background: "rgba(255, 255, 255, 0.02)",
-                border: "1px dashed rgba(255, 255, 255, 0.12)",
-                fontFamily: "var(--font-space-mono), monospace",
-                fontSize: "0.68rem",
-                color: "#999",
-              }}
-            >
-              <div>
-                <strong style={{ color: "#D4C9B0" }}>Formación:</strong> SMR (Sistemas Microinformáticos y Redes)
+                        {platform.handle}
+                      </div>
+                    </a>
+                  );
+                })}
               </div>
-              <div>
-                <strong style={{ color: "#D4C9B0" }}>Ruta:</strong> Ginebra (Valle) ➔ Santander (Cantabria)
-              </div>
-            </div>
-          </div>
 
-          {/* RIGHT: TikTok Video Showcase (5 columns on desktop, centered) */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center anim-credit order-1 lg:order-2">
-            <div
-              className="relative rounded-lg overflow-hidden flex flex-col items-center"
-              style={{
-                width: "100%",
-                maxWidth: "clamp(200px, 58vw, 260px)",
-                background: "#0A0A0A",
-                border: "1px solid rgba(232, 168, 124, 0.25)",
-                boxShadow: "0 14px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(232, 168, 124, 0.1)",
-              }}
-            >
-              {/* Header Badge */}
+              {/* Technical metadata pills */}
               <div
-                className="w-full flex items-center justify-between px-3 py-1.5"
+                className="anim-credit mt-2 p-2.5 sm:p-3.5 rounded-sm flex flex-wrap items-center justify-between gap-2"
                 style={{
-                  background: "rgba(20, 20, 20, 0.9)",
-                  borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                  background: "rgba(255, 255, 255, 0.02)",
+                  border: "1px dashed rgba(255, 255, 255, 0.12)",
                   fontFamily: "var(--font-space-mono), monospace",
-                  fontSize: "0.62rem",
-                  letterSpacing: "0.1em",
+                  fontSize: "clamp(0.58rem, 1.3vw, 0.68rem)",
+                  color: "#999",
                 }}
               >
-                <div className="flex items-center gap-1.5">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ color: "#00f2fe" }}>
-                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .58.04.85.12V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.49 6.26 6.26 0 0 0 1.97-4.49V8.62a8.28 8.28 0 0 0 4.8 1.52V6.69z" />
-                  </svg>
-                  <span style={{ color: "#FFF", fontWeight: 700 }}>TIKTOK</span>
+                <div>
+                  <strong style={{ color: "#D4C9B0" }}>Formación:</strong> SMR
                 </div>
-                <span style={{ color: "var(--scene-accent, #E8A87C)", opacity: 0.9 }}>@yuanfer</span>
+                <div>
+                  <strong style={{ color: "#D4C9B0" }}>Ruta:</strong> Ginebra ➔ Santander
+                </div>
               </div>
+            </div>
 
-              {/* Vertical Video Element */}
-              <div className="relative w-full aspect-[9/16] bg-black overflow-hidden group">
-                <video
-                  ref={videoRef}
-                  src="/videos/tiktok-yuanfer.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover"
-                  aria-label="Vídeo de TikTok de JuanFe @yuanfer"
-                />
-
-                {/* Scanline CRT overlay effect */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    backgroundImage: "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)",
-                    backgroundSize: "100% 4px",
-                    opacity: 0.35,
-                  }}
-                  aria-hidden="true"
-                />
-
-                {/* Floating Sound Toggle Pill */}
-                <button
-                  onClick={toggleVideoSound}
-                  className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-full text-xs active:scale-95 transition-all duration-150"
-                  style={{
-                    background: videoSoundActive ? "rgba(232, 168, 124, 0.95)" : "rgba(10, 10, 10, 0.85)",
-                    color: videoSoundActive ? "#000" : "#FFF",
-                    backdropFilter: "blur(8px)",
-                    border: videoSoundActive ? "1px solid #E8A87C" : "1px solid rgba(255, 255, 255, 0.25)",
-                    fontFamily: "var(--font-space-mono), monospace",
-                    fontSize: "0.64rem",
-                    fontWeight: 600,
-                    letterSpacing: "0.06em",
-                    cursor: "pointer",
-                  }}
-                  aria-label={videoSoundActive ? "Silenciar vídeo" : "Activar sonido del vídeo"}
-                >
-                  {videoSoundActive ? (
-                    <>
-                      <span>🔊 SONIDO ACTIVO</span>
-                      <span className="text-[0.58rem] opacity-75">(Toca para silenciar)</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>🔇 ACTIVAR SONIDO</span>
-                      <span className="text-[0.58rem] opacity-75">(Toca para escuchar)</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* TikTok Follow CTA */}
-              <a
-                href="https://www.tiktok.com/@yuanfer"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2 px-3 flex items-center justify-center gap-2 active:scale-98 transition-all duration-150"
+            {/* TikTok Video Showcase — shown AFTER social cards on mobile */}
+            <div className="lg:col-span-5 flex flex-col items-center justify-center anim-credit order-2 lg:order-2">
+              <div
+                className="relative rounded-lg overflow-hidden flex flex-col items-center"
                 style={{
-                  background: "rgba(255, 255, 255, 0.05)",
-                  color: "#FFF",
-                  fontFamily: "var(--font-space-mono), monospace",
-                  fontSize: "0.65rem",
-                  letterSpacing: "0.1em",
-                  textDecoration: "none",
-                  borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "var(--scene-accent, #E8A87C)";
-                  e.currentTarget.style.color = "#000";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
-                  e.currentTarget.style.color = "#FFF";
+                  width: "100%",
+                  maxWidth: "clamp(180px, 45vw, 260px)",
+                  background: "#0A0A0A",
+                  border: "1px solid rgba(232, 168, 124, 0.25)",
+                  boxShadow: "0 14px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(232, 168, 124, 0.1)",
                 }}
               >
-                <span>SEGUIR EN TIKTOK @yuanfer</span>
-                <span>↗</span>
-              </a>
+                {/* Header Badge */}
+                <div
+                  className="w-full flex items-center justify-between px-2.5 py-1"
+                  style={{
+                    background: "rgba(20, 20, 20, 0.9)",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                    fontFamily: "var(--font-space-mono), monospace",
+                    fontSize: "0.58rem",
+                    letterSpacing: "0.1em",
+                  }}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ color: "#00f2fe" }}>
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .58.04.85.12V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.49 6.26 6.26 0 0 0 1.97-4.49V8.62a8.28 8.28 0 0 0 4.8 1.52V6.69z" />
+                    </svg>
+                    <span style={{ color: "#FFF", fontWeight: 700 }}>TIKTOK</span>
+                  </div>
+                  <span style={{ color: "var(--scene-accent, #E8A87C)", opacity: 0.9 }}>@yuanfer</span>
+                </div>
+
+                {/* Vertical Video Element */}
+                <div className="relative w-full aspect-[9/16] bg-black overflow-hidden group">
+                  <video
+                    ref={videoRef}
+                    src="/videos/tiktok-yuanfer.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                    aria-label="Vídeo de TikTok de JuanFe @yuanfer"
+                  />
+
+                  {/* Scanline CRT overlay effect */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      backgroundImage: "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)",
+                      backgroundSize: "100% 4px",
+                      opacity: 0.35,
+                    }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Floating Sound Toggle Pill */}
+                  <button
+                    onClick={toggleVideoSound}
+                    className="absolute bottom-2 left-2 right-2 flex items-center justify-center gap-1 py-1.5 px-2 rounded-full text-xs active:scale-95 transition-all duration-150"
+                    style={{
+                      background: videoSoundActive ? "rgba(232, 168, 124, 0.95)" : "rgba(10, 10, 10, 0.85)",
+                      color: videoSoundActive ? "#000" : "#FFF",
+                      backdropFilter: "blur(8px)",
+                      border: videoSoundActive ? "1px solid #E8A87C" : "1px solid rgba(255, 255, 255, 0.25)",
+                      fontFamily: "var(--font-space-mono), monospace",
+                      fontSize: "clamp(0.52rem, 1.2vw, 0.64rem)",
+                      fontWeight: 600,
+                      letterSpacing: "0.06em",
+                      cursor: "pointer",
+                    }}
+                    aria-label={videoSoundActive ? "Silenciar vídeo" : "Activar sonido del vídeo"}
+                  >
+                    {videoSoundActive ? "🔊 ON" : "🔇 SONIDO"}
+                  </button>
+                </div>
+
+                {/* TikTok Follow CTA */}
+                <a
+                  href="https://www.tiktok.com/@yuanfer"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-1.5 px-2 flex items-center justify-center gap-1.5 active:scale-98 transition-all duration-150"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    color: "#FFF",
+                    fontFamily: "var(--font-space-mono), monospace",
+                    fontSize: "clamp(0.55rem, 1.2vw, 0.65rem)",
+                    letterSpacing: "0.1em",
+                    textDecoration: "none",
+                    borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--scene-accent, #E8A87C)";
+                    e.currentTarget.style.color = "#000";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+                    e.currentTarget.style.color = "#FFF";
+                  }}
+                >
+                  <span>SEGUIR @yuanfer</span>
+                  <span>↗</span>
+                </a>
+              </div>
             </div>
+
           </div>
 
+          {/* FOOTER: Signature & Rewind Button */}
+          <footer className="anim-credit mt-2 pt-4 flex flex-col items-center gap-3 text-center border-t border-white/10" style={{ paddingBottom: "max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem))" }}>
+            <span
+              style={{
+                fontFamily: "var(--font-space-mono), monospace",
+                fontSize: "clamp(0.55rem, 1.2vw, 0.72rem)",
+                color: "#7E786B",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+              }}
+            >
+              © 2026 JuanFe — Fin de la película interactiva
+            </span>
+
+            <button
+              onClick={scrollToTop}
+              className="active:scale-95 transition-all duration-150"
+              style={{
+                fontFamily: "var(--font-space-mono), monospace",
+                fontSize: "clamp(0.58rem, 1.3vw, 0.72rem)",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                background: "transparent",
+                color: "var(--scene-accent, #E8A87C)",
+                border: "1px solid var(--scene-accent, #E8A87C)",
+                padding: "0.4rem 1rem",
+                borderRadius: "2px",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--scene-accent, #E8A87C)";
+                e.currentTarget.style.color = "#000";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = "var(--scene-accent, #E8A87C)";
+              }}
+              aria-label="Volver al inicio del relato"
+            >
+              ↑ Rebobinar película al inicio
+            </button>
+          </footer>
         </div>
-
-        {/* FOOTER: Signature & Rewind Button */}
-        <footer className="anim-credit mt-2 pt-5 flex flex-col items-center gap-3 text-center border-t border-white/10">
-          <span
-            style={{
-              fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.6rem, 1.3vw, 0.72rem)",
-              color: "#7E786B",
-              letterSpacing: "0.22em",
-              textTransform: "uppercase",
-            }}
-          >
-            © 2026 JuanFe — Fin de la película interactiva
-          </span>
-
-          <button
-            onClick={scrollToTop}
-            className="active:scale-95 transition-all duration-150"
-            style={{
-              fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.62rem, 1.3vw, 0.72rem)",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              background: "transparent",
-              color: "var(--scene-accent, #E8A87C)",
-              border: "1px solid var(--scene-accent, #E8A87C)",
-              padding: "0.45rem 1.25rem",
-              borderRadius: "2px",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "var(--scene-accent, #E8A87C)";
-              e.currentTarget.style.color = "#000";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = "var(--scene-accent, #E8A87C)";
-            }}
-            aria-label="Volver al inicio del relato"
-          >
-            ↑ Rebobinar película al inicio
-          </button>
-        </footer>
       </div>
     </section>
   );
