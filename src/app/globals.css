@@ -1,0 +1,443 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-fraunces), Georgia, serif;
+  --font-mono: var(--font-mono), monospace;
+  --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-receipt: var(--font-space-mono), monospace;
+
+  --color-paper: #F5F2EB;
+  --color-paper-subtle: #ECE8DD;
+  --color-paper-card: #FAF8F2;
+  --color-paper-border: rgba(27, 26, 23, 0.12);
+
+  --color-receipt-paper: #F3EFE6;
+  --color-receipt-ink: #181715;
+  --color-receipt-faint: #6D6960;
+
+}
+
+/* ==========================================================================
+   Scene tokens — each scene morphs the whole page via data-scene on <html>
+   ========================================================================== */
+:root {
+  --scene-bg: #000000;
+  --scene-fg: #f5f5f5;
+  --scene-accent: #f5f5f5;
+  --scene-muted: #555555;
+  --scene-border: rgba(245, 245, 245, 0.12);
+  --scene-card-bg: rgba(255, 255, 255, 0.04);
+  --scene-hud-bg: rgba(0, 0, 0, 0.82);
+  --scene-grain-opacity: 0.06;
+}
+
+/* 00 — Opening: negro absoluto, tipo blanco */
+[data-scene="scene-opening"] {
+  --scene-bg: #000000;
+  --scene-fg: #f5f5f5;
+  --scene-accent: #f5f5f5;
+  --scene-muted: #555555;
+  --scene-border: rgba(245, 245, 245, 0.12);
+  --scene-card-bg: rgba(255, 255, 255, 0.04);
+  --scene-hud-bg: rgba(0, 0, 0, 0.85);
+  --scene-grain-opacity: 0.06;
+}
+
+/* 01 — Ticket: papel térmico */
+[data-scene="scene-ticket"] {
+  --scene-bg: #F3EFE6;
+  --scene-fg: #181715;
+  --scene-accent: #E08732;
+  --scene-muted: #736E65;
+  --scene-border: rgba(24, 23, 21, 0.14);
+  --scene-card-bg: rgba(255, 255, 255, 0.65);
+  --scene-hud-bg: rgba(243, 239, 230, 0.85);
+  --scene-grain-opacity: 0.035;
+}
+
+/* 02 — Brutalismo: blanco y negro editorial */
+[data-scene="scene-brutalism"] {
+  --scene-bg: #f7f7f7;
+  --scene-fg: #0a0a0a;
+  --scene-accent: #0a0a0a;
+  --scene-muted: #444444;
+  --scene-border: rgba(10, 10, 10, 0.85);
+  --scene-card-bg: rgba(10, 10, 10, 0.05);
+  --scene-hud-bg: rgba(247, 247, 247, 0.9);
+  --scene-grain-opacity: 0.02;
+}
+
+/* 03 — Terminal: verde sobre oscuro */
+[data-scene="scene-terminal"] {
+  --scene-bg: #0A0E17;
+  --scene-fg: #E6EDF3;
+  --scene-accent: #39D353;
+  --scene-muted: #8B949E;
+  --scene-border: rgba(57, 211, 83, 0.22);
+  --scene-card-bg: rgba(16, 22, 34, 0.7);
+  --scene-hud-bg: rgba(10, 14, 23, 0.9);
+  --scene-grain-opacity: 0.03;
+}
+
+/* 04 — VHS: cinta magnética analógica, fósforo CRT y cromo */
+[data-scene="scene-vhs"] {
+  --scene-bg: #0D0C0F;
+  --scene-fg: #F0EBF4;
+  --scene-accent: #E53935;
+  --scene-muted: #8E8696;
+  --scene-border: rgba(229, 57, 53, 0.28);
+  --scene-card-bg: rgba(255, 255, 255, 0.04);
+  --scene-hud-bg: rgba(13, 12, 15, 0.92);
+  --scene-grain-opacity: 0.08;
+}
+
+/* 05 — Zine: papel beige cálido analógico */
+[data-scene="scene-zine"] {
+  --scene-bg: #E8DFC8;
+  --scene-fg: #1A1713;
+  --scene-accent: #B8402A;
+  --scene-muted: #756D60;
+  --scene-border: rgba(184, 64, 42, 0.22);
+  --scene-card-bg: rgba(250, 246, 237, 0.8);
+  --scene-hud-bg: rgba(232, 223, 200, 0.88);
+  --scene-grain-opacity: 0.055;
+}
+
+/* 06 — Jazz: azul noche profundo */
+[data-scene="scene-jazz"] {
+  --scene-bg: #0C101C;
+  --scene-fg: #F4EEDD;
+  --scene-accent: #E5A952;
+  --scene-muted: #8A92A0;
+  --scene-border: rgba(229, 169, 82, 0.22);
+  --scene-card-bg: rgba(18, 24, 40, 0.7);
+  --scene-hud-bg: rgba(12, 16, 28, 0.9);
+  --scene-grain-opacity: 0.05;
+}
+
+/* 07 — Obsessions: off-white suave, cotidiano */
+[data-scene="scene-obsessions"] {
+  --scene-bg: #F9F6F0;
+  --scene-fg: #1a1814;
+  --scene-accent: #D44D2A;
+  --scene-muted: #776F63;
+  --scene-border: rgba(26, 24, 20, 0.14);
+  --scene-card-bg: rgba(255, 255, 255, 0.7);
+  --scene-hud-bg: rgba(249, 246, 240, 0.9);
+  --scene-grain-opacity: 0.04;
+}
+
+/* 08 — Credits: negro absoluto, letras doradas */
+[data-scene="scene-credits"] {
+  --scene-bg: #000000;
+  --scene-fg: #d4c9b0;
+  --scene-accent: #a89070;
+  --scene-muted: #4a4540;
+  --scene-border: rgba(212, 201, 176, 0.15);
+  --scene-card-bg: rgba(255, 255, 255, 0.03);
+  --scene-hud-bg: rgba(0, 0, 0, 0.9);
+  --scene-grain-opacity: 0.045;
+}
+
+/* ==========================================================================
+   Base resets & typography bound to scene variables
+   ========================================================================== */
+html {
+  background-color: var(--scene-bg);
+  color: var(--scene-fg);
+  transition:
+    background-color 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  scroll-behavior: auto;
+}
+
+body {
+  background-color: var(--scene-bg);
+  color: var(--scene-fg);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition:
+    background-color 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   Grain overlay
+   ========================================================================== */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--scene-grain-opacity);
+  transition: opacity 0.85s ease;
+}
+
+/* ==========================================================================
+   Variable font — cinematic weight morphing (Fraunces: opsz, SOFT, WONK)
+   ========================================================================== */
+.font-kinetic {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.font-receipt {
+  font-family: var(--font-space-mono), monospace;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ==========================================================================
+   Scene: Terminal / CRT
+   ========================================================================== */
+.thermal-photo-dither {
+  filter: grayscale(100%) contrast(145%) brightness(95%);
+  mix-blend-mode: multiply;
+  transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s ease;
+}
+
+.thermal-photo-dither:hover,
+.thermal-photo-dither.active-color {
+  filter: grayscale(0%) contrast(105%) brightness(100%);
+  mix-blend-mode: normal;
+}
+
+.crt-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(57, 211, 83, 0.05) 2px,
+    rgba(57, 211, 83, 0.05) 4px
+  );
+}
+
+.cursor-blink {
+  animation: cursorBlink 1.1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ==========================================================================
+   Scene: VHS / Glitch
+   ========================================================================== */
+.vhs-scanlines {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.22) 3px,
+    rgba(0, 0, 0, 0.22) 4px
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.glitch-text {
+  position: relative;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  color: #ff6b9d;
+  clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+  transform: translate(-3px, 0);
+  opacity: 0;
+}
+
+.glitch-text::after {
+  color: #6bf0ff;
+  clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+  transform: translate(3px, 0);
+  opacity: 0;
+}
+
+.glitch-active .glitch-text::before,
+.glitch-active .glitch-text::after {
+  animation: glitchBands 0.28s steps(1) forwards;
+}
+
+@keyframes glitchBands {
+  0%   { opacity: 0; transform: translate(-3px, 0); }
+  25%  { opacity: 1; transform: translate(3px, -2px); }
+  50%  { opacity: 0.8; transform: translate(-2px, 1px); }
+  75%  { opacity: 1; transform: translate(2px, -1px); }
+  100% { opacity: 0; transform: translate(-3px, 0); }
+}
+
+/* ==========================================================================
+   Scene: Zine — collage analógico
+   ========================================================================== */
+.zine-polaroid {
+  background: #faf8f2;
+  padding: clamp(8px, 2vw, 14px) clamp(8px, 2vw, 14px) clamp(22px, 4vw, 36px);
+  box-shadow: 2px 4px 20px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12);
+  will-change: transform;
+}
+
+/* ==========================================================================
+   HUD flotante — ponytail: blur solo en elemento pequeño, no en fondos
+   ========================================================================== */
+.scene-hud {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  backdrop-filter: blur(8px);
+  background: var(--scene-hud-bg);
+  border: 1px solid var(--scene-border);
+  border-radius: 9999px;
+  padding: 0.5rem 0.9rem;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--scene-fg);
+  transition:
+    background 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mute-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.mute-btn:hover { opacity: 1; }
+
+/* ==========================================================================
+   Scroll progress bar
+   ========================================================================== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--scene-accent);
+  transform-origin: left;
+  z-index: 999;
+  transition: background 0.85s ease;
+}
+
+/* ==========================================================================
+   Keyframes
+   ========================================================================== */
+@keyframes cinematicFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-10px) rotate(1.5deg); }
+}
+
+.animate-cinematic-float { animation: cinematicFloat 6s ease-in-out infinite; }
+
+@keyframes floatOrganic {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-8px) rotate(1deg); }
+  66%       { transform: translateY(-4px) rotate(-0.5deg); }
+}
+
+.animate-float { animation: floatOrganic 7s ease-in-out infinite; }
+
+/* ==========================================================================
+   Scrollbar
+   ========================================================================== */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--scene-border);
+  border-radius: 9999px;
+}
+
+/* ==========================================================================
+   Focal-Plane Shutter Wipe (Analog 35mm Reel Scene Transition)
+   ========================================================================== */
+.shutter-curtain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.shutter-blade-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52%;
+  background: #08080A;
+  transform-origin: top;
+}
+
+.shutter-blade-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52%;
+  background: #08080A;
+  transform-origin: bottom;
+}
+
+.film-sprocket-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  display: flex;
+  flex-direction: column;
+  justifyContent: space-around;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0.25;
+}
+
+.sprocket-hole {
+  width: 10px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* ==========================================================================
+   prefers-reduced-motion: estética conservada, coreografía eliminada
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html, body { transition: none !important; }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

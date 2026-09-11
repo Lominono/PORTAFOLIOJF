@@ -1,0 +1,178 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { audioManager } from "./AudioManager";
+
+// Escena 00 — Apertura cinematográfica
+// Tipografía cinética con peso variable (Fraunces axes: opsz, SOFT, WONK)
+// La palabra "JuanFe" aparece letra por letra con peso variable
+// Click de obturador de cámara al completarse
+
+const NAME = "JuanFe";
+const TAGLINE = "creative developer · 18 · santander";
+
+export default function OpeningScene() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const charsRef = useRef<HTMLSpanElement[]>([]);
+  const taglineRef = useRef<HTMLParagraphElement>(null);
+  const hasPlayedSound = useRef(false);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const chars = charsRef.current.filter(Boolean);
+    const tagline = taglineRef.current;
+    if (!chars.length || !tagline) return;
+
+    if (prefersReduced) {
+      chars.forEach((c) => {
+        c.style.opacity = "1";
+        c.style.transform = "none";
+      });
+      tagline.style.opacity = "1";
+      tagline.style.transform = "none";
+      return;
+    }
+
+    gsap.set(chars, {
+      opacity: 0,
+      yPercent: 60,
+      fontVariationSettings: '"opsz" 144, "SOFT" 100, "WONK" 1',
+      fontWeight: 100,
+    });
+    gsap.set(tagline, { opacity: 0, y: 14 });
+
+    const tl = gsap.timeline();
+
+    tl.to(chars, {
+      opacity: 1,
+      yPercent: 0,
+      fontWeight: 900,
+      fontVariationSettings: '"opsz" 144, "SOFT" 0, "WONK" 0',
+      stagger: 0.08,
+      duration: 0.6,
+      ease: "power3.out",
+      onComplete: () => {
+        if (!hasPlayedSound.current) {
+          hasPlayedSound.current = true;
+          audioManager.play("shutter");
+        }
+      },
+    }).to(
+      tagline,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "power2.out",
+      },
+      "-=0.1"
+    );
+
+    const checkActive = () => {
+      if (document.documentElement.dataset.scene === "scene-opening") {
+        tl.play();
+      }
+    };
+    const observer = new MutationObserver(checkActive);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-scene"] });
+
+    return () => {
+      tl.kill();
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      data-scene-id="opening"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      style={{
+        background: "#000",
+        padding: "clamp(2rem, 8vw, 6rem)",
+      }}
+      aria-label="Escena de apertura"
+    >
+      {/* Name — kinetic variable font */}
+      <h1
+        className="font-kinetic select-none"
+        style={{
+          fontSize: "clamp(3.8rem, 20vw, 17rem)",
+          color: "#f5f5f5",
+          lineHeight: 0.88,
+          mixBlendMode: "normal",
+          letterSpacing: "-0.04em",
+          textAlign: "center",
+        }}
+        aria-label={NAME}
+      >
+        {NAME.split("").map((char, i) => (
+          <span
+            key={i}
+            ref={(el) => {
+              if (el) charsRef.current[i] = el;
+            }}
+            style={{ display: "inline-block", willChange: "transform, opacity, font-variation-settings" }}
+            aria-hidden="true"
+          >
+            {char}
+          </span>
+        ))}
+      </h1>
+
+      {/* Tagline */}
+      <p
+        ref={taglineRef}
+        className="font-receipt"
+        style={{
+          fontSize: "clamp(0.65rem, 2vw, 0.95rem)",
+          color: "#666",
+          letterSpacing: "0.26em",
+          textTransform: "uppercase",
+          marginTop: "clamp(1.25rem, 3.5vw, 2.2rem)",
+          willChange: "opacity, transform",
+          textAlign: "center",
+        }}
+      >
+        {TAGLINE}
+      </p>
+
+      {/* Editorial scroll prompt — Film cue indicator */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "clamp(1.5rem, 4vw, 2.75rem)",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.75rem",
+          color: "#555",
+          fontFamily: "var(--font-space-mono), monospace",
+          fontSize: "clamp(0.55rem, 1.4vw, 0.65rem)",
+          letterSpacing: "0.22em",
+          textTransform: "uppercase",
+          opacity: 0.85,
+        }}
+        aria-hidden="true"
+      >
+        <span
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: "50%",
+            background: "#DE9F43",
+            display: "inline-block",
+            boxShadow: "0 0 8px rgba(222, 159, 67, 0.4)",
+          }}
+        />
+        <span>BOBINA 00 / PROYECTOR EN MARCHA · DESLIZA</span>
+        <span style={{ transform: "translateY(1px)", display: "inline-block" }}>↓</span>
+      </div>
+    </section>
+  );
+}

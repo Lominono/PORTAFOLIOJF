@@ -1,0 +1,309 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
+import FloatingSticker from "./FloatingSticker";
+
+// Escena 04 — Glitch / VHS — El salto geográfico
+// Bisagra narrativa: Ginebra (Valle del Cauca) → Santander (Cantabria)
+// Aberración cromática, scanlines analógicas, tracking VHS
+
+export default function VHSScene() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const glitchRef = useRef<HTMLDivElement>(null);
+  const photoFrameRef = useRef<HTMLDivElement>(null);
+  const glitchTriggered = useRef(false);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReduced) {
+      if (sectionRef.current) sectionRef.current.style.opacity = "1";
+      return;
+    }
+
+    gsap.set(photoFrameRef.current, { opacity: 0, scale: 0.92, y: 30 });
+
+    const playVHSScene = () => {
+      if (glitchTriggered.current) return;
+      glitchTriggered.current = true;
+
+      const el = glitchRef.current;
+      if (el) {
+        el.classList.add("glitch-active");
+        setTimeout(() => el?.classList.remove("glitch-active"), 400);
+        setTimeout(() => {
+          el?.classList.add("glitch-active");
+          setTimeout(() => el?.classList.remove("glitch-active"), 320);
+        }, 700);
+      }
+
+      if (photoFrameRef.current) {
+        gsap.to(photoFrameRef.current, {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.9,
+          ease: "power3.out",
+        });
+      }
+    };
+
+    const checkActive = () => {
+      if (document.documentElement.dataset.scene === "scene-vhs") {
+        playVHSScene();
+      }
+    };
+    checkActive();
+    const observer = new MutationObserver(checkActive);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-scene"] });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      data-scene-id="vhs"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden vhs-frame"
+      style={{
+        background: "#0D0C0F",
+        color: "#F0EBF4",
+        padding: "clamp(3.5rem, 8vw, 6rem) clamp(1.25rem, 5vw, 4rem)",
+      }}
+      aria-label="Escena del salto geográfico — Ginebra a Santander"
+    >
+      {/* Scanlines overlay */}
+      <div className="vhs-scanlines" aria-hidden="true" />
+
+      {/* Top VHS indicators */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "clamp(1rem, 3vw, 1.75rem)",
+          left: "clamp(1rem, 3vw, 2rem)",
+          fontFamily: "var(--font-space-mono), monospace",
+          fontSize: "clamp(0.6rem, 1.4vw, 0.75rem)",
+          color: "#ff6b9d",
+          letterSpacing: "0.14em",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          zIndex: 4,
+        }}
+      >
+        <span
+          style={{
+            width: "8px",
+            height: "8px",
+            borderRadius: "50%",
+            background: "#ff3b30",
+            display: "inline-block",
+            animation: "pulse 1.2s infinite",
+          }}
+        />
+        <span>REC ● PLAY 00:08:26</span>
+      </div>
+
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "clamp(1rem, 3vw, 1.75rem)",
+          right: "clamp(1rem, 3vw, 2rem)",
+          fontFamily: "var(--font-space-mono), monospace",
+          fontSize: "clamp(0.6rem, 1.4vw, 0.75rem)",
+          color: "var(--scene-muted)",
+          letterSpacing: "0.12em",
+          opacity: 0.7,
+          zIndex: 4,
+        }}
+      >
+        SP ■ NTSC AUTO
+      </div>
+
+      {/* Main content */}
+      <div
+        ref={containerRef}
+        style={{
+          textAlign: "center",
+          position: "relative",
+          zIndex: 2,
+          maxWidth: "850px",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {/* Origin tag */}
+        <div
+          style={{
+            fontFamily: "var(--font-space-mono), monospace",
+            fontSize: "clamp(0.65rem, 1.8vw, 0.85rem)",
+            color: "var(--scene-muted)",
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            marginBottom: "0.5rem",
+            opacity: 0.8,
+          }}
+        >
+          Valle del Cauca, Colombia · 2007
+        </div>
+
+        {/* Glitch big heading */}
+        <div
+          ref={glitchRef}
+          className="glitch-text"
+          data-text="→ SANTANDER →"
+          style={{ display: "inline-block", margin: "0.5rem 0" }}
+        >
+          <h2
+            className="font-kinetic"
+            style={{
+              fontSize: "clamp(2.8rem, 14vw, 10.5rem)",
+              color: "var(--scene-fg)",
+              lineHeight: 0.88,
+              letterSpacing: "-0.04em",
+            }}
+          >
+            → SANTANDER →
+          </h2>
+        </div>
+
+        {/* Destination tag */}
+        <div
+          style={{
+            fontFamily: "var(--font-space-mono), monospace",
+            fontSize: "clamp(0.65rem, 1.8vw, 0.85rem)",
+            color: "var(--scene-muted)",
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            marginTop: "0.5rem",
+            opacity: 0.8,
+          }}
+        >
+          Cantabria, España · Presente
+        </div>
+
+        {/* Distance badge — Tape index readout */}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            background: "rgba(0, 0, 0, 0.65)",
+            border: "1px solid rgba(255, 255, 255, 0.15)",
+            padding: "0.35rem 0.95rem",
+            borderRadius: "2px",
+            marginTop: "1.5rem",
+            fontFamily: "var(--font-space-mono), monospace",
+            fontSize: "clamp(0.62rem, 1.5vw, 0.72rem)",
+            color: "var(--scene-fg)",
+            letterSpacing: "0.18em",
+          }}
+        >
+          <span style={{ color: "var(--scene-accent)", fontWeight: 700 }}>TRACKING</span>
+          <span style={{ opacity: 0.4 }}>|</span>
+          <span>8.026 KM EN LÍNEA RECTA</span>
+        </div>
+
+        {/* Floating Reaching Emoji Sticker */}
+        <div className="absolute -left-4 sm:-left-12 top-1/2 z-20 hidden md:block">
+          <FloatingSticker
+            src="/reaching-emoji.png"
+            alt="El salto geográfico"
+            label="EL SALTO · 8026KM"
+            width={105}
+            height={105}
+            initialRotate={-12}
+            sound="static"
+          />
+        </div>
+
+        {/* VHS Tape Frame Photo — CRT monitor bezel */}
+        <div
+          ref={photoFrameRef}
+          style={{
+            marginTop: "clamp(1.75rem, 4vw, 2.5rem)",
+            position: "relative",
+            maxWidth: "clamp(220px, 50vw, 320px)",
+            width: "100%",
+            aspectRatio: "4/3",
+            border: "2px solid rgba(255, 255, 255, 0.2)",
+            boxShadow: "0 10px 35px rgba(0, 0, 0, 0.85), inset 0 0 20px rgba(0, 0, 0, 0.9)",
+            overflow: "hidden",
+            background: "#09090b",
+          }}
+        >
+          <Image
+            src="/juanfe-reciente-1.jpg"
+            alt="JuanFe en Santander"
+            fill
+            style={{
+              objectFit: "cover",
+              filter: "contrast(125%) saturate(130%) hue-rotate(-5deg)",
+            }}
+            sizes="(max-width: 768px) 60vw, 320px"
+          />
+          {/* Internal timestamp stamp on video */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: "8px",
+              right: "10px",
+              fontFamily: "var(--font-space-mono), monospace",
+              fontSize: "0.55rem",
+              color: "#ffff00",
+              textShadow: "1px 1px 2px #000",
+              letterSpacing: "0.1em",
+            }}
+          >
+            11-SEP-2026 01:50
+          </div>
+        </div>
+
+        {/* Narrative phrase */}
+        <p
+          style={{
+            fontFamily: "var(--font-space-mono), monospace",
+            fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
+            color: "var(--scene-fg)",
+            opacity: 0.85,
+            lineHeight: 1.6,
+            letterSpacing: "0.04em",
+            maxWidth: "52ch",
+            margin: "clamp(1.75rem, 4vw, 2.5rem) auto 0",
+          }}
+        >
+          Crucé el océano con dieciocho años y una sola certeza: las ganas de desarmar y construir cosas.
+          Ocho mil kilómetros no cambian las raíces de Ginebra, solo amplían el horizonte.
+        </p>
+      </div>
+
+      {/* Decorative tracking glitch bars */}
+      {[24, 52, 78].map((top, i) => (
+        <div
+          key={i}
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: `${top}%`,
+            left: 0,
+            width: "100%",
+            height: "2px",
+            background: i % 2 === 0 ? "rgba(255,107,157,0.2)" : "rgba(107,240,255,0.15)",
+            transform: `translateX(${i % 2 === 0 ? -12 : 10}px)`,
+          }}
+        />
+      ))}
+    </section>
+  );
+}
