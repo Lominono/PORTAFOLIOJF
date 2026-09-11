@@ -21,9 +21,10 @@ type SoundKey =
 
 let ctx: AudioContext | null = null;
 let muted = false;
+let isDucked = false;
 let hasInteracted = false;
 
-// Background ambient music configuration
+// Background ambient music configuration: Fly Me to the Moon (amari)
 let bgAudio: HTMLAudioElement | null = null;
 let currentBgVolume = 0;
 const TARGET_VOLUME = 0.67; // 67% volume as requested
@@ -42,7 +43,7 @@ function startBgFade() {
     const progress = Math.min(1, elapsed / FADE_DURATION_MS);
     currentBgVolume = progress * TARGET_VOLUME;
 
-    if (!muted) {
+    if (!muted && !isDucked) {
       bgAudio.volume = currentBgVolume;
     }
 
@@ -50,33 +51,49 @@ function startBgFade() {
       fadeAnimationId = requestAnimationFrame(updateFade);
     } else {
       currentBgVolume = TARGET_VOLUME;
-      if (!muted) bgAudio.volume = TARGET_VOLUME;
+      if (!muted && !isDucked) bgAudio.volume = TARGET_VOLUME;
     }
   };
 
   fadeAnimationId = requestAnimationFrame(updateFade);
 }
 
-function startBgMusic() {
-  if (bgMusicStarted || typeof window === "undefined") return;
-
-  if (!bgAudio) {
-    const audio = new Audio("/music/bg-music.mp3");
-    audio.loop = true;
-    audio.volume = 0;
-    audio.preload = "auto";
-    bgAudio = audio;
+function initBgAudio() {
+  if (bgAudio || typeof window === "undefined") return bgAudio;
+  const audio = new Audio();
+  const canPlayMp3 = audio.canPlayType("audio/mpeg");
+  const canPlayM4a = audio.canPlayType("audio/mp4; codecs=\"mp4a.40.2\"");
+  
+  if (canPlayM4a && !canPlayMp3) {
+    audio.src = "/music/bg-music.m4a";
+  } else {
+    audio.src = "/music/bg-music.mp3";
   }
 
-  const playPromise = bgAudio.play();
+  audio.loop = true;
+  audio.volume = 0;
+  audio.preload = "auto";
+  bgAudio = audio;
+  return bgAudio;
+}
+
+export function startBgMusic() {
+  if (typeof window === "undefined") return;
+  const audio = initBgAudio();
+  if (!audio) return;
+
+  if (bgMusicStarted && !audio.paused) return;
+
+  const playPromise = audio.play();
   if (playPromise !== undefined) {
     playPromise
       .then(() => {
         bgMusicStarted = true;
         startBgFade();
+        removeInteractionListeners();
       })
       .catch(() => {
-        // Autoplay policy prevented playback until user interaction
+        // Autoplay policy prevented playback until explicit user interaction
       });
   }
 }
@@ -91,17 +108,26 @@ function resumeCtx() {
   if (c.state === "suspended") c.resume();
 }
 
-// Mark interaction on first user gesture & start background music
+// Mark interaction on user gesture & start background music reliably
+function handleUserGesture() {
+  hasInteracted = true;
+  resumeCtx();
+  startBgMusic();
+}
+
+const GESTURE_EVENTS = ["pointerdown", "touchstart", "click", "keydown", "wheel", "scroll"];
+
+function removeInteractionListeners() {
+  if (typeof window === "undefined") return;
+  GESTURE_EVENTS.forEach((evt) => {
+    window.removeEventListener(evt, handleUserGesture);
+  });
+}
+
 if (typeof window !== "undefined") {
-  const markInteraction = () => {
-    hasInteracted = true;
-    resumeCtx();
-    startBgMusic();
-  };
-  window.addEventListener("pointerdown", markInteraction, { once: true, passive: true });
-  window.addEventListener("keydown", markInteraction, { once: true, passive: true });
-  window.addEventListener("wheel", markInteraction, { once: true, passive: true });
-  window.addEventListener("touchstart", markInteraction, { once: true, passive: true });
+  GESTURE_EVENTS.forEach((evt) => {
+    window.addEventListener(evt, handleUserGesture, { passive: true });
+  });
 }
 
 function synth(fn: (ctx: AudioContext) => void) {
@@ -319,16 +345,23 @@ export const audioManager = {
   },
   unmute: () => {
     muted = false;
-    if (bgAudio) bgAudio.volume = currentBgVolume || TARGET_VOLUME;
+    if (bgAudio && !isDucked) bgAudio.volume = currentBgVolume || TARGET_VOLUME;
   },
   toggle: () => {
     muted = !muted;
     if (bgAudio) {
-      bgAudio.volume = muted ? 0 : (currentBgVolume || TARGET_VOLUME);
+      bgAudio.volume = muted || isDucked ? 0 : (currentBgVolume || TARGET_VOLUME);
     }
     return muted;
   },
+  duck: (duckActive: boolean) => {
+    isDucked = duckActive;
+    if (bgAudio) {
+      bgAudio.volume = isDucked || muted ? 0 : (currentBgVolume || TARGET_VOLUME);
+    }
+  },
   isMuted: () => muted,
+  startBgMusic: () => startBgMusic(),
 };
 
 // Expose globally for ScrollTrigger callbacks that can't import directly
