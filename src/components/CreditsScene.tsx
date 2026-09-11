@@ -146,43 +146,44 @@ export default function CreditsScene() {
       style={{
         background: "radial-gradient(ellipse at 50% 20%, #111111 0%, #050505 70%, #000000 100%)",
         color: "#EDE8D0",
-        padding: "clamp(2rem, 5vh, 4.5rem) clamp(1rem, 4vw, 3.5rem)",
+        padding: "clamp(1.75rem, 4vh, 4rem) clamp(0.85rem, 3.5vw, 3rem)",
+        touchAction: "pan-y",
       }}
       aria-label="Créditos finales de la película interactiva"
     >
       <div
         ref={containerRef}
-        className="w-full max-w-6xl mx-auto flex flex-col gap-8 md:gap-12 relative z-10"
+        className="w-full max-w-6xl mx-auto flex flex-col gap-6 md:gap-10 relative z-10"
       >
         {/* HEADER: Monumental "JuanFe" Typography */}
         <header className="text-center anim-credit flex flex-col items-center">
           <div
             style={{
               fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.6rem, 1.4vw, 0.75rem)",
+              fontSize: "clamp(0.55rem, 1.2vw, 0.72rem)",
               color: "var(--scene-accent, #E8A87C)",
-              letterSpacing: "0.3em",
+              letterSpacing: "0.25em",
               textTransform: "uppercase",
-              marginBottom: "0.5rem",
+              marginBottom: "0.35rem",
               display: "inline-flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "6px",
             }}
           >
-            <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--scene-accent, #E8A87C)", display: "inline-block" }} />
+            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--scene-accent, #E8A87C)", display: "inline-block" }} />
             CRÉDITOS FINALES · DIRECCIÓN & CREACIÓN
           </div>
 
           <h1
             style={{
               fontFamily: "var(--font-fraunces), serif",
-              fontSize: "clamp(3.4rem, 11vw, 7.5rem)",
+              fontSize: "clamp(2.6rem, 9.5vw, 6.8rem)",
               fontWeight: 800,
               letterSpacing: "-0.04em",
               lineHeight: 0.95,
-              margin: "0.2rem 0 0.8rem",
+              margin: "0.15rem 0 0.5rem",
               color: "#FFFBF2",
-              textShadow: "0 0 40px rgba(232, 168, 124, 0.25)",
+              textShadow: "0 0 35px rgba(232, 168, 124, 0.22)",
             }}
           >
             JuanFe
@@ -191,11 +192,11 @@ export default function CreditsScene() {
           <p
             style={{
               fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.7rem, 1.6vw, 0.9rem)",
+              fontSize: "clamp(0.65rem, 1.4vw, 0.85rem)",
               color: "#A8A090",
-              maxWidth: "600px",
-              lineHeight: 1.5,
-              letterSpacing: "0.05em",
+              maxWidth: "580px",
+              lineHeight: 1.45,
+              letterSpacing: "0.04em",
             }}
           >
             Sistemas Microinformáticos y Redes · Desarrollador Web · Creador de Contenido
@@ -244,7 +245,7 @@ export default function CreditsScene() {
                     href={platform.link}
                     target={platform.link.startsWith("http") ? "_blank" : undefined}
                     rel={platform.link.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="group relative flex flex-col justify-between p-4 rounded-sm transition-all duration-200"
+                    className="group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-sm active:scale-[0.98] transition-all duration-150"
                     style={{
                       background: "rgba(255, 255, 255, 0.03)",
                       border: "1px solid rgba(255, 255, 255, 0.1)",
@@ -349,7 +350,7 @@ export default function CreditsScene() {
               className="relative rounded-lg overflow-hidden flex flex-col items-center"
               style={{
                 width: "100%",
-                maxWidth: "270px",
+                maxWidth: "clamp(200px, 58vw, 260px)",
                 background: "#0A0A0A",
                 border: "1px solid rgba(232, 168, 124, 0.25)",
                 boxShadow: "0 14px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(232, 168, 124, 0.1)",
@@ -357,17 +358,17 @@ export default function CreditsScene() {
             >
               {/* Header Badge */}
               <div
-                className="w-full flex items-center justify-between px-3 py-2"
+                className="w-full flex items-center justify-between px-3 py-1.5"
                 style={{
                   background: "rgba(20, 20, 20, 0.9)",
                   borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
                   fontFamily: "var(--font-space-mono), monospace",
-                  fontSize: "0.65rem",
+                  fontSize: "0.62rem",
                   letterSpacing: "0.1em",
                 }}
               >
-                <div className="flex items-center gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ color: "#00f2fe" }}>
+                <div className="flex items-center gap-1.5">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ color: "#00f2fe" }}>
                     <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .58.04.85.12V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.49 6.26 6.26 0 0 0 1.97-4.49V8.62a8.28 8.28 0 0 0 4.8 1.52V6.69z" />
                   </svg>
                   <span style={{ color: "#FFF", fontWeight: 700 }}>TIKTOK</span>
@@ -402,14 +403,14 @@ export default function CreditsScene() {
                 {/* Floating Sound Toggle Pill */}
                 <button
                   onClick={toggleVideoSound}
-                  className="absolute bottom-3 left-3 right-3 flex items-center justify-center gap-2 py-2 px-3 rounded-full text-xs transition-all duration-200"
+                  className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-full text-xs active:scale-95 transition-all duration-150"
                   style={{
                     background: videoSoundActive ? "rgba(232, 168, 124, 0.95)" : "rgba(10, 10, 10, 0.85)",
                     color: videoSoundActive ? "#000" : "#FFF",
                     backdropFilter: "blur(8px)",
                     border: videoSoundActive ? "1px solid #E8A87C" : "1px solid rgba(255, 255, 255, 0.25)",
                     fontFamily: "var(--font-space-mono), monospace",
-                    fontSize: "0.68rem",
+                    fontSize: "0.64rem",
                     fontWeight: 600,
                     letterSpacing: "0.06em",
                     cursor: "pointer",
@@ -419,12 +420,12 @@ export default function CreditsScene() {
                   {videoSoundActive ? (
                     <>
                       <span>🔊 SONIDO ACTIVO</span>
-                      <span className="text-[0.6rem] opacity-75">(Toca para silenciar)</span>
+                      <span className="text-[0.58rem] opacity-75">(Toca para silenciar)</span>
                     </>
                   ) : (
                     <>
                       <span>🔇 ACTIVAR SONIDO</span>
-                      <span className="text-[0.6rem] opacity-75">(Toca para escuchar)</span>
+                      <span className="text-[0.58rem] opacity-75">(Toca para escuchar)</span>
                     </>
                   )}
                 </button>
@@ -435,12 +436,12 @@ export default function CreditsScene() {
                 href="https://www.tiktok.com/@yuanfer"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-2.5 px-3 flex items-center justify-center gap-2 transition-colors duration-200"
+                className="w-full py-2 px-3 flex items-center justify-center gap-2 active:scale-98 transition-all duration-150"
                 style={{
                   background: "rgba(255, 255, 255, 0.05)",
                   color: "#FFF",
                   fontFamily: "var(--font-space-mono), monospace",
-                  fontSize: "0.68rem",
+                  fontSize: "0.65rem",
                   letterSpacing: "0.1em",
                   textDecoration: "none",
                   borderTop: "1px solid rgba(255, 255, 255, 0.08)",
@@ -463,13 +464,13 @@ export default function CreditsScene() {
         </div>
 
         {/* FOOTER: Signature & Rewind Button */}
-        <footer className="anim-credit mt-4 pt-6 flex flex-col items-center gap-4 text-center border-t border-white/10">
+        <footer className="anim-credit mt-2 pt-5 flex flex-col items-center gap-3 text-center border-t border-white/10">
           <span
             style={{
               fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.65rem, 1.4vw, 0.75rem)",
+              fontSize: "clamp(0.6rem, 1.3vw, 0.72rem)",
               color: "#7E786B",
-              letterSpacing: "0.25em",
+              letterSpacing: "0.22em",
               textTransform: "uppercase",
             }}
           >
@@ -478,9 +479,10 @@ export default function CreditsScene() {
 
           <button
             onClick={scrollToTop}
+            className="active:scale-95 transition-all duration-150"
             style={{
               fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.65rem, 1.4vw, 0.75rem)",
+              fontSize: "clamp(0.62rem, 1.3vw, 0.72rem)",
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               background: "transparent",
@@ -489,7 +491,6 @@ export default function CreditsScene() {
               padding: "0.45rem 1.25rem",
               borderRadius: "2px",
               cursor: "pointer",
-              transition: "all 0.2s ease",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = "var(--scene-accent, #E8A87C)";

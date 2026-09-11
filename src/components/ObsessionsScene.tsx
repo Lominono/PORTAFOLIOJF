@@ -11,12 +11,12 @@ import { audioManager } from "./AudioManager";
 // Foto con hermana en sudadera de Minecraft.
 
 const OBSESSIONS = [
-  { tag: "01", label: "Jazz & OSTs", note: "Bill Evans de fondo mientras compilo. El jazz modal como estado de flow." },
-  { tag: "02", label: "Minecraft",   note: "La primera escuela de lógica. Construir sistemas bloque a bloque desde los 7." },
-  { tag: "03", label: "Steven Universe", note: "Paletas de pastel y sensibilidad musical. Referencia visual constante." },
-  { tag: "04", label: "Redes & Linux", note: "SMR: servidores Samba, routing, IPs. El hardware como capa 0." },
-  { tag: "05", label: "Comida del Valle", note: "Salchipapas y sancocho en fogón. El sabor de Ginebra que no se olvida." },
-  { tag: "06", label: "El Mar de Santander", note: "La costa cantábrica cuando el código necesita un respiro." },
+  { tag: "01", label: "Mortal Kombat (MK1)", note: "Uno de mis videojuegos favoritos de siempre. Últimamente le he metido muchísimas horas al nuevo Mortal Kombat 1." },
+  { tag: "02", label: "Steven Universe", note: "Mi serie animada de muñequitos favorita absoluta. La sensibilidad, su música y los colores me encantan." },
+  { tag: "03", label: "Rick and Morty", note: "También me gusta mucho, aunque como a tanta gente le gusta a veces me da un poco de 'ñe' (celos)." },
+  { tag: "04", label: "Minecraft & Lógica", note: "La primera escuela de sistemas. Construir lógica bloque a bloque desde la infancia." },
+  { tag: "05", label: "Redes & Linux (SMR)", note: "Sistemas Microinformáticos y Redes: servidores Samba, routing e infraestructura." },
+  { tag: "06", label: "Ginebra & Santander", note: "Salchipapas del Valle del Cauca y el respiro frente al mar de la costa cantábrica." },
 ];
 
 export default function ObsessionsScene() {
@@ -173,10 +173,12 @@ export default function ObsessionsScene() {
               margin: 0,
               display: "flex",
               flexDirection: "column",
-              maxHeight: "clamp(230px, 44vh, 420px)",
+              maxHeight: "clamp(250px, 46vh, 440px)",
               overflowY: "auto",
-              paddingRight: "4px",
+              paddingRight: "6px",
               WebkitOverflowScrolling: "touch",
+              touchAction: "pan-y",
+              overscrollBehavior: "contain",
             }}
           >
             {OBSESSIONS.map((obs, i) => (

@@ -315,15 +315,14 @@ export default function VHSScene() {
             fontFamily: "var(--font-space-mono), monospace",
             fontSize: "clamp(0.72rem, 1.8vw, 0.92rem)",
             color: "var(--scene-fg)",
-            opacity: 0.85,
+            opacity: 0.9,
             lineHeight: 1.55,
             letterSpacing: "0.03em",
-            maxWidth: "52ch",
+            maxWidth: "56ch",
             margin: "clamp(0.85rem, 2vh, 2rem) auto 0",
           }}
         >
-          Crucé el océano con dieciocho años y una sola certeza: las ganas de desarmar y construir cosas.
-          Ocho mil kilómetros no cambian las raíces de Ginebra, solo amplían el horizonte.
+          Cuando vine a España pues al principio fue difícil porque relativamente estaba solo, sin amigos (solo mi familia), y pues a medida que iba pasando el tiempo fui conociendo gente y ver lo maravilloso y alegres que llegan a ser los españoles.
         </p>
       </div>
 

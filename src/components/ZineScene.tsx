@@ -10,12 +10,12 @@ import { audioManager } from "./AudioManager";
 // Papel kraft / beige texturizado, polaroid infantil, cinta adhesiva
 // Foto: juanfe-nino.jpg + salchipapa.png como elemento decorativo
 
-const ORIGIN_HEAD_1 = "El calor del Valle,";
-const ORIGIN_HEAD_2 = "las tardes largas";
-const ORIGIN_HEAD_3 = "y desarmar cosas.";
-const ORIGIN_SUB = "Ginebra, Valle del Cauca — Raíces intactas";
+const ORIGIN_HEAD_1 = "Ginebra, el pueblo mágico";
+const ORIGIN_HEAD_2 = "(o así le decían),";
+const ORIGIN_HEAD_3 = "fue mi hogar.";
+const ORIGIN_SUB = "Valle del Cauca, Colombia — Gente que quiero";
 const ORIGIN_BODY =
-  "Crecí en un pueblo donde el tiempo pasaba despacio y la curiosidad no cabía en la casa. Mucho antes de escribir una sola línea de código, ya intentaba entender qué había adentro de cada aparato.";
+  "Ginebra, el pueblo mágico (o así le decían) fue mi hogar, ahí conocí gente importante, gente que quiero mucho. Ginebra, Valle del Cauca, es un pueblo muy bonito que no dudaría en recomendar para visitar.";
 
 export default function ZineScene() {
   const sectionRef = useRef<HTMLElement>(null);

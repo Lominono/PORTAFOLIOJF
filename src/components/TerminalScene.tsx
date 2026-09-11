@@ -312,10 +312,11 @@ export default function TerminalScene() {
                       setActiveCategory(cat.id);
                       audioManager.play("keyclick");
                     }}
+                    className="active:scale-95 transition-transform duration-100"
                     style={{
                       fontFamily: "var(--font-space-mono), monospace",
                       fontSize: "0.55rem",
-                      padding: "0.15rem 0.45rem",
+                      padding: "0.18rem 0.5rem",
                       borderRadius: "2px",
                       border: `1px solid ${isActive ? "var(--scene-accent)" : "rgba(255,255,255,0.15)"}`,
                       background: isActive ? "rgba(57, 211, 83, 0.15)" : "transparent",
@@ -332,19 +333,25 @@ export default function TerminalScene() {
           )}
         </div>
 
-        {/* Projects directory list - optimized for mobile touch */}
+        {/* Projects directory list - optimized for mobile touch and smooth scrolling */}
         {showProjects && (
           <div
             style={{
               display: "flex",
               flexDirection: "column",
               gap: "0.4rem",
-              maxHeight: "clamp(190px, 34vh, 310px)",
+              maxHeight: "clamp(210px, 38vh, 340px)",
               overflowY: "auto",
-              paddingRight: "3px",
+              paddingRight: "6px",
               WebkitOverflowScrolling: "touch",
+              touchAction: "pan-y",
+              overscrollBehavior: "contain",
             }}
           >
+            <div className="flex justify-between items-center px-1 pb-1 text-[0.56rem] font-mono text-[#39D353]/70">
+              <span>{filteredProjects.length} REPOSITORIOS DISPONIBLES</span>
+              <span className="sm:hidden animate-pulse">↕ DESLIZA PARA SCROLL</span>
+            </div>
             {filteredProjects.map((p, i) => {
               const isSelected = activeProject === i;
               return (
@@ -354,6 +361,7 @@ export default function TerminalScene() {
                     setActiveProject(i);
                     audioManager.play("keyclick");
                   }}
+                  className="active:scale-[0.99] transition-transform duration-100"
                   style={{
                     background: isSelected ? "rgba(57, 211, 83, 0.09)" : "rgba(0,0,0,0.28)",
                     border: `1px solid ${isSelected ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.14)"}`,

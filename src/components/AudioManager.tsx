@@ -24,38 +24,51 @@ let muted = false;
 let isDucked = false;
 let hasInteracted = false;
 
-// Background ambient music configuration: Fly Me to the Moon (amari)
+// Background ambient music configuration: Fly Me to the Moon (Claire - pixel Y)
 let bgAudio: HTMLAudioElement | null = null;
 let currentBgVolume = 0;
-const TARGET_VOLUME = 0.67; // 67% volume as requested
-const FADE_DURATION_MS = 20000; // 20-second smooth entrance fade
-let fadeStartTime: number | null = null;
+const TARGET_VOLUME = 1.0; // 100% full volume as requested
+const ENTRANCE_FADE_MS = 14000; // 14-second smooth entrance fade
 let fadeAnimationId: number | null = null;
 let bgMusicStarted = false;
 
-function startBgFade() {
-  if (fadeStartTime !== null) return;
-  fadeStartTime = performance.now();
+function fadeVolumeTo(targetVol: number, durationMs: number, onComplete?: () => void) {
+  if (!bgAudio) return;
+  if (fadeAnimationId !== null) {
+    cancelAnimationFrame(fadeAnimationId);
+    fadeAnimationId = null;
+  }
 
-  const updateFade = (now: number) => {
-    if (!fadeStartTime || !bgAudio) return;
-    const elapsed = now - fadeStartTime;
-    const progress = Math.min(1, elapsed / FADE_DURATION_MS);
-    currentBgVolume = progress * TARGET_VOLUME;
+  const startVol = bgAudio.volume;
+  const startTime = performance.now();
 
-    if (!muted && !isDucked) {
-      bgAudio.volume = currentBgVolume;
-    }
+  const step = (now: number) => {
+    if (!bgAudio) return;
+    const elapsed = now - startTime;
+    const progress = Math.min(1, elapsed / durationMs);
+    // Smooth quadratic ease-in-out
+    const eased = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+    
+    currentBgVolume = startVol + (targetVol - startVol) * eased;
+    bgAudio.volume = Math.max(0, Math.min(1, currentBgVolume));
 
     if (progress < 1) {
-      fadeAnimationId = requestAnimationFrame(updateFade);
+      fadeAnimationId = requestAnimationFrame(step);
     } else {
-      currentBgVolume = TARGET_VOLUME;
-      if (!muted && !isDucked) bgAudio.volume = TARGET_VOLUME;
+      currentBgVolume = targetVol;
+      bgAudio.volume = targetVol;
+      fadeAnimationId = null;
+      if (onComplete) onComplete();
     }
   };
 
-  fadeAnimationId = requestAnimationFrame(updateFade);
+  fadeAnimationId = requestAnimationFrame(step);
+}
+
+function startBgFade() {
+  if (!bgAudio) return;
+  bgAudio.volume = 0;
+  fadeVolumeTo(TARGET_VOLUME, ENTRANCE_FADE_MS);
 }
 
 function initBgAudio() {
@@ -341,23 +354,36 @@ export const audioManager = {
   play: (key: SoundKey) => synth(sounds[key]),
   mute: () => {
     muted = true;
-    if (bgAudio) bgAudio.volume = 0;
+    fadeVolumeTo(0, 1600, () => {
+      bgAudio?.pause();
+    });
   },
   unmute: () => {
     muted = false;
-    if (bgAudio && !isDucked) bgAudio.volume = currentBgVolume || TARGET_VOLUME;
+    if (bgAudio?.paused) bgAudio.play().catch(() => {});
+    fadeVolumeTo(TARGET_VOLUME, 1200);
   },
   toggle: () => {
     muted = !muted;
-    if (bgAudio) {
-      bgAudio.volume = muted || isDucked ? 0 : (currentBgVolume || TARGET_VOLUME);
+    if (muted) {
+      fadeVolumeTo(0, 1600, () => {
+        bgAudio?.pause();
+      });
+    } else {
+      if (bgAudio?.paused) bgAudio.play().catch(() => {});
+      fadeVolumeTo(TARGET_VOLUME, 1200);
     }
     return muted;
   },
   duck: (duckActive: boolean) => {
     isDucked = duckActive;
-    if (bgAudio) {
-      bgAudio.volume = isDucked || muted ? 0 : (currentBgVolume || TARGET_VOLUME);
+    if (isDucked) {
+      fadeVolumeTo(0, 700, () => {
+        bgAudio?.pause();
+      });
+    } else if (!muted) {
+      if (bgAudio?.paused) bgAudio.play().catch(() => {});
+      fadeVolumeTo(TARGET_VOLUME, 1000);
     }
   },
   isMuted: () => muted,

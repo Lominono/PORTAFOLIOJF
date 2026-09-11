@@ -557,3 +557,27 @@ section[data-scene-id] img {
   background: rgba(0, 0, 0, 0.2);
 }
 
+/* Universal tactile button micro-interactions & spring animations */
+button,
+a[role="button"],
+.tactile-button {
+  transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.4, 1), background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease, filter 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active,
+a[role="button"]:active,
+.tactile-button:active {
+  transform: scale(0.95);
+}
+
+/* Touch scroll optimization for mobile containers */
+[style*="overflow-y: auto"],
+[style*="overflowY: auto"],
+[style*="overflow-y: scroll"],
+[style*="overflowY: scroll"] {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+

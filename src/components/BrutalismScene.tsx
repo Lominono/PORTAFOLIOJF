@@ -9,11 +9,11 @@ import FloatingSticker from "./FloatingSticker";
 // Tipografía monumental, contrastes de peso y bordes contundentes.
 // Sin florituras: una declaración directa que rompe la expectativa del visitante.
 
-const LINE_1 = "Construyo";
-const LINE_2 = "con criterio.";
-const LINE_3 = "Sistemas & Código.";
-const SUBDECLARATION = "JUANFE · 18 AÑOS · SMR · CANTABRIA";
-const TICKER_TEXT = "DESARROLLO WEB + SISTEMAS + LINUX + EXPERIMENTACIÓN DIGITAL + ";
+const LINE_1 = "Nuestra vida";
+const LINE_2 = "es lo que nuestros pensamientos";
+const LINE_3 = "hacen de ella.";
+const SUBDECLARATION = "— MARCO AURELIO · PRINCIPIO DE JUANFE · 18 AÑOS · SMR";
+const TICKER_TEXT = "NUESTRA VIDA ES LO QUE NUESTROS PENSAMIENTOS HACEN DE ELLA + MARCO AURELIO + SMR + ";
 
 export default function BrutalismScene() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -119,23 +119,23 @@ export default function BrutalismScene() {
         ref={textRef}
         className="font-kinetic uppercase select-none"
         style={{
-          fontSize: "clamp(2.1rem, 10vw, 9.5rem)",
+          fontSize: "clamp(1.75rem, 6.2vw, 5.8rem)",
           color: "var(--scene-fg)",
-          lineHeight: 0.92,
-          letterSpacing: "-0.04em",
-          maxWidth: "14ch",
+          lineHeight: 1.02,
+          letterSpacing: "-0.035em",
+          maxWidth: "20ch",
           willChange: "opacity, transform",
         }}
       >
         <span className="block opacity-90">{LINE_1}</span>
-        <span className="block italic font-light opacity-95">{LINE_2}</span>
+        <span className="block italic font-light opacity-95 text-balance">{LINE_2}</span>
         <span
           className="block font-black"
           style={{
             color: "var(--scene-accent, #c85028)",
             textDecoration: "underline",
-            textDecorationThickness: "clamp(3px, 1vw, 10px)",
-            textUnderlineOffset: "clamp(5px, 1.2vw, 14px)",
+            textDecorationThickness: "clamp(3px, 0.8vw, 8px)",
+            textUnderlineOffset: "clamp(4px, 1vw, 12px)",
           }}
         >
           {LINE_3}
