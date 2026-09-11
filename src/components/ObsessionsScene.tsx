@@ -84,7 +84,7 @@ export default function ObsessionsScene() {
       style={{
         background: "#F9F6F0",
         color: "#1A1814",
-        padding: "clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 6vw, 5rem)",
+        padding: "clamp(2.2rem, 4.5vh, 4.5rem) clamp(1rem, 4vw, 3.5rem)",
       }}
       aria-label="Escena de obsesiones — fuera del código"
     >
@@ -101,14 +101,14 @@ export default function ObsessionsScene() {
 
       <div style={{ maxWidth: "960px", width: "100%", margin: "0 auto", position: "relative", zIndex: 2 }}>
 
-        <div style={{ fontFamily: "var(--font-space-mono), monospace", fontSize: "clamp(0.6rem, 1.4vw, 0.75rem)", color: "var(--scene-muted)", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "0.5rem", opacity: 0.75 }}>
+        <div style={{ fontFamily: "var(--font-space-mono), monospace", fontSize: "clamp(0.6rem, 1.4vw, 0.75rem)", color: "var(--scene-muted)", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "0.4rem", opacity: 0.75 }}>
           Capítulo 07 · Personal
         </div>
 
         <h2
           ref={headRef}
           className="font-kinetic"
-          style={{ fontSize: "clamp(2.4rem, 8vw, 6.5rem)", color: "var(--scene-fg)", lineHeight: 0.92, letterSpacing: "-0.03em", marginBottom: "clamp(2rem, 5vw, 3.5rem)", willChange: "opacity, transform" }}
+          style={{ fontSize: "clamp(1.85rem, 6.2vw, 5.5rem)", color: "var(--scene-fg)", lineHeight: 0.92, letterSpacing: "-0.03em", marginBottom: "clamp(1rem, 2.5vh, 2.2rem)", willChange: "opacity, transform" }}
         >
           Fuera del código.
         </h2>
@@ -116,8 +116,8 @@ export default function ObsessionsScene() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
-            gap: "clamp(2rem, 4vw, 3.5rem)",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
+            gap: "clamp(1rem, 2.8vh, 3rem)",
             alignItems: "start",
           }}
         >
@@ -132,9 +132,9 @@ export default function ObsessionsScene() {
             <div
               style={{
                 background: "#faf8f2",
-                padding: "clamp(10px, 2.5vw, 14px) clamp(10px, 2.5vw, 14px) clamp(28px, 4.5vw, 40px)",
+                padding: "clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) clamp(22px, 3.5vw, 32px)",
                 boxShadow: "2px 4px 0 rgba(0,0,0,0.18), 6px 10px 28px rgba(0,0,0,0.12)",
-                maxWidth: "300px",
+                maxWidth: "clamp(150px, 38vw, 260px)",
                 width: "100%",
                 border: "1px solid rgba(0,0,0,0.08)",
               }}
@@ -167,7 +167,17 @@ export default function ObsessionsScene() {
           {/* Log list — cuaderno de bitácora, no tarjetas */}
           <ul
             ref={listRef}
-            style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column" }}
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
+              display: "flex",
+              flexDirection: "column",
+              maxHeight: "clamp(230px, 44vh, 420px)",
+              overflowY: "auto",
+              paddingRight: "4px",
+              WebkitOverflowScrolling: "touch",
+            }}
           >
             {OBSESSIONS.map((obs, i) => (
               <li
@@ -176,7 +186,7 @@ export default function ObsessionsScene() {
                 style={{
                   display: "flex",
                   gap: "1.1rem",
-                  padding: "0.85rem 0",
+                  padding: "clamp(0.45rem, 1vh, 0.75rem) 0",
                   borderBottom: "1px solid rgba(26,24,20,0.12)",
                   willChange: "opacity, transform",
                   transition: "color 0.18s ease",

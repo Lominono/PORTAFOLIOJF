@@ -100,7 +100,7 @@ export default function VHSScene() {
       style={{
         background: "#0D0C0F",
         color: "#F0EBF4",
-        padding: "clamp(3.5rem, 8vw, 6rem) clamp(1.25rem, 5vw, 4rem)",
+        padding: "clamp(2.2rem, 4.5vh, 4.5rem) clamp(1rem, 4vw, 3.5rem)",
       }}
       aria-label="Escena del salto geográfico — Ginebra a Santander"
     >
@@ -271,9 +271,9 @@ export default function VHSScene() {
           }}
           title="Toca para distorsión de cinta VHS"
           style={{
-            marginTop: "clamp(1.5rem, 4vw, 2.5rem)",
+            marginTop: "clamp(0.85rem, 2vh, 2rem)",
             position: "relative",
-            maxWidth: "clamp(200px, 65vw, 320px)",
+            maxWidth: "clamp(160px, 46vw, 290px)",
             width: "100%",
             aspectRatio: "4/3",
             border: "2px solid rgba(255, 255, 255, 0.2)",
@@ -313,13 +313,13 @@ export default function VHSScene() {
         <p
           style={{
             fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
+            fontSize: "clamp(0.72rem, 1.8vw, 0.92rem)",
             color: "var(--scene-fg)",
             opacity: 0.85,
-            lineHeight: 1.6,
-            letterSpacing: "0.04em",
+            lineHeight: 1.55,
+            letterSpacing: "0.03em",
             maxWidth: "52ch",
-            margin: "clamp(1.75rem, 4vw, 2.5rem) auto 0",
+            margin: "clamp(0.85rem, 2vh, 2rem) auto 0",
           }}
         >
           Crucé el océano con dieciocho años y una sola certeza: las ganas de desarmar y construir cosas.

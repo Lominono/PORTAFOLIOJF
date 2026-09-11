@@ -110,7 +110,7 @@ export default function ZineScene() {
       style={{
         background: "#E8DFC8",
         color: "#1A1713",
-        padding: "clamp(4rem, 10vw, 8rem) clamp(1.25rem, 6vw, 5rem)",
+        padding: "clamp(2.2rem, 4.5vh, 4.5rem) clamp(1rem, 4vw, 3.5rem)",
       }}
       aria-label="Escena de origen — Ginebra, Valle del Cauca"
     >
@@ -132,8 +132,8 @@ export default function ZineScene() {
         style={{
           position: "relative",
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
-          gap: "clamp(2rem, 6vw, 4.5rem)",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
+          gap: "clamp(1rem, 2.8vh, 3.5rem)",
           alignItems: "center",
           maxWidth: "980px",
           width: "100%",
@@ -148,7 +148,7 @@ export default function ZineScene() {
           title="Toca para escuchar el papel analógico"
           style={{
             width: "100%",
-            maxWidth: "clamp(210px, 45vw, 290px)",
+            maxWidth: "clamp(140px, 36vw, 260px)",
             willChange: "opacity, transform",
             position: "relative",
           }}
@@ -223,7 +223,7 @@ export default function ZineScene() {
             ref={phraseRef}
             className="font-kinetic"
             style={{
-              fontSize: "clamp(2.2rem, 7.5vw, 5.2rem)",
+              fontSize: "clamp(1.75rem, 6.2vw, 4.8rem)",
               color: "var(--scene-fg)",
               lineHeight: 0.94,
               letterSpacing: "-0.025em",
@@ -241,10 +241,10 @@ export default function ZineScene() {
             ref={bodyRef}
             style={{
               fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.75rem, 1.8vw, 0.9rem)",
+              fontSize: "clamp(0.7rem, 1.7vw, 0.88rem)",
               color: "var(--scene-fg)",
               opacity: 0.85,
-              lineHeight: 1.65,
+              lineHeight: 1.55,
               maxWidth: "46ch",
             }}
           >

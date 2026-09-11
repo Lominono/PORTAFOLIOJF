@@ -101,7 +101,7 @@ export default function CreditsScene() {
       style={{
         background: "#000000",
         color: "#D4C9B0",
-        padding: "clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 5vw, 4rem)",
+        padding: "clamp(2.2rem, 4.5vh, 4.5rem) clamp(1rem, 4vw, 3.5rem)",
       }}
       aria-label="Créditos finales de la película interactiva"
     >
@@ -109,7 +109,7 @@ export default function CreditsScene() {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "clamp(2rem, 5vw, 3.5rem)",
+          gap: "clamp(0.75rem, 1.8vh, 1.9rem)",
           textAlign: "center",
           maxWidth: "600px",
           width: "100%",
@@ -132,7 +132,7 @@ export default function CreditsScene() {
                 color: "var(--scene-muted)",
                 letterSpacing: "0.25em",
                 textTransform: "uppercase",
-                marginBottom: "0.5rem",
+                marginBottom: "0.25rem",
                 opacity: 0.7,
               }}
             >
@@ -186,7 +186,7 @@ export default function CreditsScene() {
               height: "1px",
               background: "var(--scene-border)",
               maxWidth: "240px",
-              margin: "0 auto clamp(1.5rem, 3vw, 2rem)",
+              margin: "0 auto clamp(0.75rem, 1.5vh, 1.5rem)",
               opacity: 0.5,
             }}
           />
@@ -207,7 +207,7 @@ export default function CreditsScene() {
         </div>
 
         {/* Back to top button */}
-        <div style={{ marginTop: "1rem" }}>
+        <div style={{ marginTop: "clamp(0.4rem, 1vh, 0.85rem)" }}>
           <button
             ref={topBtnRef}
             onClick={scrollToTop}
@@ -219,7 +219,7 @@ export default function CreditsScene() {
               background: "transparent",
               color: "var(--scene-accent)",
               border: "1px solid var(--scene-accent)",
-              padding: "0.5rem 1.25rem",
+              padding: "0.45rem 1.15rem",
               borderRadius: "2px",
               cursor: "pointer",
               transition: "all 0.2s ease",

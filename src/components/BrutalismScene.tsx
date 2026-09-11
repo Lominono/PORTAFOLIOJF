@@ -102,7 +102,7 @@ export default function BrutalismScene() {
       style={{
         background: "#F7F7F7",
         color: "#0A0A0A",
-        padding: "clamp(3rem, 8vw, 6rem) clamp(1.25rem, 5vw, 4.5rem)",
+        padding: "clamp(2.2rem, 4.5vh, 4.5rem) clamp(1rem, 4vw, 3.5rem)",
       }}
       aria-label="Escena de declaración brutalista"
     >
@@ -110,7 +110,7 @@ export default function BrutalismScene() {
       <div
         ref={borderTopRef}
         className="brutalism-rule"
-        style={{ marginBottom: "clamp(1.5rem, 4vw, 3rem)", willChange: "transform" }}
+        style={{ marginBottom: "clamp(0.85rem, 2vh, 2.5rem)", willChange: "transform" }}
         aria-hidden="true"
       />
 
@@ -165,7 +165,7 @@ export default function BrutalismScene() {
           color: "var(--scene-fg)",
           opacity: 0.65,
           letterSpacing: "0.14em",
-          marginTop: "clamp(2rem, 5vw, 3.5rem)",
+          marginTop: "clamp(1rem, 2.5vh, 2.5rem)",
           willChange: "opacity, transform",
         }}
       >
@@ -176,7 +176,7 @@ export default function BrutalismScene() {
       <div
         ref={borderBottomRef}
         className="brutalism-rule"
-        style={{ marginTop: "clamp(1.5rem, 4vw, 3rem)", marginBottom: "1.5rem", willChange: "transform" }}
+        style={{ marginTop: "clamp(0.85rem, 2vh, 2.5rem)", marginBottom: "clamp(0.75rem, 1.8vh, 1.5rem)", willChange: "transform" }}
         aria-hidden="true"
       />
 

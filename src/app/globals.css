@@ -541,3 +541,23 @@ section[data-scene-id] img {
     gap: 0.25rem;
   }
 }
+
+/* Minimalist scrollbars for internal scrollable lists */
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+[data-scene="scene-ticket"] *::-webkit-scrollbar-thumb,
+[data-scene="scene-brutalism"] *::-webkit-scrollbar-thumb,
+[data-scene="scene-zine"] *::-webkit-scrollbar-thumb,
+[data-scene="scene-obsessions"] *::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+

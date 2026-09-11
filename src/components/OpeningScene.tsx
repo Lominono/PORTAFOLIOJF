@@ -147,7 +147,7 @@ export default function OpeningScene() {
       <div
         style={{
           position: "absolute",
-          bottom: "clamp(1.5rem, 4vw, 2.75rem)",
+          bottom: "clamp(3.6rem, 8vh, 5.5rem)",
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",

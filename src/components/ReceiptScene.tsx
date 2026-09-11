@@ -101,7 +101,7 @@ export default function ReceiptScene() {
       style={{
         background: "#F3EFE6",
         color: "#181715",
-        padding: "clamp(4rem, 10vw, 8rem) clamp(1.25rem, 5vw, 4rem)",
+        padding: "clamp(2rem, 4.5vh, 4.5rem) clamp(0.75rem, 3vw, 2.5rem)",
       }}
       aria-label="Escena del recibo térmico — Ficha técnica"
     >
@@ -110,7 +110,7 @@ export default function ReceiptScene() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "clamp(1.5rem, 4vw, 3rem)",
+          gap: "clamp(0.5rem, 1.6vh, 1.6rem)",
           maxWidth: "600px",
           width: "100%",
           position: "relative",
@@ -122,8 +122,8 @@ export default function ReceiptScene() {
           style={{
             background: "var(--scene-bg)",
             border: "1px solid var(--scene-border)",
-            width: "min(100%, 350px)",
-            padding: "clamp(1.25rem, 4vw, 2.2rem) clamp(1rem, 3.5vw, 1.75rem)",
+            width: "min(100%, 330px)",
+            padding: "clamp(0.65rem, 1.8vh, 1.5rem) clamp(0.75rem, 2.5vw, 1.25rem)",
             boxShadow: "0 10px 40px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.04)",
             fontFamily: "var(--font-space-mono), monospace",
           }}
@@ -217,7 +217,7 @@ export default function ReceiptScene() {
                   if (el) linesRef.current[i] = el;
                 }}
                 style={{
-                  marginBottom: line.type === "sep" || line.type === "header" ? "0.25rem" : "0.55rem",
+                  marginBottom: line.type === "sep" || line.type === "header" ? "0.15rem" : "0.35rem",
                   willChange: "clip-path",
                 }}
               >
@@ -237,7 +237,7 @@ export default function ReceiptScene() {
           }}
           title="Toca para revelar emulsión térmica"
           style={{
-            width: "clamp(150px, 40vw, 240px)",
+            width: "clamp(120px, 32vw, 200px)",
             aspectRatio: "3/4",
             position: "relative",
             willChange: "opacity, transform",

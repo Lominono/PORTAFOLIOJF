@@ -114,7 +114,7 @@ export default function TerminalScene() {
       style={{
         background: "#0A0E17",
         color: "#E6EDF3",
-        padding: "clamp(3.5rem, 8vw, 6rem) clamp(1.25rem, 5vw, 4rem)",
+        padding: "clamp(2.2rem, 4.5vh, 4.5rem) clamp(1rem, 4vw, 3.5rem)",
       }}
       aria-label="Escena terminal — Proyectos de código"
     >
@@ -245,7 +245,17 @@ export default function TerminalScene() {
 
         {/* Projects directory list */}
         {showProjects && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.5rem",
+              maxHeight: "clamp(240px, 46vh, 430px)",
+              overflowY: "auto",
+              paddingRight: "4px",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
             {PROJECTS.map((p, i) => {
               const isSelected = activeProject === i;
               return (
@@ -350,12 +360,12 @@ export default function TerminalScene() {
 
         {/* Green phosphor photo overlay in lower corner — CRT analog pulse */}
         <div
-          className="animate-crt-pulse tactile-frame"
+          className="animate-crt-pulse tactile-frame hidden sm:block"
           style={{
             position: "absolute",
             right: 0,
-            bottom: "clamp(-4rem, -8vw, -6rem)",
-            width: "clamp(80px, 16vw, 150px)",
+            bottom: "clamp(-3rem, -6vw, -5rem)",
+            width: "clamp(80px, 14vw, 135px)",
             aspectRatio: "1",
             borderRadius: "4px",
             overflow: "hidden",

@@ -101,7 +101,7 @@ export default function JazzScene() {
       style={{
         background: "#0C101C",
         color: "#F4EEDD",
-        padding: "clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 6vw, 5rem)",
+        padding: "clamp(2.2rem, 4.5vh, 4.5rem) clamp(1rem, 4vw, 3.5rem)",
       }}
       aria-label="Escena jazz — La escucha y el ritmo"
     >
@@ -140,7 +140,7 @@ export default function JazzScene() {
             color: "var(--scene-accent)",
             letterSpacing: "0.2em",
             textTransform: "uppercase",
-            marginBottom: "1.5rem",
+            marginBottom: "clamp(0.75rem, 2vh, 1.4rem)",
             opacity: 0.8,
             textWrap: "balance",
             lineHeight: 1.6,
@@ -150,10 +150,10 @@ export default function JazzScene() {
         </div>
 
         {/* Dynamic Waveform SVG */}
-        <div style={{ width: "100%", maxWidth: "560px", marginBottom: "clamp(2rem, 5vw, 3.5rem)" }}>
+        <div style={{ width: "100%", maxWidth: "560px", marginBottom: "clamp(1rem, 2.5vh, 2.5rem)" }}>
           <svg
             width="100%"
-            height="64"
+            height="48"
             viewBox={`0 0 ${BAR_COUNT * 9} 64`}
             preserveAspectRatio="xMidYMid meet"
             style={{ overflow: "visible" }}
@@ -183,11 +183,11 @@ export default function JazzScene() {
           ref={phraseRef}
           className="font-kinetic"
           style={{
-            fontSize: "clamp(1.95rem, 8vw, 6.8rem)",
+            fontSize: "clamp(1.75rem, 6.8vw, 6.8rem)",
             color: "var(--scene-fg)",
             lineHeight: 0.94,
             letterSpacing: "-0.03em",
-            marginBottom: "1.5rem",
+            marginBottom: "clamp(0.75rem, 2vh, 1.4rem)",
             willChange: "opacity, transform",
           }}
         >
@@ -195,7 +195,7 @@ export default function JazzScene() {
           <span
             className="block font-serif italic font-light mt-1"
             style={{
-              fontSize: "clamp(1.1rem, 4.2vw, 3rem)",
+              fontSize: "clamp(0.95rem, 3.6vw, 2.8rem)",
               color: "var(--scene-accent)",
               lineHeight: 1.15,
             }}
@@ -209,10 +209,10 @@ export default function JazzScene() {
           <p
             style={{
               fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.72rem, 1.8vw, 0.9rem)",
+              fontSize: "clamp(0.7rem, 1.7vw, 0.88rem)",
               color: "var(--scene-fg)",
               opacity: 0.75,
-              lineHeight: 1.6,
+              lineHeight: 1.55,
               letterSpacing: "0.02em",
             }}
           >
@@ -228,9 +228,9 @@ export default function JazzScene() {
         title="Notas de jazz"
         style={{
           position: "absolute",
-          right: "clamp(1rem, 5vw, 4rem)",
-          bottom: "clamp(1.5rem, 4vw, 3.5rem)",
-          width: "clamp(60px, 14vw, 115px)",
+          right: "clamp(1rem, 4vw, 3.5rem)",
+          bottom: "clamp(1rem, 3vh, 3rem)",
+          width: "clamp(50px, 12vw, 100px)",
           aspectRatio: "1",
           opacity: 0.45,
           transform: "rotate(14deg)",
