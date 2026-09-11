@@ -44,6 +44,15 @@ export const metadata: Metadata = {
     locale: "es_ES",
     type: "website",
   },
+  icons: {
+    icon: [
+      { url: "/salchipapa.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/salchipapa.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/salchipapa.png",
+  },
 };
 
 export const viewport: Viewport = {

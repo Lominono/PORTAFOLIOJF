@@ -23,6 +23,64 @@ let ctx: AudioContext | null = null;
 let muted = false;
 let hasInteracted = false;
 
+// Background ambient music configuration
+let bgAudio: HTMLAudioElement | null = null;
+let currentBgVolume = 0;
+const TARGET_VOLUME = 0.67; // 67% volume as requested
+const FADE_DURATION_MS = 20000; // 20-second smooth entrance fade
+let fadeStartTime: number | null = null;
+let fadeAnimationId: number | null = null;
+let bgMusicStarted = false;
+
+function startBgFade() {
+  if (fadeStartTime !== null) return;
+  fadeStartTime = performance.now();
+
+  const updateFade = (now: number) => {
+    if (!fadeStartTime || !bgAudio) return;
+    const elapsed = now - fadeStartTime;
+    const progress = Math.min(1, elapsed / FADE_DURATION_MS);
+    currentBgVolume = progress * TARGET_VOLUME;
+
+    if (!muted) {
+      bgAudio.volume = currentBgVolume;
+    }
+
+    if (progress < 1) {
+      fadeAnimationId = requestAnimationFrame(updateFade);
+    } else {
+      currentBgVolume = TARGET_VOLUME;
+      if (!muted) bgAudio.volume = TARGET_VOLUME;
+    }
+  };
+
+  fadeAnimationId = requestAnimationFrame(updateFade);
+}
+
+function startBgMusic() {
+  if (bgMusicStarted || typeof window === "undefined") return;
+
+  if (!bgAudio) {
+    const audio = new Audio("/music/bg-music.mp3");
+    audio.loop = true;
+    audio.volume = 0;
+    audio.preload = "auto";
+    bgAudio = audio;
+  }
+
+  const playPromise = bgAudio.play();
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        bgMusicStarted = true;
+        startBgFade();
+      })
+      .catch(() => {
+        // Autoplay policy prevented playback until user interaction
+      });
+  }
+}
+
 function getCtx(): AudioContext {
   if (!ctx) ctx = new AudioContext();
   return ctx;
@@ -33,15 +91,17 @@ function resumeCtx() {
   if (c.state === "suspended") c.resume();
 }
 
-// Mark interaction on first user gesture
+// Mark interaction on first user gesture & start background music
 if (typeof window !== "undefined") {
   const markInteraction = () => {
     hasInteracted = true;
     resumeCtx();
+    startBgMusic();
   };
-  window.addEventListener("pointerdown", markInteraction, { once: true });
-  window.addEventListener("keydown", markInteraction, { once: true });
-  window.addEventListener("wheel", markInteraction, { once: true });
+  window.addEventListener("pointerdown", markInteraction, { once: true, passive: true });
+  window.addEventListener("keydown", markInteraction, { once: true, passive: true });
+  window.addEventListener("wheel", markInteraction, { once: true, passive: true });
+  window.addEventListener("touchstart", markInteraction, { once: true, passive: true });
 }
 
 function synth(fn: (ctx: AudioContext) => void) {
@@ -253,9 +313,21 @@ const sounds: Record<SoundKey, (ctx: AudioContext) => void> = {
 
 export const audioManager = {
   play: (key: SoundKey) => synth(sounds[key]),
-  mute: () => { muted = true; },
-  unmute: () => { muted = false; },
-  toggle: () => { muted = !muted; return muted; },
+  mute: () => {
+    muted = true;
+    if (bgAudio) bgAudio.volume = 0;
+  },
+  unmute: () => {
+    muted = false;
+    if (bgAudio) bgAudio.volume = currentBgVolume || TARGET_VOLUME;
+  },
+  toggle: () => {
+    muted = !muted;
+    if (bgAudio) {
+      bgAudio.volume = muted ? 0 : (currentBgVolume || TARGET_VOLUME);
+    }
+    return muted;
+  },
   isMuted: () => muted,
 };
 
@@ -264,11 +336,13 @@ if (typeof window !== "undefined") {
   (window as unknown as Record<string, unknown>).audioManager = audioManager;
 }
 
-// Component: mounts the interaction listeners and exposes the manager
+// Component: mounts the interaction listeners and manages background audio
 export default function AudioManagerProvider() {
   useEffect(() => {
-    // Already handled in module scope; this component just ensures the module is loaded
-    return () => {};
+    startBgMusic();
+    return () => {
+      if (fadeAnimationId) cancelAnimationFrame(fadeAnimationId);
+    };
   }, []);
   return null;
 }
