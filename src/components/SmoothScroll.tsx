@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { startBgMusic } from "@/components/AudioManager";
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
@@ -41,6 +42,15 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
     // Connect Lenis scroll to GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
+
+    // Start background music on first user scroll — no click required.
+    // touchstart (fires before scroll on mobile) already unlocks AudioContext;
+    // calling startBgMusic here, inside the RAF loop, satisfies autoplay policy.
+    const startMusicOnce = () => {
+      startBgMusic();
+      lenis.off("scroll", startMusicOnce);
+    };
+    lenis.on("scroll", startMusicOnce);
 
     const updateTicker = (time: number) => {
       lenis.raf(time * 1000);
