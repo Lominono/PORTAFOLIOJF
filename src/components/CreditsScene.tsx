@@ -463,8 +463,8 @@ export default function CreditsScene() {
 
           </div>
 
-          {/* FOOTER: Signature & Rewind Button */}
-          <footer className="anim-credit mt-2 pt-4 flex flex-col items-center gap-3 text-center border-t border-white/10" style={{ paddingBottom: "max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem))" }}>
+          {/* FOOTER: Signature, Share & Rewind Button */}
+          <footer className="anim-credit mt-2 pt-4 flex flex-col items-center gap-4 text-center border-t border-white/10" style={{ paddingBottom: "max(5rem, calc(env(safe-area-inset-bottom, 0px) + 4rem))" }}>
             <span
               style={{
                 fontFamily: "var(--font-space-mono), monospace",
@@ -477,33 +477,78 @@ export default function CreditsScene() {
               © 2026 JuanFe — Fin de la película interactiva
             </span>
 
-            <button
-              onClick={scrollToTop}
-              className="active:scale-95 transition-all duration-150"
-              style={{
-                fontFamily: "var(--font-space-mono), monospace",
-                fontSize: "clamp(0.58rem, 1.3vw, 0.72rem)",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                background: "transparent",
-                color: "var(--scene-accent, #E8A87C)",
-                border: "1px solid var(--scene-accent, #E8A87C)",
-                padding: "0.4rem 1rem",
-                borderRadius: "2px",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "var(--scene-accent, #E8A87C)";
-                e.currentTarget.style.color = "#000";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "var(--scene-accent, #E8A87C)";
-              }}
-              aria-label="Volver al inicio del relato"
-            >
-              ↑ Rebobinar película al inicio
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-sm">
+              {/* Compartir Button */}
+              <button
+                onClick={async () => {
+                  try {
+                    if (navigator.share) {
+                      await navigator.share({
+                        title: "JuanFe - Portafolio Cinematográfico",
+                        text: "Descubre el portafolio interactivo de JuanFe.",
+                        url: window.location.origin,
+                      });
+                    } else {
+                      await navigator.clipboard.writeText(window.location.origin);
+                      alert("¡Enlace copiado al portapapeles! Listo para compartir.");
+                    }
+                  } catch (err) {
+                    console.log("Error al compartir", err);
+                  }
+                }}
+                className="w-full sm:w-auto active:scale-95 transition-all duration-150 flex items-center justify-center gap-2"
+                style={{
+                  fontFamily: "var(--font-space-mono), monospace",
+                  fontSize: "clamp(0.58rem, 1.3vw, 0.72rem)",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  background: "var(--scene-accent, #E8A87C)",
+                  color: "#000",
+                  border: "1px solid var(--scene-accent, #E8A87C)",
+                  padding: "0.5rem 1.2rem",
+                  borderRadius: "2px",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                }}
+                aria-label="Compartir enlace o subir a historias"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                </svg>
+                Compartir Web
+              </button>
+
+              {/* Rebobinar Button */}
+              <button
+                onClick={scrollToTop}
+                className="w-full sm:w-auto active:scale-95 transition-all duration-150"
+                style={{
+                  fontFamily: "var(--font-space-mono), monospace",
+                  fontSize: "clamp(0.58rem, 1.3vw, 0.72rem)",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  background: "transparent",
+                  color: "var(--scene-accent, #E8A87C)",
+                  border: "1px solid var(--scene-accent, #E8A87C)",
+                  padding: "0.5rem 1.2rem",
+                  borderRadius: "2px",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(232, 168, 124, 0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                }}
+                aria-label="Volver al inicio del relato"
+              >
+                ↑ Rebobinar
+              </button>
+            </div>
           </footer>
         </div>
       </div>
