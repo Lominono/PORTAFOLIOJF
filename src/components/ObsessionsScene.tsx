@@ -12,19 +12,19 @@ import { audioManager } from "./AudioManager";
 
 const OBSESSIONS = [
   { tag: "01", label: "Mortal Kombat (MK1)", note: "Uno de mis videojuegos favoritos de siempre. Últimamente le he metido muchísimas horas al nuevo Mortal Kombat 1." },
-  { tag: "02", label: "Steven Universe", note: "Mi serie animada de muñequitos favorita absoluta. La sensibilidad, su música y los colores me encantan." },
+  { tag: "02", label: "Steven Universe", note: "Mi serie animada favorita. La sensibilidad, su música y la historia me encanta." },
   { tag: "03", label: "Rick and Morty", note: "También me gusta mucho, aunque como a tanta gente le gusta a veces me da un poco de 'ñe' (celos)." },
-  { tag: "04", label: "Minecraft & Lógica", note: "La primera escuela de sistemas. Construir lógica bloque a bloque desde la infancia." },
+  { tag: "04", label: "Minecraft & Lógica", note: "Por asi decirlo mi primera escuela de lógica. Construir lógica bloque a bloque desde la infancia." },
   { tag: "05", label: "Redes & Linux (SMR)", note: "Sistemas Microinformáticos y Redes: servidores Samba, routing e infraestructura." },
-  { tag: "06", label: "Ginebra & Santander", note: "Salchipapas del Valle del Cauca y el respiro frente al mar de la costa cantábrica." },
+  { tag: "06", label: "Ginebra & Santander", note: "Salchipapas del Valle del Cauca (BUENISIMAS) y el respiro frente al mar de la costa cantábrica." },
 ];
 
 export default function ObsessionsScene() {
-  const sectionRef  = useRef<HTMLElement>(null);
-  const headRef     = useRef<HTMLHeadingElement>(null);
-  const photoRef    = useRef<HTMLDivElement>(null);
-  const listRef     = useRef<HTMLUListElement>(null);
-  const rowsRef     = useRef<(HTMLLIElement | null)[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headRef = useRef<HTMLHeadingElement>(null);
+  const photoRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const rowsRef = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -38,7 +38,7 @@ export default function ObsessionsScene() {
     }
 
     // Set initial states
-    gsap.set(headRef.current,  { opacity: 0, y: 28 });
+    gsap.set(headRef.current, { opacity: 0, y: 28 });
     gsap.set(photoRef.current, { opacity: 0, scale: 0.93, rotate: 3 });
     gsap.set(rowsRef.current.filter(Boolean), { opacity: 0, x: -18 });
 
@@ -173,12 +173,13 @@ export default function ObsessionsScene() {
               margin: 0,
               display: "flex",
               flexDirection: "column",
-              maxHeight: "clamp(250px, 46vh, 440px)",
+              maxHeight: "clamp(280px, 50vh, 480px)",
               overflowY: "auto",
-              paddingRight: "6px",
+              overflowX: "hidden",
               WebkitOverflowScrolling: "touch",
-              touchAction: "pan-y",
+              paddingRight: "0.2rem",
             }}
+            data-lenis-prevent="true"
           >
             {OBSESSIONS.map((obs, i) => (
               <li

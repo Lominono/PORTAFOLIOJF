@@ -14,7 +14,7 @@ const LINE_1 = "Nuestra vida";
 const LINE_2 = "es lo que nuestros pensamientos";
 const LINE_3 = "hacen de ella.";
 const SUBDECLARATION = "— MARCO AURELIO · PRINCIPIO DE JUANFE · 18 AÑOS · SMR";
-const TICKER_TEXT = "NUESTRA VIDA ES LO QUE NUESTROS PENSAMIENTOS HACEN DE ELLA + MARCO AURELIO + SMR + ";
+const TICKER_TEXT = "NUESTRA VIDA ES LO QUE NUESTROS PENSAMIENTOS HACEN DE ELLA + MARCO AURELIO + NO SE QUE MAS + ";
 
 export default function BrutalismScene() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -48,25 +48,25 @@ export default function BrutalismScene() {
       duration: 0.6,
       ease: "power3.inOut",
     })
-    .to(textRef.current, {
-      opacity: 1,
-      y: 0,
-      skewY: 0,
-      duration: 0.75,
-      ease: "power4.out",
-    }, "-=0.25")
-    .to(subRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.45,
-      ease: "power2.out",
-    }, "-=0.2")
-    .to(borderBottomRef.current, {
-      scaleX: 1,
-      transformOrigin: "left",
-      duration: 0.6,
-      ease: "power3.inOut",
-    }, "-=0.3");
+      .to(textRef.current, {
+        opacity: 1,
+        y: 0,
+        skewY: 0,
+        duration: 0.75,
+        ease: "power4.out",
+      }, "-=0.25")
+      .to(subRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.45,
+        ease: "power2.out",
+      }, "-=0.2")
+      .to(borderBottomRef.current, {
+        scaleX: 1,
+        transformOrigin: "left",
+        duration: 0.6,
+        ease: "power3.inOut",
+      }, "-=0.3");
 
     // Continuous ticker tape animation
     if (tickerRef.current) {
@@ -116,17 +116,17 @@ export default function BrutalismScene() {
       />
 
       {/* Marco Aurelio Background Bust (Inverted & Multiplied for Editorial Look) */}
-      <div 
+      <div
         className="absolute left-[-5%] sm:left-[10%] top-[15%] opacity-15 sm:opacity-25 pointer-events-none z-0"
         style={{
-           width: "clamp(300px, 50vw, 700px)",
-           aspectRatio: "1/1",
-           mixBlendMode: "multiply",
-           filter: "invert(1) contrast(130%) grayscale(100%)",
-           animation: "floatOrganic 12s ease-in-out infinite",
+          width: "clamp(300px, 50vw, 700px)",
+          aspectRatio: "1/1",
+          mixBlendMode: "multiply",
+          filter: "invert(1) contrast(130%) grayscale(100%)",
+          animation: "floatOrganic 12s ease-in-out infinite",
         }}
       >
-        <Image src="/marco-aurelio.jpg" alt="Busto de Marco Aurelio" fill style={{objectFit: "contain"}} />
+        <Image src="/marco-aurelio.jpg" alt="Busto de Marco Aurelio" fill style={{ objectFit: "contain" }} />
       </div>
 
       {/* Main declaration */}

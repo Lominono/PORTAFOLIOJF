@@ -161,6 +161,7 @@ export default function CreditsScene() {
           touchAction: "pan-y",
           padding: "clamp(1.5rem, 3.5vh, 4rem) clamp(0.75rem, 3.5vw, 3rem)",
         }}
+        data-lenis-prevent="true"
       >
         <div
           ref={containerRef}

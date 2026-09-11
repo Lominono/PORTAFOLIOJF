@@ -7,11 +7,10 @@ import { audioManager } from "./AudioManager";
 
 // Escena 00 — Apertura cinematográfica
 // Tipografía cinética con peso variable (Fraunces axes: opsz, SOFT, WONK)
-// La palabra "JuanFe" aparece letra por letra con peso variable
 // Click de obturador de cámara al completarse
 
 const NAME = "JuanFe";
-const TAGLINE = "creative developer · 18 · santander";
+const TAGLINE = "Desarrolador web· 18 · santander";
 
 export default function OpeningScene() {
   const sectionRef = useRef<HTMLElement>(null);

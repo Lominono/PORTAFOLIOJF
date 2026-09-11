@@ -339,13 +339,13 @@ export default function TerminalScene() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "0.4rem",
-              maxHeight: "clamp(210px, 38vh, 340px)",
+              maxHeight: "clamp(250px, 45vh, 450px)",
               overflowY: "auto",
-              paddingRight: "6px",
+              overflowX: "hidden",
               WebkitOverflowScrolling: "touch",
-              touchAction: "pan-y",
+              paddingRight: "0.5rem",
             }}
+            data-lenis-prevent="true"
           >
             <div className="flex justify-between items-center px-1 pb-1 text-[0.56rem] font-mono text-[#39D353]/70">
               <span>{filteredProjects.length} REPOSITORIOS DISPONIBLES</span>

@@ -13,7 +13,7 @@ interface ReceiptPhotoProps {
 export default function ReceiptPhoto({
   src = "/juanfe.jpg",
   alt = "JuanFe (Juan Fernando Ospina Tigreros)",
-  caption = "FIG. 01 — RETRATO TITULAR: DE «FERNAN» A «JUANFE»",
+  caption = "FIG. 01 — TITULAR: DE «FERNAN» A «JUANFE»",
   className = "",
 }: ReceiptPhotoProps) {
   const [revealed, setRevealed] = useState(false);
@@ -53,9 +53,8 @@ export default function ReceiptPhoto({
               />
               {/* Thermal dot overlay texture */}
               <div
-                className={`absolute inset-0 pointer-events-none transition-opacity duration-300 ${
-                  revealed ? "opacity-0" : "opacity-30"
-                }`}
+                className={`absolute inset-0 pointer-events-none transition-opacity duration-300 ${revealed ? "opacity-0" : "opacity-30"
+                  }`}
                 style={{
                   backgroundImage:
                     "radial-gradient(#1A1916 0.75px, transparent 0.75px)",

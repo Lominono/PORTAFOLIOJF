@@ -177,7 +177,7 @@ export default function CinematicDeck() {
         All lower and previous scenes are set to visibility: hidden.
       */}
       <div
-        className="fixed inset-0 w-screen h-screen overflow-hidden"
+        className="fixed inset-0 w-screen h-[100dvh] overflow-hidden"
         style={{ zIndex: 1 }}
         aria-live="polite"
       >
@@ -203,6 +203,7 @@ export default function CinematicDeck() {
                 overflowX: "hidden",
                 WebkitOverflowScrolling: "touch",
               }}
+              data-lenis-prevent="true"
             >
               <Component />
             </div>
