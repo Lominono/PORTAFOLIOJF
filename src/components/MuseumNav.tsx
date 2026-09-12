@@ -50,9 +50,10 @@ export default function MuseumNav() {
   const goTo = (id: string, index: number) => {
     const lenis = (window as unknown as { lenis?: { scrollTo: (target: number, opts?: { duration?: number }) => void } }).lenis;
     const vh = window.innerHeight;
-    const targetY = index * vh * 1.65;
+    const currentSlice = window.innerWidth <= 768 ? 1.20 : 1.50;
+    const targetY = index * vh * currentSlice;
     if (lenis?.scrollTo) {
-      lenis.scrollTo(targetY, { duration: 1.2 });
+      lenis.scrollTo(targetY, { duration: 1.0 });
     } else {
       const el = document.querySelector(`[data-scene-id="${id}"]`);
       if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -93,17 +94,18 @@ export default function MuseumNav() {
             aria-current={isActive ? "true" : undefined}
             title={label}
             style={{
-              width: isActive ? "22px" : "9px",
+              width: isActive ? "24px" : "9px",
               height: "3px",
               borderRadius: "2px",
-              background: isActive ? "var(--scene-accent)" : "var(--scene-muted)",
+              backgroundColor: isActive ? "var(--scene-accent)" : "var(--scene-muted)",
               border: "none",
-              padding: "6px 1px",
+              padding: "20px 3px",
+              minHeight: "44px",
               backgroundClip: "content-box",
               boxSizing: "content-box",
               cursor: "pointer",
               opacity: isActive ? 1 : 0.35,
-              transition: "width 0.3s cubic-bezier(0.16,1,0.3,1), background 0.65s ease, opacity 0.25s ease",
+              transition: "width 0.3s cubic-bezier(0.16,1,0.3,1), background-color 0.65s ease, opacity 0.25s ease",
               flexShrink: 0,
               touchAction: "manipulation",
             }}

@@ -142,42 +142,95 @@ export default function OpeningScene() {
         {TAGLINE}
       </p>
 
-      {/* Explicit Editorial scroll prompt */}
+      {/* Tactile 35mm Reel Controller & Scroll Incentive */}
       <div
         style={{
           position: "absolute",
-          bottom: "clamp(3.6rem, 8vh, 5.5rem)",
+          bottom: "clamp(3.5rem, 8vh, 4.5rem)",
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "0.5rem",
-          color: "#888",
-          fontFamily: "var(--font-space-mono), monospace",
-          fontSize: "clamp(0.55rem, 1.4vw, 0.65rem)",
-          letterSpacing: "0.22em",
-          textTransform: "uppercase",
-          opacity: 0.9,
+          gap: "0.65rem",
+          width: "min(92vw, 440px)",
+          zIndex: 10,
         }}
-        aria-hidden="true"
       >
-        <div className="flex items-center gap-2">
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "#DE9F43",
-              display: "inline-block",
-              boxShadow: "0 0 8px rgba(222, 159, 67, 0.4)",
-              animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-            }}
-          />
-          <span>EXPLORA MI PORTAFOLIO WEB</span>
+        {/* Interactive Click/Tap Action Reel Badge */}
+        <button
+          onClick={() => {
+            audioManager.play("keyclick");
+            audioManager.startBgMusic();
+            const slice = window.innerWidth <= 768 ? 1.20 : 1.50;
+            const targetY = window.innerHeight * slice * 0.45;
+            const lenis = (window as unknown as { lenis?: { scrollTo: (y: number, opts?: unknown) => void } }).lenis;
+            if (lenis) {
+              lenis.scrollTo(targetY, { duration: 1.2 });
+            } else {
+              window.scrollTo({ top: targetY, behavior: "smooth" });
+            }
+          }}
+          className="group relative cursor-pointer active:scale-[0.98] transition-all duration-200"
+          style={{
+            background: "rgba(222, 159, 67, 0.05)",
+            border: "1px solid rgba(222, 159, 67, 0.4)",
+            borderRadius: "3px",
+            padding: "0.55rem 1.1rem",
+            minHeight: "44px",
+            color: "#E5A952",
+            fontFamily: "var(--font-space-mono), monospace",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.25rem",
+            boxShadow: "0 0 15px rgba(222, 159, 67, 0.08)",
+            backdropFilter: "blur(4px)",
+          }}
+          aria-label="Iniciar recorrido: deslizar o hacer clic para avanzar a la siguiente escena"
+        >
+          {/* Header metadata tag */}
+          <div className="flex items-center gap-2 text-[0.52rem] sm:text-[0.58rem] tracking-[0.25em] text-[#DE9F43]/90 uppercase font-semibold">
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                background: "#DE9F43",
+                display: "inline-block",
+                boxShadow: "0 0 10px #DE9F43",
+                animation: "pulse 1.8s ease-in-out infinite",
+              }}
+              aria-hidden="true"
+            />
+            <span>CARRETE ANALÓGICO · 35MM [00 / 08]</span>
+          </div>
+
+          {/* Main instruction text */}
+          <div className="flex items-center gap-2 mt-0.5">
+            <span className="text-[0.62rem] sm:text-[0.74rem] text-[#F3EFE6] font-bold tracking-[0.14em] uppercase group-hover:text-[#DE9F43] transition-colors">
+              DESLIZA O HAZ CLIC PARA AVANZAR
+            </span>
+            <span className="text-[0.85rem] text-[#DE9F43] animate-bounce font-bold inline-block">
+              ↓
+            </span>
+          </div>
+
+          {/* Micro tape progress ticker */}
+          <div className="w-full flex justify-between items-center text-[0.46rem] sm:text-[0.5rem] tracking-[0.18em] text-[#888] pt-1 mt-0.5 border-t border-[#DE9F43]/20 font-mono">
+            <span>ESCENA SIGUIENTE:</span>
+            <span className="text-[#DE9F43]/90 font-medium">01 · AHORA (SANTANDER) ↗</span>
+          </div>
+        </button>
+
+        {/* Tactile scroll mouse-wheel / trackpad hint */}
+        <div
+          className="hidden sm:flex items-center gap-2 text-[0.5rem] tracking-[0.2em] text-[#666] font-mono select-none"
+          aria-hidden="true"
+        >
+          <span>[ RUEDA DE RATÓN / TRACKPAD DISPONIBLE ]</span>
         </div>
-        <span style={{ fontSize: "0.5rem", color: "#666", letterSpacing: "0.15em" }}>DESLIZA HACIA ABAJO PARA CONTINUAR</span>
-        <span className="animate-bounce" style={{ marginTop: "0.2rem", display: "inline-block", fontSize: "0.8rem", color: "#DE9F43" }}>↓</span>
       </div>
     </section>
   );

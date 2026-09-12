@@ -28,7 +28,7 @@ let hasInteracted = false;
 let bgAudio: HTMLAudioElement | null = null;
 let currentBgVolume = 0;
 const TARGET_VOLUME = 1.0; // 100% full volume as requested
-const ENTRANCE_FADE_MS = 14000; // 14-second smooth entrance fade
+const ENTRANCE_FADE_MS = 2200; // Fast and atmospheric 2.2-second smooth entrance fade
 let fadeAnimationId: number | null = null;
 let bgMusicStarted = false;
 
@@ -67,7 +67,9 @@ function fadeVolumeTo(targetVol: number, durationMs: number, onComplete?: () => 
 
 function startBgFade() {
   if (!bgAudio) return;
-  bgAudio.volume = 0;
+  // Start from audible baseline (0.25) so user hears music immediately upon scrolling
+  bgAudio.volume = 0.25;
+  currentBgVolume = 0.25;
   fadeVolumeTo(TARGET_VOLUME, ENTRANCE_FADE_MS);
 }
 
@@ -84,68 +86,100 @@ function initBgAudio() {
   }
 
   audio.loop = true;
-  audio.volume = 0;
+  audio.volume = 0.25;
   audio.preload = "auto";
   bgAudio = audio;
   return bgAudio;
 }
+
+let isPlayPending = false;
 
 export function startBgMusic() {
   if (typeof window === "undefined") return;
   const audio = initBgAudio();
   if (!audio) return;
 
-  if (bgMusicStarted && !audio.paused) return;
+  if ((bgMusicStarted && !audio.paused) || isPlayPending) return;
 
+  isPlayPending = true;
   const playPromise = audio.play();
   if (playPromise !== undefined) {
     playPromise
       .then(() => {
+        isPlayPending = false;
         bgMusicStarted = true;
         startBgFade();
-        removeInteractionListeners();
       })
       .catch(() => {
-        // Autoplay policy prevented playback until explicit user interaction
+        isPlayPending = false;
+        // Autoplay policy prevented playback until user interaction; keep listeners active
       });
   }
 }
 
-function getCtx(): AudioContext {
-  if (!ctx) ctx = new AudioContext();
+function getCtx(): AudioContext | null {
+  if (typeof window === "undefined") return null;
+  if (!ctx && hasInteracted) {
+    try {
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioCtx) ctx = new AudioCtx();
+    } catch {
+      ctx = null;
+    }
+  }
   return ctx;
 }
 
 function resumeCtx() {
-  const c = getCtx();
-  if (c.state === "suspended") c.resume();
+  if (!ctx) return;
+  if (ctx.state === "suspended") {
+    ctx.resume().catch(() => {});
+  }
 }
 
-// Mark interaction on user gesture & start background music reliably
-function handleUserGesture() {
+// Full user gesture (touch tap, click, key) unlocks Web Audio AudioContext cleanly without warnings
+function handleUserActivation() {
   hasInteracted = true;
   resumeCtx();
   startBgMusic();
 }
 
-const GESTURE_EVENTS = ["pointerdown", "touchstart", "click", "keydown", "wheel", "scroll"];
+// Scroll / wheel only triggers background music, never touches AudioContext
+function handleScrollMovement() {
+  startBgMusic();
+}
+
+const ACTIVATION_EVENTS = ["pointerdown", "touchend", "click", "keydown"];
+const SCROLL_EVENTS = ["wheel", "scroll"];
 
 function removeInteractionListeners() {
   if (typeof window === "undefined") return;
-  GESTURE_EVENTS.forEach((evt) => {
-    window.removeEventListener(evt, handleUserGesture);
+  ACTIVATION_EVENTS.forEach((evt) => {
+    window.removeEventListener(evt, handleUserActivation);
+  });
+  SCROLL_EVENTS.forEach((evt) => {
+    window.removeEventListener(evt, handleScrollMovement);
   });
 }
 
 if (typeof window !== "undefined") {
-  GESTURE_EVENTS.forEach((evt) => {
-    window.addEventListener(evt, handleUserGesture, { passive: true });
+  ACTIVATION_EVENTS.forEach((evt) => {
+    window.addEventListener(evt, handleUserActivation, { passive: true, once: false });
+  });
+  SCROLL_EVENTS.forEach((evt) => {
+    window.addEventListener(evt, handleScrollMovement, { passive: true });
   });
 }
 
 function synth(fn: (ctx: AudioContext) => void) {
   if (muted || !hasInteracted) return;
-  try { fn(getCtx()); } catch { /* autoplay policy — safe to ignore */ }
+  const c = getCtx();
+  if (!c || c.state === "suspended") return;
+  try {
+    fn(c);
+  } catch {
+    /* Safe catch for any audio buffer errors */
+  }
 }
 
 const sounds: Record<SoundKey, (ctx: AudioContext) => void> = {

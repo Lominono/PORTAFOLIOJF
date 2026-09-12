@@ -1,88 +1,124 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 import { audioManager } from "./AudioManager";
 import FloatingSticker from "./FloatingSticker";
 
-// Escena 03 — Terminal / CRT interactiva
-// Proyectos reales de GitHub (Lominono)
-// Diseñado para interacción táctil fluida en móvil y escritorio
+// Escena 03 — Estación de trabajo Hacker / Git Terminal
+// Proyectos reales de GitHub de JuanFe (Lominono)
+// Estética Linux Arch / UNIX TTY con git log, diff stats y comandos reales
+// Cero clichés de IA, cero gradientes morados, pura autenticidad de sysadmin y dev
 
 interface Project {
   id: string;
   name: string;
   desc: string;
+  archNote: string;
   category: "web" | "sys" | "exp";
   stack: string[];
   year: string;
   url: string;
+  commitHash: string;
+  branch: string;
+  diffAdded: number;
+  diffDeleted: number;
+  filesChanged: number;
 }
 
 const PROJECTS: Project[] = [
   {
     id: "01",
     name: "Portafolio_cr",
-    desc: "Plataforma web de presentación comercial y cotización de servicios fotográficos.",
+    desc: "Plataforma web de presentación comercial y cotización de servicios fotográficos profesionales.",
+    archNote: "Diseño tipográfico editorial de alto contraste, orquestación de imágenes de alta fidelidad y motor de cotización en cliente.",
     category: "web",
     stack: ["TypeScript", "Next.js", "TailwindCSS"],
     year: "2026",
     url: "https://github.com/Lominono/Portafolio_cr",
+    commitHash: "7f2a1b9",
+    branch: "main",
+    diffAdded: 412,
+    diffDeleted: 38,
+    filesChanged: 14,
   },
   {
     id: "02",
     name: "Ubuntu_samba",
-    desc: "App interactiva para simular y practicar comandos de Samba y configuración de IP estática.",
+    desc: "Simulador interactivo para Android para practicar configuración de servidores Samba e IP estática.",
+    archNote: "Diseñado para laboratorio de redes SMR: permite emular sintaxis de smb.conf, permisos UNIX y comprobaciones de routing sin servidor físico.",
     category: "sys",
-    stack: ["Kotlin", "Android", "Redes & Linux"],
+    stack: ["Kotlin", "Android SDK", "Linux / SMR", "Samba"],
     year: "2026",
     url: "https://github.com/Lominono/Ubuntu_samba",
+    commitHash: "3c89df1",
+    branch: "feature/samba-cfg",
+    diffAdded: 580,
+    diffDeleted: 64,
+    filesChanged: 19,
   },
   {
     id: "03",
     name: "Boda_luz_Julio",
-    desc: "Invitación digital interactiva con narrativa visual para boda, optimizada para móviles.",
+    desc: "Invitación digital interactiva con narrativa visual cinematográfica y confirmación en tiempo real.",
+    archNote: "Orquestación de micro-animaciones CSS y diseño mobile-first pensado para dispositivos táctiles de distintas densidades de píxel.",
     category: "web",
-    stack: ["TypeScript", "React", "Animaciones CSS"],
+    stack: ["TypeScript", "React", "CSS Motion", "Mobile-UX"],
     year: "2026",
     url: "https://github.com/Lominono/Boda_luz_Julio",
+    commitHash: "a152e04",
+    branch: "main",
+    diffAdded: 290,
+    diffDeleted: 15,
+    filesChanged: 9,
   },
   {
     id: "04",
     name: "Chat-Pker",
-    desc: "Aplicación de mensajería rápida para charlar con amigos y probar sockets en tiempo real.",
+    desc: "Aplicación de mensajería instantánea de baja latencia con sockets en tiempo real entre peers.",
+    archNote: "Implementación ligera de WebSockets en Node.js para experimentación de salas concurrentes, gestión de eventos y reconexión resiliente.",
     category: "exp",
-    stack: ["JavaScript", "WebSockets", "Node.js"],
+    stack: ["JavaScript", "WebSockets", "Node.js", "Express"],
     year: "2025",
     url: "https://github.com/Lominono/Chat-Pker",
+    commitHash: "8b90c12",
+    branch: "main",
+    diffAdded: 345,
+    diffDeleted: 52,
+    filesChanged: 11,
   },
   {
     id: "05",
     name: "Youreidiot",
-    desc: "Experimento web estilo prank con popups y visuales retro inspirados en la red noventera.",
+    desc: "Experimento web retro estilo broma digital de los 90s con recreación de ventanas flotantes.",
+    archNote: "Prueba de estrés de posicionamiento absoluto del DOM, manipulación de bucles de animación y estética de la red de finales del siglo XX.",
     category: "exp",
-    stack: ["JavaScript", "Retro UI", "CSS Grid"],
+    stack: ["JavaScript", "Retro UI", "CSS Grid", "Canvas"],
     year: "2026",
     url: "https://github.com/Lominono/Youreidiot",
+    commitHash: "e42f7a9",
+    branch: "main",
+    diffAdded: 198,
+    diffDeleted: 22,
+    filesChanged: 5,
   },
 ];
 
 const CATEGORIES = [
-  { id: "all", label: "TODOS (5)" },
-  { id: "web", label: "WEB" },
-  { id: "sys", label: "LINUX/REDES" },
-  { id: "exp", label: "EXP" },
+  { id: "all", label: "ALL_REPOS (5)" },
+  { id: "web", label: "WEB_STACK" },
+  { id: "sys", label: "LINUX / NETWORKS" },
+  { id: "exp", label: "EXPERIMENTS" },
 ];
 
-const TYPED_COMMAND = "$ ls -la ~/projects/ && git status";
+const TYPED_COMMAND = "$ git log --graph --all --oneline --decorate -n 5";
 
 export default function TerminalScene() {
   const sectionRef = useRef<HTMLElement>(null);
   const [typedText, setTypedText] = useState("");
   const [showProjects, setShowProjects] = useState(false);
-  const [activeProject, setActiveProject] = useState(0);
+  const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const [activeCategory, setActiveCategory] = useState("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [terminalOutput, setTerminalOutput] = useState<string | null>(null);
@@ -91,6 +127,8 @@ export default function TerminalScene() {
   const filteredProjects = activeCategory === "all"
     ? PROJECTS
     : PROJECTS.filter((p) => p.category === activeCategory);
+
+  const currentProject = filteredProjects[activeProjectIdx] || filteredProjects[0] || PROJECTS[0];
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -115,9 +153,9 @@ export default function TerminalScene() {
         audioManager.play("keyclick");
         if (i >= TYPED_COMMAND.length) {
           if (typingInterval) clearInterval(typingInterval);
-          setTimeout(() => setShowProjects(true), 250);
+          setTimeout(() => setShowProjects(true), 200);
         }
-      }, 40);
+      }, 35);
     };
 
     const checkActive = () => {
@@ -135,6 +173,40 @@ export default function TerminalScene() {
     };
   }, []);
 
+  // Keyboard navigation for power users (Up/Down or J/K to navigate, C to copy clone)
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (document.documentElement.dataset.scene !== "scene-terminal") return;
+      if (!showProjects) return;
+
+      if (e.key === "ArrowDown" || e.key === "j" || e.key === "J") {
+        e.preventDefault();
+        setActiveProjectIdx((prev) => (prev + 1) % filteredProjects.length);
+        audioManager.play("keyclick");
+      } else if (e.key === "ArrowUp" || e.key === "k" || e.key === "K") {
+        e.preventDefault();
+        setActiveProjectIdx((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length);
+        audioManager.play("keyclick");
+      } else if (e.key === "c" || e.key === "C") {
+        if (currentProject) {
+          const cmd = `git clone ${currentProject.url}.git`;
+          if (typeof navigator !== "undefined" && navigator.clipboard) {
+            navigator.clipboard.writeText(cmd);
+          }
+          setCopiedId(currentProject.id);
+          audioManager.play("keyclick");
+          setTimeout(() => setCopiedId(null), 1800);
+        }
+      }
+    },
+    [showProjects, filteredProjects.length, currentProject]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
   const handleCopyClone = (e: React.MouseEvent, repoUrl: string, id: string) => {
     e.stopPropagation();
     const cmd = `git clone ${repoUrl}.git`;
@@ -148,13 +220,21 @@ export default function TerminalScene() {
 
   const handleRunCommand = (cmd: string) => {
     audioManager.play("keyclick");
-    if (cmd === "whoami") {
-      setTerminalOutput("→ [tty1] juanfe: 18 años · Santander & Ginebra · Developer & SMR Sysadmin");
-    } else if (cmd === "git") {
-      setTerminalOutput("→ [git] On branch main · working tree clean · live on Vercel");
-    } else if (cmd === "neofetch") {
-      setTerminalOutput("→ [arch] Arch Linux x86_64 · Shell: bash 5.2 · Terminal: TTY1 · Stack: Next.js/Kotlin");
-    } else {
+    if (cmd === "git-status") {
+      setTerminalOutput(
+        "→ [git:status] On branch main · Your branch is up to date with 'origin/main' · Nothing to commit, working tree clean."
+      );
+    } else if (cmd === "git-log") {
+      setTerminalOutput(
+        "→ [git:log] * 7f2a1b9 (HEAD -> main) feat(portfolio): high-craft editorial engine · * 3c89df1 feat(samba): add android smb.conf generator"
+      );
+    } else if (cmd === "whoami") {
+      setTerminalOutput(
+        "→ [identity] juanfe @ devbox · 18 años · Santander & Ginebra · Sysadmin SMR & Full-Stack Creative Developer"
+      );
+    } else if (cmd === "uname") {
+      setTerminalOutput("→ [kernel] Linux devbox 6.12.9-arch1-1-lts x86_64 GNU/Linux · Uptime: 42 days");
+    } else if (cmd === "clear") {
       setTerminalOutput(null);
     }
   };
@@ -165,78 +245,79 @@ export default function TerminalScene() {
       data-scene-id="terminal"
       className="relative min-h-screen flex items-center justify-center overflow-x-clip crt-scanlines"
       style={{
-        background: "#0A0E17",
+        background: "#080C14",
         color: "#E6EDF3",
-        padding: "clamp(2rem, 4vh, 4rem) clamp(0.75rem, 3.5vw, 3rem)",
+        padding: "clamp(1.5rem, 4vh, 3.5rem) clamp(0.75rem, 3.5vw, 3rem)",
       }}
-      aria-label="Escena terminal — Proyectos de código"
+      aria-label="Escena terminal — Proyectos de código y repositorios Git"
     >
-      {/* CRT vignette overlay */}
+      {/* CRT scanlines vignette */}
       <div
         aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,
-          background: "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.7) 100%)",
+          background: "radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.85) 100%)",
           pointerEvents: "none",
           zIndex: 1,
         }}
       />
 
-      <div style={{ position: "relative", zIndex: 2, width: "100%", maxWidth: "800px" }}>
-        {/* Terminal top bar */}
+      <div style={{ position: "relative", zIndex: 2, width: "100%", maxWidth: "980px" }}>
+        {/* Terminal Header Bar */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "0.85rem",
-            paddingBottom: "0.55rem",
-            borderBottom: "1px solid rgba(57, 211, 83, 0.2)",
+            paddingBottom: "0.6rem",
+            borderBottom: "1px solid rgba(57, 211, 83, 0.25)",
           }}
         >
-          <div style={{ display: "flex", gap: "0.45rem", alignItems: "center", overflow: "hidden", minWidth: 0 }}>
+          {/* Machine & Path Badge */}
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", overflow: "hidden", minWidth: 0 }}>
             <span
               style={{
                 display: "inline-block",
-                width: 6,
-                height: 6,
-                flexShrink: 0,
+                width: 8,
+                height: 8,
+                borderRadius: "1px",
                 background: "var(--scene-accent)",
-                boxShadow: "0 0 6px rgba(57, 211, 83, 0.5)",
+                boxShadow: "0 0 8px rgba(57, 211, 83, 0.7)",
               }}
               aria-hidden="true"
             />
             <span
               style={{
                 fontFamily: "var(--font-space-mono), monospace",
-                fontSize: "clamp(0.58rem, 1.3vw, 0.7rem)",
+                fontSize: "clamp(0.62rem, 1.4vw, 0.75rem)",
                 color: "var(--scene-accent)",
-                letterSpacing: "0.1em",
+                letterSpacing: "0.08em",
                 fontWeight: 700,
                 flexShrink: 0,
               }}
             >
-              [ TTY1 ]
+              [ TTY1 · ARCH-WORKSTATION ]
             </span>
             <span
-              className="hidden sm:inline"
+              className="hidden md:inline"
               style={{
                 fontFamily: "var(--font-space-mono), monospace",
-                fontSize: "clamp(0.6rem, 1.4vw, 0.72rem)",
+                fontSize: "clamp(0.6rem, 1.3vw, 0.7rem)",
                 color: "var(--scene-muted)",
-                marginLeft: "0.3rem",
-                letterSpacing: "0.06em",
+                letterSpacing: "0.04em",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
               }}
             >
-              juanfe@devbox:~/github/Lominono
+              juanfe@devbox:~/github/Lominono (git:main*)
             </span>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+          {/* Quick profile links */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
             <a
               href="https://github.com/Lominono"
               target="_blank"
@@ -247,15 +328,16 @@ export default function TerminalScene() {
                 color: "var(--scene-accent)",
                 textDecoration: "none",
                 border: "1px solid var(--scene-accent)",
-                padding: "0.15rem 0.45rem",
+                padding: "0.2rem 0.55rem",
                 borderRadius: "2px",
-                opacity: 0.85,
-                transition: "all 0.2s",
-                whiteSpace: "nowrap",
+                background: "rgba(57, 211, 83, 0.05)",
+                fontWeight: 600,
+                letterSpacing: "0.05em",
+                transition: "all 0.15s",
               }}
-              className="hover:opacity-100 hover:bg-[#39D353]/10"
+              className="hover:bg-[#39D353]/20 hover:text-white"
             >
-              github/Lominono ↗
+              GH/Lominono ↗
             </a>
 
             <a
@@ -268,255 +350,296 @@ export default function TerminalScene() {
                 color: "#E5A952",
                 textDecoration: "none",
                 border: "1px solid rgba(229, 169, 82, 0.6)",
-                padding: "0.15rem 0.45rem",
+                padding: "0.2rem 0.55rem",
                 borderRadius: "2px",
-                opacity: 0.9,
-                transition: "all 0.2s",
-                whiteSpace: "nowrap",
+                background: "rgba(229, 169, 82, 0.05)",
+                fontWeight: 600,
+                letterSpacing: "0.05em",
+                transition: "all 0.15s",
               }}
-              className="hover:opacity-100 hover:bg-[#E5A952]/10"
+              className="hover:bg-[#E5A952]/20 hover:text-white"
             >
-              ig/Juanfer_ost ↗
+              IG/Juanfer_ost ↗
             </a>
           </div>
         </div>
 
-        {/* Command line & Category touch filters */}
-        <div style={{ marginBottom: "0.75rem" }}>
+        {/* Command Line & Filter Tabs */}
+        <div style={{ marginBottom: "0.85rem" }}>
           <div
             style={{
               fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "clamp(0.75rem, 1.8vw, 0.95rem)",
+              fontSize: "clamp(0.72rem, 1.8vw, 0.92rem)",
               color: "var(--scene-accent)",
               minHeight: "1.4em",
               wordBreak: "break-all",
-              marginBottom: "0.45rem",
+              marginBottom: "0.5rem",
             }}
           >
             {typedText}
-            <span className="cursor-blink" style={{ marginLeft: 2, color: "var(--scene-accent)" }}>█</span>
+            <span className="cursor-blink" style={{ marginLeft: 3, color: "var(--scene-accent)" }}>
+              █
+            </span>
           </div>
 
-          {/* Interactive touch filter tabs */}
+          {/* Interactive filter tabs */}
           {showProjects && (
-            <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap", alignItems: "center" }}>
-              <span style={{ fontFamily: "var(--font-space-mono), monospace", fontSize: "0.55rem", opacity: 0.5, marginRight: "0.2rem" }}>
-                FILTRAR:
-              </span>
-              {CATEGORIES.map((cat) => {
-                const isActive = activeCategory === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => {
-                      setActiveCategory(cat.id);
-                      audioManager.play("keyclick");
-                    }}
-                    className="active:scale-95 transition-transform duration-100"
-                    style={{
-                      fontFamily: "var(--font-space-mono), monospace",
-                      fontSize: "0.55rem",
-                      padding: "0.18rem 0.5rem",
-                      borderRadius: "2px",
-                      border: `1px solid ${isActive ? "var(--scene-accent)" : "rgba(255,255,255,0.15)"}`,
-                      background: isActive ? "rgba(57, 211, 83, 0.15)" : "transparent",
-                      color: isActive ? "var(--scene-accent)" : "var(--scene-muted)",
-                      cursor: "pointer",
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    {cat.label}
-                  </button>
-                );
-              })}
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="font-mono text-[0.52rem] text-[#888] mr-1 uppercase">SCOPE:</span>
+                {CATEGORIES.map((cat) => {
+                  const isActive = activeCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => {
+                        setActiveCategory(cat.id);
+                        setActiveProjectIdx(0);
+                        audioManager.play("keyclick");
+                      }}
+                      className="active:scale-95 transition-all"
+                      style={{
+                        fontFamily: "var(--font-space-mono), monospace",
+                        fontSize: "0.54rem",
+                        padding: "0.18rem 0.5rem",
+                        borderRadius: "2px",
+                        border: `1px solid ${isActive ? "var(--scene-accent)" : "rgba(255,255,255,0.14)"}`,
+                        background: isActive ? "rgba(57, 211, 83, 0.16)" : "rgba(0,0,0,0.3)",
+                        color: isActive ? "var(--scene-accent)" : "#999",
+                        cursor: "pointer",
+                        fontWeight: isActive ? 700 : 500,
+                      }}
+                    >
+                      {cat.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Keyboard shortcuts hint */}
+              <div className="hidden lg:flex items-center gap-2 font-mono text-[0.5rem] text-[#666]">
+                <span>[ ↑/↓ o J/K : navegar ]</span>
+                <span>[ C : copiar clone ]</span>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Projects directory list - optimized for mobile touch and smooth scrolling */}
+        {/* Workstation Split View: Left (Git Log Tree) | Right (Repo Dossier Inspector) */}
         {showProjects && (
           <div
+            className="grid grid-cols-1 lg:grid-cols-12 gap-3"
             style={{
-              display: "flex",
-              flexDirection: "column",
-              maxHeight: "clamp(250px, 45vh, 450px)",
-              overflowY: "auto",
-              overflowX: "hidden",
-              WebkitOverflowScrolling: "touch",
-              paddingRight: "0.5rem",
+              maxHeight: "clamp(380px, 65vh, 600px)",
+              alignItems: "stretch",
             }}
-            data-lenis-prevent="true"
           >
-            <div className="flex justify-between items-center px-1 pb-1 text-[0.56rem] font-mono text-[#39D353]/70">
-              <span>{filteredProjects.length} REPOSITORIOS DISPONIBLES</span>
-              <span className="sm:hidden animate-pulse">↕ DESLIZA PARA SCROLL</span>
-            </div>
-            {filteredProjects.map((p, i) => {
-              const isSelected = activeProject === i;
-              return (
-                <div
-                  key={p.id}
-                  onClick={() => {
-                    setActiveProject(i);
-                    audioManager.play("keyclick");
-                  }}
-                  className="active:scale-[0.99] transition-transform duration-100"
-                  style={{
-                    background: isSelected ? "rgba(57, 211, 83, 0.09)" : "rgba(0,0,0,0.28)",
-                    border: `1px solid ${isSelected ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.14)"}`,
-                    borderLeft: `3px solid ${isSelected ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.28)"}`,
-                    padding: "clamp(0.55rem, 1.4vh, 0.85rem) clamp(0.65rem, 1.8vw, 1rem)",
-                    cursor: "pointer",
-                    color: isSelected ? "var(--scene-fg)" : "var(--scene-muted)",
-                    fontFamily: "var(--font-space-mono), monospace",
-                    transition: "all 0.15s ease",
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-expanded={isSelected}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                    <span style={{ fontSize: "clamp(0.78rem, 1.8vw, 0.92rem)", fontWeight: 700, color: "var(--scene-fg)" }}>
-                      <span style={{ opacity: 0.45, fontSize: "0.75em", marginRight: "0.45rem" }}>drwx {p.id}</span>
-                      {p.name}
-                    </span>
-                    <span style={{ fontSize: "0.58rem", opacity: 0.55 }}>{p.year}</span>
-                  </div>
+            {/* Left Column: Git Tree Log (6 Cols on desktop) */}
+            <div
+              className="lg:col-span-6 flex flex-col gap-1.5 overflow-y-auto pr-1"
+              style={{
+                WebkitOverflowScrolling: "touch",
+              }}
+              data-lenis-prevent="true"
+            >
+              <div className="flex justify-between items-center px-1 pb-1 font-mono text-[0.54rem] text-[#39D353]/80 border-b border-[#39D353]/20">
+                <span>GIT COMMIT LOG & TREE</span>
+                <span>{filteredProjects.length} REPOS FOUND</span>
+              </div>
 
-                  {isSelected && (
-                    <div style={{ marginTop: "0.5rem", paddingTop: "0.45rem", borderTop: "1px dashed rgba(57, 211, 83, 0.2)" }}>
-                      <p style={{ fontSize: "clamp(0.68rem, 1.5vw, 0.8rem)", color: "var(--scene-fg)", opacity: 0.9, lineHeight: 1.45 }}>
-                        {p.desc}
-                      </p>
-
-                      {/* Tech badges */}
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem", marginTop: "0.45rem" }}>
-                        {p.stack.map((item, sIdx) => (
-                          <span
-                            key={sIdx}
-                            style={{
-                              fontSize: "0.52rem",
-                              background: "rgba(57, 211, 83, 0.08)",
-                              border: "1px solid rgba(57, 211, 83, 0.25)",
-                              color: "var(--scene-accent)",
-                              padding: "0.1rem 0.35rem",
-                              borderRadius: "2px",
-                            }}
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Mobile interactive action buttons */}
-                      <div
-                        style={{
-                          display: "flex",
-                          flexWrap: "wrap",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          gap: "0.35rem",
-                          marginTop: "0.55rem",
-                        }}
-                      >
-                        <button
-                          onClick={(e) => handleCopyClone(e, p.url, p.id)}
+              {filteredProjects.map((p, i) => {
+                const isSelected = activeProjectIdx === i;
+                return (
+                  <div
+                    key={p.id}
+                    onClick={() => {
+                      setActiveProjectIdx(i);
+                      audioManager.play("keyclick");
+                    }}
+                    className="group active:scale-[0.99] transition-all cursor-pointer select-none"
+                    style={{
+                      background: isSelected ? "rgba(57, 211, 83, 0.08)" : "rgba(10, 16, 26, 0.6)",
+                      border: `1px solid ${isSelected ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.18)"}`,
+                      borderLeft: `4px solid ${isSelected ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.3)"}`,
+                      padding: "0.55rem 0.75rem",
+                      borderRadius: "2px",
+                      boxShadow: isSelected ? "0 0 14px rgba(57, 211, 83, 0.12)" : "none",
+                    }}
+                  >
+                    {/* Commit graph line & Repo name */}
+                    <div className="flex items-baseline justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="text-[#39D353] font-mono text-[0.7rem] font-bold">
+                          {isSelected ? "▶" : "*"}
+                        </span>
+                        <span
                           style={{
-                            fontSize: "0.58rem",
                             fontFamily: "var(--font-space-mono), monospace",
-                            background: copiedId === p.id ? "var(--scene-accent)" : "rgba(255, 255, 255, 0.06)",
-                            color: copiedId === p.id ? "#000" : "var(--scene-fg)",
-                            border: "1px solid rgba(57, 211, 83, 0.35)",
-                            padding: "0.2rem 0.5rem",
-                            borderRadius: "2px",
-                            cursor: "pointer",
-                            transition: "all 0.15s ease",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "0.25rem",
-                          }}
-                        >
-                          {copiedId === p.id ? "COPIADO ✓" : "copiar git clone 📋"}
-                        </button>
-
-                        <a
-                          href={p.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          style={{
-                            fontSize: "0.58rem",
-                            color: "#000",
-                            background: "var(--scene-accent)",
-                            padding: "0.2rem 0.55rem",
+                            fontSize: "clamp(0.75rem, 1.5vw, 0.86rem)",
                             fontWeight: 700,
-                            textDecoration: "none",
-                            borderRadius: "2px",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "0.2rem",
+                            color: isSelected ? "#FFFFFF" : "var(--scene-fg)",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
                           }}
                         >
-                          repo ↗
-                        </a>
+                          {p.name}
+                        </span>
                       </div>
+
+                      {/* Commit hash pill */}
+                      <span className="font-mono text-[0.54rem] text-[#39D353]/90 bg-[#39D353]/10 px-1.5 py-0.5 rounded border border-[#39D353]/30 shrink-0">
+                        {p.commitHash}
+                      </span>
                     </div>
-                  )}
+
+                    {/* Metadata line: diff stats and branch */}
+                    <div className="flex items-center justify-between text-[0.52rem] font-mono text-[#888] mt-1.5 pt-1 border-t border-[#39D353]/10">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[#888]">branch:{p.branch}</span>
+                        <span className="text-[#39D353]">+{p.diffAdded}</span>
+                        <span className="text-[#F85149]">-{p.diffDeleted}</span>
+                      </div>
+                      <span className="text-[#666]">{p.year}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Right Column: Repository Dossier & Inspector (6 Cols on desktop) */}
+            <div
+              className="lg:col-span-6 flex flex-col justify-between overflow-y-auto"
+              style={{
+                background: "rgba(5, 9, 15, 0.85)",
+                border: "1px solid rgba(57, 211, 83, 0.3)",
+                padding: "clamp(0.75rem, 2vh, 1.1rem)",
+                borderRadius: "3px",
+              }}
+              data-lenis-prevent="true"
+            >
+              <div>
+                {/* Dossier Header */}
+                <div className="flex justify-between items-center pb-2 mb-2 border-b border-[#39D353]/25 font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#DE9F43] text-[0.62rem] font-bold">[ INSPECTOR ]</span>
+                    <span className="text-[0.68rem] text-white font-bold tracking-wider uppercase">
+                      {currentProject.name}
+                    </span>
+                  </div>
+                  <span className="text-[0.52rem] text-[#888]">REF: HEAD·{currentProject.commitHash}</span>
                 </div>
-              );
-            })}
+
+                {/* Purpose / Architectural rationale */}
+                <div className="mb-3">
+                  <p className="font-mono text-[0.65rem] sm:text-[0.72rem] text-[#E6EDF3] leading-relaxed mb-2">
+                    {currentProject.desc}
+                  </p>
+                  <div className="bg-[#03060A] p-2 rounded border border-[#39D353]/15 font-mono text-[0.56rem] sm:text-[0.62rem] text-[#9EA7B3] leading-normal">
+                    <span className="text-[#39D353] font-bold">NOTA TÉCNICA: </span>
+                    {currentProject.archNote}
+                  </div>
+                </div>
+
+                {/* Diff stats breakdown */}
+                <div className="mb-3 font-mono text-[0.54rem] flex flex-col gap-1">
+                  <div className="flex justify-between text-[#888]">
+                    <span>MODIFICACIONES DEL COMMIT:</span>
+                    <span>{currentProject.filesChanged} archivos afectados</span>
+                  </div>
+                  <div className="w-full bg-[#161B22] h-2 rounded overflow-hidden flex border border-[#30363D]">
+                    <div
+                      style={{
+                        width: `${Math.round((currentProject.diffAdded / (currentProject.diffAdded + currentProject.diffDeleted)) * 100)}%`,
+                        background: "#39D353",
+                      }}
+                      title={`+${currentProject.diffAdded} líneas añadidas`}
+                    />
+                    <div
+                      style={{
+                        width: `${Math.round((currentProject.diffDeleted / (currentProject.diffAdded + currentProject.diffDeleted)) * 100)}%`,
+                        background: "#F85149",
+                      }}
+                      title={`-${currentProject.diffDeleted} líneas eliminadas`}
+                    />
+                  </div>
+                  <div className="flex justify-between text-[0.5rem] text-[#777]">
+                    <span className="text-[#39D353]">+{currentProject.diffAdded} inserciones</span>
+                    <span className="text-[#F85149]">-{currentProject.diffDeleted} supresiones</span>
+                  </div>
+                </div>
+
+                {/* Stack Packages (styled like Linux packages) */}
+                <div className="mb-3">
+                  <span className="font-mono text-[0.52rem] text-[#888] block mb-1">DEPENDENCIAS & ENTORNO:</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {currentProject.stack.map((item, idx) => (
+                      <span
+                        key={idx}
+                        className="font-mono text-[0.52rem] px-1.5 py-0.5 rounded bg-[#39D353]/10 border border-[#39D353]/30 text-[#39D353]"
+                      >
+                        pkg:{item.toLowerCase().replace(/[^a-z0-9]/g, "-")}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-2 border-t border-[#39D353]/20 flex flex-wrap items-center justify-between gap-2">
+                <button
+                  onClick={(e) => handleCopyClone(e, currentProject.url, currentProject.id)}
+                  className="font-mono text-[0.58rem] py-1.5 px-3 rounded border border-[#39D353]/50 text-white active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+                  style={{
+                    background: copiedId === currentProject.id ? "#39D353" : "rgba(57, 211, 83, 0.1)",
+                    color: copiedId === currentProject.id ? "#000" : "#39D353",
+                    fontWeight: 700,
+                  }}
+                  title="Copiar comando de clonación al portapapeles"
+                >
+                  <span>{copiedId === currentProject.id ? "COPIADO AL PORTAPAPELES ✓" : "copiar git clone 📋"}</span>
+                </button>
+
+                <a
+                  href={currentProject.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-[0.58rem] py-1.5 px-3 rounded font-bold text-black bg-[#39D353] hover:bg-[#48e864] active:scale-95 transition-all flex items-center gap-1 text-decoration-none cursor-pointer"
+                >
+                  <span>ABRIR EN GITHUB</span>
+                  <span>↗</span>
+                </a>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Interactive quick chips (Touch command runner) */}
+        {/* Quick Shell Commands Bar */}
         {showProjects && (
-          <div style={{ marginTop: "0.6rem" }}>
-            <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap", alignItems: "center" }}>
-              <span style={{ fontFamily: "var(--font-space-mono), monospace", fontSize: "0.55rem", opacity: 0.5 }}>
-                RUN:
-              </span>
+          <div style={{ marginTop: "0.75rem" }}>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="font-mono text-[0.52rem] text-[#777] uppercase mr-1">RUN:</span>
               {[
+                { cmd: "git-status", label: "$ git status" },
+                { cmd: "git-log", label: "$ git log" },
                 { cmd: "whoami", label: "$ whoami" },
-                { cmd: "git", label: "$ git status" },
-                { cmd: "neofetch", label: "$ neofetch" },
+                { cmd: "uname", label: "$ uname -a" },
                 { cmd: "clear", label: "$ clear" },
               ].map((c) => (
                 <button
                   key={c.cmd}
                   onClick={() => handleRunCommand(c.cmd)}
-                  style={{
-                    fontFamily: "var(--font-space-mono), monospace",
-                    fontSize: "0.55rem",
-                    padding: "0.15rem 0.45rem",
-                    background: "rgba(255, 255, 255, 0.04)",
-                    border: "1px solid rgba(57, 211, 83, 0.2)",
-                    color: "var(--scene-accent)",
-                    borderRadius: "2px",
-                    cursor: "pointer",
-                    transition: "all 0.15s",
-                  }}
-                  className="hover:bg-[#39D353]/15"
+                  className="font-mono text-[0.52rem] py-0.5 px-2 rounded bg-white/[0.04] border border-[#39D353]/25 text-[#39D353] hover:bg-[#39D353]/15 active:scale-95 transition-all cursor-pointer"
                 >
                   {c.label}
                 </button>
               ))}
             </div>
 
-            {/* Command output box */}
+            {/* Terminal output box */}
             {terminalOutput && (
               <div
-                style={{
-                  fontFamily: "var(--font-space-mono), monospace",
-                  fontSize: "0.62rem",
-                  color: "var(--scene-fg)",
-                  background: "rgba(0, 0, 0, 0.45)",
-                  border: "1px dashed rgba(57, 211, 83, 0.35)",
-                  padding: "0.4rem 0.6rem",
-                  borderRadius: "2px",
-                  marginTop: "0.45rem",
-                  lineHeight: 1.4,
-                  wordBreak: "break-word",
-                }}
+                className="font-mono text-[0.62rem] p-2 rounded mt-2 border border-dashed border-[#39D353]/40 leading-relaxed text-[#E6EDF3] bg-black/60"
               >
                 {terminalOutput}
               </div>
@@ -524,60 +647,14 @@ export default function TerminalScene() {
           </div>
         )}
 
-        {/* Status line */}
-        {showProjects && (
-          <div
-            style={{
-              fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "0.58rem",
-              color: "var(--scene-muted)",
-              paddingTop: "0.5rem",
-              opacity: 0.6,
-              display: "flex",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "0.25rem",
-            }}
-          >
-            <span>{filteredProjects.length} repos · toca para abrir / copiar</span>
-            <span>BRANCH: main [clean]</span>
-          </div>
-        )}
-
-        {/* Green phosphor photo overlay in corner — Only on desktop so it never covers mobile */}
-        <div
-          className="animate-crt-pulse tactile-frame hidden md:block"
-          style={{
-            position: "absolute",
-            right: 0,
-            bottom: "-3.5rem",
-            width: "115px",
-            aspectRatio: "1",
-            borderRadius: "4px",
-            overflow: "hidden",
-            cursor: "pointer",
-          }}
-          onClick={() => audioManager.play("crt")}
-          title="Terminal CRT monitor"
-          aria-hidden="true"
-        >
-          <Image
-            src="/juanfe-reciente-2.jpg"
-            alt=""
-            fill
-            style={{ objectFit: "cover" }}
-            sizes="115px"
-          />
-        </div>
-
-        {/* Floating Tux Sticker — Only on desktop to protect mobile readability */}
+        {/* Floating Tux Sticker — Desktop only to preserve mobile ergonomics */}
         <div className="absolute -right-12 -bottom-10 z-20 hidden md:block">
           <FloatingSticker
             src="/tux-roses.png"
             alt="Tux con rosas"
             label="TUX · LINUX KERNEL"
-            width={100}
-            height={125}
+            width={95}
+            height={115}
             initialRotate={8}
             sound="keyclick"
           />

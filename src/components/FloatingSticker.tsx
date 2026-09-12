@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
@@ -65,7 +65,7 @@ export default function FloatingSticker({
   return (
     <div
       ref={containerRef}
-      className={`select-none cursor-pointer z-20 ${className}`}
+      className={`select-none cursor-pointer z-20 min-w-[44px] min-h-[44px] ${className}`}
       style={{
         // Organic float + pop scale, no transition on animation-driven transform
         animation: ANIM_MAP[animVariant],
@@ -79,6 +79,10 @@ export default function FloatingSticker({
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={() => {
+        setIsHovered(true);
+        setTimeout(() => setIsHovered(false), 2500);
+      }}
       role="button"
       tabIndex={0}
       aria-label={label || alt}

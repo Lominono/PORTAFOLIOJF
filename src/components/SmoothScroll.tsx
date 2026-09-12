@@ -23,15 +23,15 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     }
 
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 0.8,
-      touchMultiplier: 1.0,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.15,
       syncTouch: true,
-      syncTouchLerp: 0.06,
+      syncTouchLerp: 0.08,
       autoRaf: false,
     });
 
@@ -43,14 +43,11 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     // Connect Lenis scroll to GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
 
-    // Start background music on first user scroll — no click required.
-    // touchstart (fires before scroll on mobile) already unlocks AudioContext;
-    // calling startBgMusic here, inside the RAF loop, satisfies autoplay policy.
-    const startMusicOnce = () => {
+    // Start background music reliably on user scroll — no click required.
+    const onLenisScroll = () => {
       startBgMusic();
-      lenis.off("scroll", startMusicOnce);
     };
-    lenis.on("scroll", startMusicOnce);
+    lenis.on("scroll", onLenisScroll);
 
     const updateTicker = (time: number) => {
       lenis.raf(time * 1000);

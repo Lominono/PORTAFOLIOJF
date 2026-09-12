@@ -513,8 +513,7 @@ body {
 
 /* Minimum 44×44px touch targets (Apple HIG / WCAG 2.5.8) */
 nav[aria-label="Escenas del portfolio"] button {
-  min-height: 28px;
-  padding: 0 3px;
+  min-height: 44px;
 }
 
 /* Prevent horizontal overflow on all scenes & ensure breathing room above bottom nav */
@@ -579,5 +578,11 @@ a[role="button"]:active,
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   overscroll-behavior: contain;
+}
+
+@media (max-width: 768px) {
+  html, body {
+    overscroll-behavior-y: none;
+  }
 }
 

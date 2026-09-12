@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 import OpeningScene from "@/components/OpeningScene";
 import ReceiptScene from "@/components/ReceiptScene";
 import BrutalismScene from "@/components/BrutalismScene";
@@ -35,21 +35,14 @@ export const SCENES: SceneConfig[] = [
   { id: "credits",    sceneToken: "scene-credits",    num: "08", title: "FIN DE RELATO",     reel: "CRÉDITOS FINALES",  sound: "shutter",    bg: "#000000", Component: CreditsScene },
 ];
 
-// Scroll budget per scene (in vh)
-// 40% focused reading hold, 60% silky-smooth solid deck curtain slide
-const SLICE_VH = 165;
-const HOLD_THRESHOLD = 0.35;
+// 24% initial reading hold, 76% silky-smooth solid deck curtain slide
+const HOLD_THRESHOLD = 0.24;
 
 // Perlin's smootherstep curve: zero 1st & 2nd derivative at both endpoints.
-// Completely eliminates sudden acceleration or deceleration jerk.
+// Eliminates sudden acceleration or deceleration jerk with organic momentum.
 function smootherStep(t: number): number {
   const c = Math.max(0, Math.min(1, t));
   return c * c * c * (c * (6 * c - 15) + 10);
-}
-
-// Extra-smooth S-curve: smootherstep applied twice for ultra-premium feel
-function ultraSmooth(t: number): number {
-  return smootherStep(smootherStep(t));
 }
 
 export default function CinematicDeck() {
@@ -57,12 +50,18 @@ export default function CinematicDeck() {
   const dimmersRef = useRef<(HTMLDivElement | null)[]>([]);
   const activeSceneRef = useRef(0);
   const soundLockRef = useRef(false);
+  
+  const [sliceVh, setSliceVh] = useState(150);
 
   const switchSceneToken = useCallback((newIdx: number) => {
     if (newIdx === activeSceneRef.current) return;
     activeSceneRef.current = newIdx;
     const target = SCENES[newIdx];
     document.documentElement.dataset.scene = target.sceneToken;
+
+    if (newIdx >= 1) {
+      audioManager.startBgMusic();
+    }
 
     if (!soundLockRef.current) {
       soundLockRef.current = true;
@@ -77,11 +76,22 @@ export default function CinematicDeck() {
     document.documentElement.dataset.scene = SCENES[0].sceneToken;
     activeSceneRef.current = 0;
 
+    const handleResize = () => {
+      setSliceVh(window.innerWidth <= 768 ? 120 : 150);
+    };
+    handleResize();
+
     const updateStage = () => {
       const scrollY = window.scrollY;
       const vh = window.innerHeight;
-      const slicePx = vh * (SLICE_VH / 100);
+      const currentSliceVh = window.innerWidth <= 768 ? 120 : 150;
+      const slicePx = vh * (currentSliceVh / 100);
       const totalScenes = SCENES.length;
+
+      // Start background music as soon as user begins scrolling or reaches scene 01/02
+      if (scrollY > 5) {
+        audioManager.startBgMusic();
+      }
 
       const rawIndex = scrollY / slicePx;
       const clampedIndex = Math.max(0, Math.min(totalScenes - 1, Math.floor(rawIndex)));
@@ -97,8 +107,8 @@ export default function CinematicDeck() {
         }
       }
 
-      // Ultra-smooth double-eased progress
-      const eased = ultraSmooth(rawT);
+      // Silky smooth Perlin eased progress
+      const eased = smootherStep(rawT);
 
       // Dominant scene determination for HUD, audio & color theme
       const dominantIndex = isTransitioning && eased >= 0.5 ? clampedIndex + 1 : clampedIndex;
@@ -166,6 +176,7 @@ export default function CinematicDeck() {
     };
 
     window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
     window.addEventListener("resize", requestUpdate, { passive: true });
 
     // Synchronize directly with Lenis scroll event
@@ -180,6 +191,7 @@ export default function CinematicDeck() {
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("resize", requestUpdate);
       if (lenisObj?.off) {
         lenisObj.off("scroll", requestUpdate);
@@ -223,7 +235,6 @@ export default function CinematicDeck() {
                 WebkitOverflowScrolling: "touch",
                 contain: "layout style paint",
               }}
-              data-lenis-prevent="true"
             >
               {/* Optical depth dimmer on receding scene */}
               <div
@@ -253,7 +264,7 @@ export default function CinematicDeck() {
       */}
       <div
         className="relative w-full pointer-events-none"
-        style={{ height: `${SCENES.length * SLICE_VH}vh` }}
+        style={{ height: `${SCENES.length * sliceVh}vh` }}
         aria-hidden="true"
       >
         {SCENES.map((scene, idx) => (
@@ -262,10 +273,10 @@ export default function CinematicDeck() {
             data-scene-id={scene.id}
             style={{
               position: "absolute",
-              top: `${idx * SLICE_VH}vh`,
+              top: `${idx * sliceVh}vh`,
               left: 0,
               width: "100%",
-              height: `${SLICE_VH}vh`,
+              height: `${sliceVh}vh`,
               pointerEvents: "none",
             }}
           />

@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import FloatingSticker from "./FloatingSticker";
+import { audioManager } from "./AudioManager";
 
 // Escena 04 — Glitch / VHS — El salto geográfico
 // Bisagra narrativa: Ginebra (Valle del Cauca) → Santander (Cantabria)
@@ -100,7 +101,7 @@ export default function VHSScene() {
       style={{
         background: "#0D0C0F",
         color: "#F0EBF4",
-        padding: "clamp(2.2rem, 4.5vh, 4.5rem) clamp(1rem, 4vw, 3.5rem)",
+        padding: "clamp(1.5rem, 3.5vh, 2.8rem) clamp(1rem, 4vw, 3rem) clamp(4.5rem, 10vh, 6.5rem)",
       }}
       aria-label="Escena del salto geográfico — Ginebra a Santander"
     >
@@ -263,6 +264,7 @@ export default function VHSScene() {
           ref={photoFrameRef}
           className="animate-vhs-drift tactile-frame cursor-pointer"
           onClick={() => {
+            audioManager.play("static");
             const el = glitchRef.current;
             if (el) {
               el.classList.add("glitch-active");
@@ -271,26 +273,28 @@ export default function VHSScene() {
           }}
           title="Toca para distorsión de cinta VHS"
           style={{
-            marginTop: "clamp(0.85rem, 2vh, 2rem)",
+            marginTop: "clamp(0.4rem, 1.2vh, 0.9rem)",
             position: "relative",
-            maxWidth: "clamp(160px, 46vw, 290px)",
+            maxWidth: "clamp(120px, 24vh, 185px)",
             width: "100%",
-            aspectRatio: "4/3",
-            border: "2px solid rgba(255, 255, 255, 0.2)",
-            boxShadow: "0 10px 35px rgba(0, 0, 0, 0.85), inset 0 0 20px rgba(0, 0, 0, 0.9)",
+            aspectRatio: "3/4",
+            border: "2px solid rgba(255, 107, 157, 0.4)",
+            borderRadius: "4px",
+            boxShadow: "0 12px 38px rgba(0, 0, 0, 0.88), 0 0 16px rgba(229, 57, 53, 0.22), inset 0 0 20px rgba(0, 0, 0, 0.9)",
             overflow: "hidden",
             background: "#09090b",
           }}
         >
           <Image
-            src="/juanfe-reciente-1.jpg"
-            alt="JuanFe en Santander"
+            src="/juanfe-salto.png"
+            alt="El Salto — De Ginebra a Santander"
             fill
+            priority
             style={{
               objectFit: "cover",
-              filter: "contrast(125%) saturate(130%) hue-rotate(-5deg)",
+              filter: "contrast(115%) brightness(102%)",
             }}
-            sizes="(max-width: 768px) 60vw, 320px"
+            sizes="(max-width: 768px) 50vw, 260px"
           />
           {/* Internal timestamp stamp on video */}
           <div
@@ -300,12 +304,13 @@ export default function VHSScene() {
               right: "10px",
               fontFamily: "var(--font-space-mono), monospace",
               fontSize: "0.55rem",
-              color: "#ffff00",
-              textShadow: "1px 1px 2px #000",
+              color: "#ffff55",
+              textShadow: "1px 1px 2px #000, 0 0 8px rgba(255,255,85,0.45)",
               letterSpacing: "0.1em",
+              zIndex: 3,
             }}
           >
-            02-SEP-2026 17:45
+            SP ■ 2026-SEP
           </div>
         </div>
 
@@ -313,13 +318,13 @@ export default function VHSScene() {
         <p
           style={{
             fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "clamp(0.72rem, 1.8vw, 0.92rem)",
+            fontSize: "clamp(0.7rem, 1.6vw, 0.88rem)",
             color: "var(--scene-fg)",
             opacity: 0.9,
-            lineHeight: 1.55,
+            lineHeight: 1.5,
             letterSpacing: "0.03em",
-            maxWidth: "56ch",
-            margin: "clamp(0.85rem, 2vh, 2rem) auto 0",
+            maxWidth: "54ch",
+            margin: "clamp(0.45rem, 1.2vh, 0.9rem) auto 0",
           }}
         >
           Cuando vine a España pues al principio fue difícil porque relativamente estaba solo, sin amigos (solo mi familia), y pues a medida que iba pasando el tiempo fui conociendo gente y ver lo maravilloso y alegres que llegan a ser los españoles.
