@@ -251,17 +251,14 @@ export default function ZineScene() {
             {ORIGIN_BODY}
           </p>
 
-          {/* Decorative Salchipapa with organic float — Contained for mobile */}
+          {/* Decorative Salchipapa with organic float — Safe positioning on mobile without overlapping text */}
           <div
             ref={decoRef}
-            className="tactile-frame cursor-pointer"
+            className="tactile-frame cursor-pointer relative sm:absolute self-end sm:self-auto sm:right-2 sm:-bottom-10 mt-1 sm:mt-0"
             onClick={() => audioManager.play("pop")}
             title="Sabor de Ginebra"
             style={{
-              position: "absolute",
-              right: "clamp(0rem, 2vw, 1.5rem)",
-              bottom: "clamp(-1.8rem, -3vw, -2.8rem)",
-              width: "clamp(80px, 17vw, 130px)",
+              width: "clamp(70px, 15vw, 125px)",
               aspectRatio: "1",
               willChange: "opacity, transform",
               animation: "floatOrganic 6s ease-in-out infinite",

@@ -14,7 +14,7 @@ const LINE_1 = "Nuestra vida";
 const LINE_2 = "es lo que nuestros pensamientos";
 const LINE_3 = "hacen de ella.";
 const SUBDECLARATION = "— MARCO AURELIO · PRINCIPIO DE JUANFE · 18 AÑOS · SMR";
-const TICKER_TEXT = "NUESTRA VIDA ES LO QUE NUESTROS PENSAMIENTOS HACEN DE ELLA + MARCO AURELIO + NO SE QUE MAS + ";
+const TICKER_TEXT = "NUESTRA VIDA ES LO QUE NUESTROS PENSAMIENTOS HACEN DE ELLA + MARCO AURELIO + DISCIPLINA Y CRITERIO + ";
 
 export default function BrutalismScene() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -158,7 +158,7 @@ export default function BrutalismScene() {
       </h2>
 
       {/* Floating Flex Sticker — Adaptive on mobile & desktop */}
-      <div className="absolute right-3 sm:right-16 top-12 sm:top-1/4 z-20">
+      <div className="absolute right-4 sm:right-16 top-auto bottom-16 sm:top-1/4 sm:bottom-auto z-20">
         <FloatingSticker
           src="/flex-emoji.png"
           alt="Fuerza y criterio"

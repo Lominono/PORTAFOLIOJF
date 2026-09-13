@@ -159,7 +159,7 @@ export default function CreditsScene() {
           height: "100%",
           WebkitOverflowScrolling: "touch",
           touchAction: "pan-y",
-          padding: "clamp(1.5rem, 3.5vh, 4rem) clamp(0.75rem, 3.5vw, 3rem)",
+          padding: "clamp(3.4rem, 6vh, 4.5rem) clamp(0.75rem, 3.5vw, 3rem) max(7rem, calc(env(safe-area-inset-bottom, 0px) + 5.5rem))",
         }}
         data-lenis-prevent="true"
       >
@@ -248,7 +248,7 @@ export default function CreditsScene() {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 sm:gap-3 anim-credit">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 anim-credit">
                 {SOCIAL_PLATFORMS.map((platform, idx) => {
                   const Icon = platform.icon;
                   return (
@@ -322,8 +322,8 @@ export default function CreditsScene() {
                           fontFamily: "var(--font-space-mono), monospace",
                           fontSize: "clamp(0.6rem, 1.5vw, 0.78rem)",
                           color: "var(--scene-accent, #E8A87C)",
-                          marginTop: "0.2rem",
-                          wordBreak: "break-all",
+                          marginTop: "0.25rem",
+                          wordBreak: "break-word",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                         }}

@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { audioManager } from "./AudioManager";
 
-// Navigation dots � 9 scenes, watches html[data-scene] via MutationObserver.
+// Navigation dots — 9 scenes, watches html[data-scene] via MutationObserver.
 // Click scrolls to [data-scene-id="X"] (native scrollIntoView, smooth).
 
 const SCENES: Array<{ id: string; label: string }> = [
@@ -48,6 +49,7 @@ export default function MuseumNav() {
   }, []);
 
   const goTo = (id: string, index: number) => {
+    audioManager.play("keyclick");
     const lenis = (window as unknown as { lenis?: { scrollTo: (target: number, opts?: { duration?: number }) => void } }).lenis;
     const vh = window.innerHeight;
     const currentSlice = window.innerWidth <= 768 ? 1.20 : 1.50;
@@ -75,11 +77,12 @@ export default function MuseumNav() {
         background: "var(--scene-hud-bg)",
         border: "1px solid var(--scene-border)",
         borderRadius: "9999px",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
+        boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 8px 24px -4px rgba(0, 0, 0, 0.35)",
+        backdropFilter: "blur(20px) saturate(180%)",
+        WebkitBackdropFilter: "blur(20px) saturate(180%)",
         opacity: visible ? 1 : 0,
         transform: `translateX(-50%) translateY(${visible ? 0 : 6}px)`,
-        transition: "opacity 0.4s ease, transform 0.4s ease, background 0.75s ease, border-color 0.75s ease",
+        transition: "opacity 0.4s ease, transform 0.4s ease, background 0.75s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.75s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
         pointerEvents: visible ? "auto" : "none",
         maxWidth: "calc(100vw - 2rem)",
       }}
@@ -105,7 +108,7 @@ export default function MuseumNav() {
               boxSizing: "content-box",
               cursor: "pointer",
               opacity: isActive ? 1 : 0.35,
-              transition: "width 0.3s cubic-bezier(0.16,1,0.3,1), background-color 0.65s ease, opacity 0.25s ease",
+              transition: "width 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.65s ease, opacity 0.25s ease",
               flexShrink: 0,
               touchAction: "manipulation",
             }}

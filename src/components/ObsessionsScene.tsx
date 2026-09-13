@@ -132,9 +132,9 @@ export default function ObsessionsScene() {
             <div
               style={{
                 background: "#faf8f2",
-                padding: "clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) clamp(22px, 3.5vw, 32px)",
+                padding: "clamp(6px, 1.8vw, 12px) clamp(6px, 1.8vw, 12px) clamp(16px, 3vh, 32px)",
                 boxShadow: "2px 4px 0 rgba(0,0,0,0.18), 6px 10px 28px rgba(0,0,0,0.12)",
-                maxWidth: "clamp(150px, 38vw, 260px)",
+                maxWidth: "clamp(120px, 20vh, 240px)",
                 width: "100%",
                 border: "1px solid rgba(0,0,0,0.08)",
               }}
@@ -151,10 +151,10 @@ export default function ObsessionsScene() {
               <p
                 style={{
                   fontFamily: "var(--font-space-mono), monospace",
-                  fontSize: "clamp(0.6rem, 1.4vw, 0.7rem)",
+                  fontSize: "clamp(0.55rem, 1.2vw, 0.68rem)",
                   color: "#4a4238",
                   textAlign: "center",
-                  marginTop: "0.85rem",
+                  marginTop: "0.55rem",
                   letterSpacing: "0.04em",
                   fontWeight: 500,
                 }}
@@ -173,11 +173,12 @@ export default function ObsessionsScene() {
               margin: 0,
               display: "flex",
               flexDirection: "column",
-              maxHeight: "clamp(280px, 50vh, 480px)",
+              maxHeight: "clamp(240px, 46vh, 480px)",
               overflowY: "auto",
               overflowX: "hidden",
               WebkitOverflowScrolling: "touch",
-              paddingRight: "0.2rem",
+              paddingRight: "0.3rem",
+              paddingBottom: "3.5rem",
             }}
             data-lenis-prevent="true"
           >

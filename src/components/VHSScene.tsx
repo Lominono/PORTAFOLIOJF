@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -9,7 +9,16 @@ import { audioManager } from "./AudioManager";
 
 // Escena 04 — Glitch / VHS — El salto geográfico
 // Bisagra narrativa: Ginebra (Valle del Cauca) → Santander (Cantabria)
-// Aberración cromática, scanlines analógicas, tracking VHS
+// Estética completa de videocasetera analógica (VCR / VHS NTSC)
+// OSD con código de tiempo en tiempo real, aberración cromática, scanlines y controles VCR táctiles
+
+function formatTimecode(totalSeconds: number): string {
+  const hrs = Math.floor(totalSeconds / 3600);
+  const mins = Math.floor((totalSeconds % 3600) / 60);
+  const secs = totalSeconds % 60;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+}
 
 export default function VHSScene() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -17,6 +26,32 @@ export default function VHSScene() {
   const glitchRef = useRef<HTMLDivElement>(null);
   const photoFrameRef = useRef<HTMLDivElement>(null);
   const glitchTriggered = useRef(false);
+
+  // Dynamic real-time VCR tape timecode & state
+  const [tapeSeconds, setTapeSeconds] = useState(506); // 00:08:26
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isGlitching, setIsGlitching] = useState(false);
+  const [trackingLevel] = useState(94);
+
+  const triggerGlitch = useCallback(() => {
+    audioManager.play("static");
+    setIsGlitching(true);
+    const el = glitchRef.current;
+    if (el) {
+      el.classList.add("glitch-active");
+      setTimeout(() => el?.classList.remove("glitch-active"), 380);
+    }
+    setTimeout(() => setIsGlitching(false), 450);
+  }, []);
+
+  // Timecode running interval when active and playing
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setTapeSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -51,7 +86,7 @@ export default function VHSScene() {
           duration: 0.9,
           ease: "power3.out",
           onComplete: () => {
-            // Analogue tracking micro-jitter — irregular rhythm, not a loop
+            // Analogue tracking micro-jitter — irregular rhythm
             const jitter = () => {
               if (!photoFrameRef.current) return;
               gsap.to(photoFrameRef.current, {
@@ -66,7 +101,6 @@ export default function VHSScene() {
                     duration: 0.1,
                     ease: "none",
                     onComplete: () => {
-                      // Next jitter in 3.5–8s
                       setTimeout(jitter, 3500 + Math.random() * 4500);
                     },
                   });
@@ -99,7 +133,7 @@ export default function VHSScene() {
       data-scene-id="vhs"
       className="relative min-h-screen flex items-center justify-center overflow-x-clip vhs-frame"
       style={{
-        background: "#0D0C0F",
+        background: "radial-gradient(ellipse at center, #131118 0%, #08070A 75%, #030304 100%)",
         color: "#F0EBF4",
         padding: "clamp(1.5rem, 3.5vh, 2.8rem) clamp(1rem, 4vw, 3rem) clamp(4.5rem, 10vh, 6.5rem)",
       }}
@@ -108,16 +142,26 @@ export default function VHSScene() {
       {/* Scanlines overlay */}
       <div className="vhs-scanlines" aria-hidden="true" />
 
-      {/* Top VHS indicators */}
+      {/* Sweeping magnetic tape tracking glitch band */}
+      <div className="vhs-tracking-band" aria-hidden="true" />
+
+      {/* 4:3 TV broadcast safe-area reticle crosshair ticks (corner brackets) */}
+      <div className="hidden sm:block pointer-events-none select-none z-10" aria-hidden="true">
+        <span className="absolute top-4 left-4 font-mono text-[1.1rem] text-[#ff6b9d]/30 font-light leading-none">⌜</span>
+        <span className="absolute top-4 right-4 font-mono text-[1.1rem] text-[#ff6b9d]/30 font-light leading-none">⌝</span>
+        <span className="absolute bottom-16 left-4 font-mono text-[1.1rem] text-[#ff6b9d]/30 font-light leading-none">⌞</span>
+        <span className="absolute bottom-16 right-4 font-mono text-[1.1rem] text-[#ff6b9d]/30 font-light leading-none">⌟</span>
+      </div>
+
+      {/* Top VHS OSD (On-Screen Display) indicators */}
       <div
         aria-hidden="true"
         style={{
           position: "absolute",
-          top: "clamp(1rem, 3vw, 1.75rem)",
-          left: "clamp(1rem, 3vw, 2rem)",
+          top: "clamp(0.85rem, 2.5vh, 1.75rem)",
+          left: "clamp(0.75rem, 3vw, 2.2rem)",
           fontFamily: "var(--font-space-mono), monospace",
-          fontSize: "clamp(0.6rem, 1.4vw, 0.75rem)",
-          color: "#ff6b9d",
+          fontSize: "clamp(0.55rem, 1.3vw, 0.74rem)",
           letterSpacing: "0.14em",
           display: "flex",
           alignItems: "center",
@@ -130,29 +174,45 @@ export default function VHSScene() {
             width: "8px",
             height: "8px",
             borderRadius: "50%",
-            background: "#ff3b30",
+            background: isPlaying ? "#00ff88" : "#ff3b30",
+            boxShadow: isPlaying ? "0 0 8px #00ff88" : "0 0 8px #ff3b30",
             display: "inline-block",
-            animation: "pulse 1.2s infinite",
+            animation: isPlaying ? "pulse 1.4s infinite" : "none",
           }}
         />
-        <span>REC ● PLAY 00:08:26</span>
+        <span className="vhs-osd-glow text-[#00ff88] font-bold">
+          {isPlaying ? "PLAY ▶" : "PAUSE ❚❚"} {formatTimecode(tapeSeconds)}
+        </span>
+        <span className="text-white/40 text-[0.52rem] hidden sm:inline font-mono">
+          · TAPE: NTSC 8026KM
+        </span>
       </div>
 
+      {/* Top-Right VHS Audio / Tracking Specs (Hidden on mobile to avoid SceneHUD overlap) */}
       <div
         aria-hidden="true"
+        className="hidden sm:flex items-center gap-3"
         style={{
           position: "absolute",
           top: "clamp(1rem, 3vw, 1.75rem)",
-          right: "clamp(1rem, 3vw, 2rem)",
+          right: "clamp(1rem, 3vw, 2.2rem)",
           fontFamily: "var(--font-space-mono), monospace",
-          fontSize: "clamp(0.6rem, 1.4vw, 0.75rem)",
+          fontSize: "clamp(0.55rem, 1.3vw, 0.68rem)",
           color: "var(--scene-muted)",
           letterSpacing: "0.12em",
-          opacity: 0.7,
           zIndex: 4,
         }}
       >
-        SP ■ NTSC AUTO
+        <div className="flex items-center gap-1">
+          <span className="text-[#00f0ff] font-bold">SP</span>
+          <span className="opacity-40">·</span>
+          <span>HI-FI STEREO</span>
+        </div>
+        <span className="opacity-30">|</span>
+        <div className="flex items-center gap-1 text-[#ff6b9d]">
+          <span>TRACKING:</span>
+          <span className="font-bold">{trackingLevel}%</span>
+        </div>
       </div>
 
       {/* Main content */}
@@ -173,12 +233,12 @@ export default function VHSScene() {
         <div
           style={{
             fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "clamp(0.65rem, 1.8vw, 0.85rem)",
+            fontSize: "clamp(0.62rem, 1.6vw, 0.8rem)",
             color: "var(--scene-muted)",
-            letterSpacing: "0.3em",
+            letterSpacing: "0.28em",
             textTransform: "uppercase",
-            marginBottom: "0.5rem",
-            opacity: 0.8,
+            marginBottom: "0.45rem",
+            opacity: 0.85,
           }}
         >
           Valle del Cauca, Colombia · 2007
@@ -187,18 +247,19 @@ export default function VHSScene() {
         {/* Glitch big heading */}
         <div
           ref={glitchRef}
-          className="glitch-text"
+          className={`glitch-text ${isGlitching ? "glitch-active" : ""}`}
           data-text="→ SANTANDER →"
-          style={{ display: "inline-block", margin: "0.5rem 0", maxWidth: "100%" }}
+          style={{ display: "inline-block", margin: "0.4rem 0", maxWidth: "100%" }}
         >
           <h2
             className="font-kinetic"
             style={{
-              fontSize: "clamp(1.65rem, 8.2vw, 9rem)",
+              fontSize: "clamp(1.45rem, 7.5vw, 7.5rem)",
               color: "var(--scene-fg)",
               lineHeight: 0.9,
               letterSpacing: "-0.03em",
               whiteSpace: "nowrap",
+              textShadow: "0 0 16px rgba(255, 107, 157, 0.25), 0 0 35px rgba(107, 240, 255, 0.18)",
             }}
           >
             → SANTANDER →
@@ -209,12 +270,12 @@ export default function VHSScene() {
         <div
           style={{
             fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "clamp(0.65rem, 1.8vw, 0.85rem)",
+            fontSize: "clamp(0.62rem, 1.6vw, 0.8rem)",
             color: "var(--scene-muted)",
-            letterSpacing: "0.3em",
+            letterSpacing: "0.28em",
             textTransform: "uppercase",
-            marginTop: "0.5rem",
-            opacity: 0.8,
+            marginTop: "0.4rem",
+            opacity: 0.85,
           }}
         >
           Cantabria, España · Presente
@@ -226,13 +287,14 @@ export default function VHSScene() {
             display: "inline-flex",
             alignItems: "center",
             gap: "0.5rem",
-            background: "rgba(0, 0, 0, 0.65)",
-            border: "1px solid rgba(255, 255, 255, 0.15)",
-            padding: "0.35rem 0.95rem",
+            background: "rgba(0, 0, 0, 0.7)",
+            border: "1px solid rgba(255, 107, 157, 0.25)",
+            boxShadow: "0 0 14px rgba(255, 107, 157, 0.12)",
+            padding: "0.32rem 0.9rem",
             borderRadius: "2px",
-            marginTop: "1.25rem",
+            marginTop: "1.1rem",
             fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "clamp(0.6rem, 1.5vw, 0.72rem)",
+            fontSize: "clamp(0.58rem, 1.4vw, 0.7rem)",
             color: "var(--scene-fg)",
             letterSpacing: "0.18em",
             maxWidth: "90vw",
@@ -245,8 +307,8 @@ export default function VHSScene() {
           <span>8.026 KM EN LÍNEA RECTA</span>
         </div>
 
-        {/* Floating Reaching Emoji Sticker — Adaptive */}
-        <div className="absolute left-2 sm:-left-12 top-1/2 z-20">
+        {/* Floating Reaching Emoji Sticker — Desktop/Tablet only to preserve mobile ergonomics */}
+        <div className="hidden sm:block absolute sm:-left-12 top-1/2 z-20">
           <FloatingSticker
             src="/reaching-emoji.png"
             alt="El salto geográfico"
@@ -259,30 +321,22 @@ export default function VHSScene() {
           />
         </div>
 
-        {/* VHS Tape Frame Photo — CRT monitor bezel with magnetic drift */}
+        {/* VHS CRT Monitor Bezel with authentic tube curvature and tactile drift */}
         <div
           ref={photoFrameRef}
-          className="animate-vhs-drift tactile-frame cursor-pointer"
-          onClick={() => {
-            audioManager.play("static");
-            const el = glitchRef.current;
-            if (el) {
-              el.classList.add("glitch-active");
-              setTimeout(() => el?.classList.remove("glitch-active"), 350);
-            }
-          }}
-          title="Toca para distorsión de cinta VHS"
+          className="animate-vhs-drift tactile-frame cursor-pointer vhs-crt-bezel"
+          onClick={triggerGlitch}
+          title="Toca para forzar distorsión analógica de cabezal"
           style={{
-            marginTop: "clamp(0.4rem, 1.2vh, 0.9rem)",
+            marginTop: "clamp(0.6rem, 1.5vh, 1.1rem)",
             position: "relative",
-            maxWidth: "clamp(120px, 24vh, 185px)",
+            maxWidth: "clamp(130px, 25vh, 195px)",
             width: "100%",
             aspectRatio: "3/4",
-            border: "2px solid rgba(255, 107, 157, 0.4)",
-            borderRadius: "4px",
-            boxShadow: "0 12px 38px rgba(0, 0, 0, 0.88), 0 0 16px rgba(229, 57, 53, 0.22), inset 0 0 20px rgba(0, 0, 0, 0.9)",
+            border: "2px solid rgba(255, 107, 157, 0.45)",
+            borderRadius: "6px",
             overflow: "hidden",
-            background: "#09090b",
+            background: "#050406",
           }}
         >
           <Image
@@ -292,26 +346,129 @@ export default function VHSScene() {
             priority
             style={{
               objectFit: "cover",
-              filter: "contrast(115%) brightness(102%)",
+              filter: isGlitching
+                ? "contrast(180%) saturate(220%) hue-rotate(90deg) brightness(130%)"
+                : "contrast(115%) brightness(102%)",
+              transition: isGlitching ? "none" : "filter 0.3s ease",
             }}
             sizes="(max-width: 768px) 50vw, 260px"
           />
-          {/* Internal timestamp stamp on video */}
+
+          {/* CRT Screen Glass Glare reflection */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 45%, rgba(0,0,0,0.2) 100%)",
+            }}
+            aria-hidden="true"
+          />
+
+          {/* Internal timestamp stamp on CRT video */}
           <div
             style={{
               position: "absolute",
               bottom: "8px",
               right: "10px",
               fontFamily: "var(--font-space-mono), monospace",
-              fontSize: "0.55rem",
+              fontSize: "0.52rem",
               color: "#ffff55",
-              textShadow: "1px 1px 2px #000, 0 0 8px rgba(255,255,85,0.45)",
+              textShadow: "1px 1px 2px #000, 0 0 8px rgba(255,255,85,0.5)",
               letterSpacing: "0.1em",
               zIndex: 3,
             }}
           >
             SP ■ 2026-SEP
           </div>
+
+          {/* Red REC indicator LED on monitor */}
+          <div
+            style={{
+              position: "absolute",
+              top: "8px",
+              left: "10px",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              zIndex: 3,
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#ff2a2a",
+                boxShadow: "0 0 6px #ff2a2a",
+                animation: "pulse 1.2s infinite",
+              }}
+            />
+            <span style={{ fontSize: "0.46rem", fontFamily: "var(--font-space-mono), monospace", color: "#ff8888", letterSpacing: "0.1em" }}>
+              REC
+            </span>
+          </div>
+        </div>
+
+        {/* Apple-grade tactile VCR Transport Control Deck */}
+        <div
+          className="flex items-center gap-2 mt-3 p-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md"
+          style={{
+            fontFamily: "var(--font-space-mono), monospace",
+            fontSize: "0.52rem",
+          }}
+        >
+          {/* REW */}
+          <button
+            onClick={() => {
+              audioManager.play("keyclick");
+              setTapeSeconds((prev) => Math.max(0, prev - 5));
+            }}
+            className="apple-press px-2 py-1 rounded text-white/70 hover:text-white bg-white/[0.04] hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+            title="Rebobinar 5 segundos"
+            aria-label="Rebobinar 5 segundos"
+          >
+            ⏪ -5s
+          </button>
+
+          {/* PLAY / PAUSE TOGGLE */}
+          <button
+            onClick={() => {
+              audioManager.play("keyclick");
+              setIsPlaying(!isPlaying);
+            }}
+            className="apple-press px-2.5 py-1 rounded font-bold transition-all cursor-pointer"
+            style={{
+              background: isPlaying ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 180, 0, 0.15)",
+              color: isPlaying ? "#00ff88" : "#ffb400",
+              border: `1px solid ${isPlaying ? "rgba(0, 255, 136, 0.35)" : "rgba(255, 180, 0, 0.35)"}`,
+            }}
+            title={isPlaying ? "Pausar reproducción VHS" : "Reanudar reproducción"}
+            aria-label={isPlaying ? "Pausar reproducción" : "Reanudar reproducción"}
+          >
+            {isPlaying ? "❚❚ PAUSA" : "▶ PLAY"}
+          </button>
+
+          {/* GLITCH / TRACKING BURST */}
+          <button
+            onClick={triggerGlitch}
+            className="apple-press px-2.5 py-1 rounded text-[#ff6b9d] bg-[#ff6b9d]/10 hover:bg-[#ff6b9d]/20 border border-[#ff6b9d]/30 font-bold active:scale-95 transition-all cursor-pointer"
+            title="Distorsionar cabezal analógico (glitch)"
+            aria-label="Distorsionar cabezal analógico"
+          >
+            ⚡ GLITCH
+          </button>
+
+          {/* FF */}
+          <button
+            onClick={() => {
+              audioManager.play("keyclick");
+              setTapeSeconds((prev) => prev + 5);
+            }}
+            className="apple-press px-2 py-1 rounded text-white/70 hover:text-white bg-white/[0.04] hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+            title="Avanzar 5 segundos"
+            aria-label="Avanzar 5 segundos"
+          >
+            +5s ⏩
+          </button>
         </div>
 
         {/* Narrative phrase */}
@@ -324,7 +481,8 @@ export default function VHSScene() {
             lineHeight: 1.5,
             letterSpacing: "0.03em",
             maxWidth: "54ch",
-            margin: "clamp(0.45rem, 1.2vh, 0.9rem) auto 0",
+            margin: "clamp(0.55rem, 1.5vh, 1rem) auto 0",
+            textWrap: "balance",
           }}
         >
           Cuando vine a España pues al principio fue difícil porque relativamente estaba solo, sin amigos (solo mi familia), y pues a medida que iba pasando el tiempo fui conociendo gente y ver lo maravilloso y alegres que llegan a ser los españoles.

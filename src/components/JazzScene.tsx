@@ -193,11 +193,13 @@ export default function JazzScene() {
         >
           <span className="block">{JAZZ_HEAD}</span>
           <span
-            className="block font-serif italic font-light mt-1"
+            className="block font-serif italic font-light mt-1.5"
             style={{
-              fontSize: "clamp(0.95rem, 3.6vw, 2.8rem)",
+              fontSize: "clamp(0.95rem, 3.6vw, 2.6rem)",
               color: "var(--scene-accent)",
-              lineHeight: 1.15,
+              lineHeight: 1.28,
+              letterSpacing: "0.01em",
+              wordSpacing: "0.06em",
             }}
           >
             {JAZZ_SUBHEAD}

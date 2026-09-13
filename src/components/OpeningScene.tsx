@@ -10,7 +10,7 @@ import { audioManager } from "./AudioManager";
 // Click de obturador de cámara al completarse
 
 const NAME = "JuanFe";
-const TAGLINE = "Desarrolador web· 18 · santander";
+const TAGLINE = "Desarrollador web · 18 · Santander";
 
 export default function OpeningScene() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -146,7 +146,7 @@ export default function OpeningScene() {
       <div
         style={{
           position: "absolute",
-          bottom: "clamp(3.5rem, 8vh, 4.5rem)",
+          bottom: "clamp(3.8rem, 8.5vh, 4.8rem)",
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",

@@ -110,7 +110,7 @@ export default function ReceiptScene() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "clamp(0.5rem, 1.6vh, 1.6rem)",
+          gap: "clamp(0.35rem, 1.2vh, 1.2rem)",
           maxWidth: "600px",
           width: "100%",
           position: "relative",
@@ -122,8 +122,8 @@ export default function ReceiptScene() {
           style={{
             background: "#F3EFE6",
             border: "1px solid rgba(24, 23, 21, 0.14)",
-            width: "min(100%, 330px)",
-            padding: "clamp(0.65rem, 1.8vh, 1.5rem) clamp(0.75rem, 2.5vw, 1.25rem)",
+            width: "min(100%, 320px)",
+            padding: "clamp(0.5rem, 1.4vh, 1.25rem) clamp(0.75rem, 2.5vw, 1.2rem)",
             boxShadow: "0 10px 40px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.04)",
             fontFamily: "var(--font-space-mono), monospace",
           }}
@@ -133,7 +133,7 @@ export default function ReceiptScene() {
 
             if (line.type === "item" && line.label) {
               content = (
-                <span style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", opacity: 0.9 }}>
+                <span style={{ display: "flex", justifyContent: "space-between", fontSize: "clamp(0.64rem, 1.6vw, 0.72rem)", opacity: 0.9 }}>
                   <span style={{ opacity: 0.6 }}>{line.label}</span>
                   <span style={{ fontWeight: 600 }}>{line.value}</span>
                 </span>
@@ -142,7 +142,7 @@ export default function ReceiptScene() {
               content = (
                 <span
                   style={{
-                    fontSize: "1.45rem",
+                    fontSize: "clamp(1.2rem, 3.2vw, 1.45rem)",
                     fontWeight: 700,
                     letterSpacing: "0.14em",
                     display: "block",
@@ -156,7 +156,7 @@ export default function ReceiptScene() {
               content = (
                 <span
                   style={{
-                    fontSize: "0.65rem",
+                    fontSize: "clamp(0.56rem, 1.4vw, 0.65rem)",
                     letterSpacing: "0.22em",
                     opacity: 0.65,
                     display: "block",
@@ -217,7 +217,7 @@ export default function ReceiptScene() {
                   if (el) linesRef.current[i] = el;
                 }}
                 style={{
-                  marginBottom: line.type === "sep" || line.type === "header" ? "0.15rem" : "0.35rem",
+                  marginBottom: line.type === "sep" || line.type === "header" ? "0.08rem" : "0.22rem",
                   willChange: "clip-path",
                 }}
               >
@@ -237,7 +237,7 @@ export default function ReceiptScene() {
           }}
           title="Toca para revelar emulsión térmica"
           style={{
-            width: "clamp(120px, 32vw, 200px)",
+            width: "clamp(90px, 18vh, 175px)",
             aspectRatio: "3/4",
             position: "relative",
             willChange: "opacity, transform",

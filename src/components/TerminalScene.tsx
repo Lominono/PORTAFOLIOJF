@@ -114,6 +114,14 @@ const CATEGORIES = [
 
 const TYPED_COMMAND = "$ git log --graph --all --oneline --decorate -n 5";
 
+function formatTimecode(totalSeconds: number): string {
+  const hrs = Math.floor(totalSeconds / 3600);
+  const mins = Math.floor((totalSeconds % 3600) / 60);
+  const secs = totalSeconds % 60;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+}
+
 export default function TerminalScene() {
   const sectionRef = useRef<HTMLElement>(null);
   const [typedText, setTypedText] = useState("");
@@ -122,7 +130,17 @@ export default function TerminalScene() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [terminalOutput, setTerminalOutput] = useState<string | null>(null);
+  const [mobileTab, setMobileTab] = useState<"list" | "detail">("list");
+  const [tapeSeconds, setTapeSeconds] = useState(194); // 00:03:14
   const triggered = useRef(false);
+
+  // Dynamic real-time retro CRT timecode counter
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTapeSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const filteredProjects = activeCategory === "all"
     ? PROJECTS
@@ -263,17 +281,36 @@ export default function TerminalScene() {
         }}
       />
 
-      <div style={{ position: "relative", zIndex: 2, width: "100%", maxWidth: "980px" }}>
+      <div
+        className="relative z-10 w-full max-w-[980px] p-2.5 sm:p-5 rounded-xl border border-[#39D353]/30 bg-[#070B12]/95 shadow-[0_12px_40px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.08)]"
+        style={{
+          boxShadow: "0 0 0 1px rgba(57, 211, 83, 0.15), 0 20px 50px rgba(0, 0, 0, 0.9)",
+        }}
+      >
+        {/* Retro OSD / VCR Monitor Status Bar */}
+        <div
+          className="flex items-center justify-between font-mono text-[0.56rem] text-[#39D353]/90 pb-2 mb-2.5 border-b border-[#39D353]/25 vhs-osd-glow select-none"
+          style={{ letterSpacing: "0.08em" }}
+        >
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1 text-[#FF3B30] font-bold">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#FF3B30] animate-pulse" />
+              REC
+            </span>
+            <span className="font-bold text-white tracking-widest">{formatTimecode(tapeSeconds)}</span>
+            <span className="text-[#39D353]/60 hidden sm:inline">[SP · NTSC 4:3]</span>
+          </div>
+
+          <div className="flex items-center gap-2.5 text-[0.52rem]">
+            <span className="hidden sm:inline text-[#8E8696]">SONY PVM-1440 · RGB</span>
+            <span className="text-[#39D353] font-semibold">TRACKING: 98%</span>
+            <span className="text-[#39D353]/60">CH-03</span>
+          </div>
+        </div>
+
         {/* Terminal Header Bar */}
         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "0.85rem",
-            paddingBottom: "0.6rem",
-            borderBottom: "1px solid rgba(57, 211, 83, 0.25)",
-          }}
+          className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3 pb-2 border-b border-[#39D353]/25"
         >
           {/* Machine & Path Badge */}
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", overflow: "hidden", minWidth: 0 }}>
@@ -317,18 +354,18 @@ export default function TerminalScene() {
           </div>
 
           {/* Quick profile links */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+          <div className="flex items-center gap-1.5 self-start sm:self-auto">
             <a
               href="https://github.com/Lominono"
               target="_blank"
               rel="noopener noreferrer"
               style={{
                 fontFamily: "var(--font-space-mono), monospace",
-                fontSize: "0.58rem",
+                fontSize: "0.56rem",
                 color: "var(--scene-accent)",
                 textDecoration: "none",
                 border: "1px solid var(--scene-accent)",
-                padding: "0.2rem 0.55rem",
+                padding: "0.18rem 0.5rem",
                 borderRadius: "2px",
                 background: "rgba(57, 211, 83, 0.05)",
                 fontWeight: 600,
@@ -346,11 +383,11 @@ export default function TerminalScene() {
               rel="noopener noreferrer"
               style={{
                 fontFamily: "var(--font-space-mono), monospace",
-                fontSize: "0.58rem",
+                fontSize: "0.56rem",
                 color: "#E5A952",
                 textDecoration: "none",
                 border: "1px solid rgba(229, 169, 82, 0.6)",
-                padding: "0.2rem 0.55rem",
+                padding: "0.18rem 0.5rem",
                 borderRadius: "2px",
                 background: "rgba(229, 169, 82, 0.05)",
                 fontWeight: 600,
@@ -427,108 +464,156 @@ export default function TerminalScene() {
 
         {/* Workstation Split View: Left (Git Log Tree) | Right (Repo Dossier Inspector) */}
         {showProjects && (
-          <div
-            className="grid grid-cols-1 lg:grid-cols-12 gap-3"
-            style={{
-              maxHeight: "clamp(380px, 65vh, 600px)",
-              alignItems: "stretch",
-            }}
-          >
-            {/* Left Column: Git Tree Log (6 Cols on desktop) */}
-            <div
-              className="lg:col-span-6 flex flex-col gap-1.5 overflow-y-auto pr-1"
-              style={{
-                WebkitOverflowScrolling: "touch",
-              }}
-              data-lenis-prevent="true"
-            >
-              <div className="flex justify-between items-center px-1 pb-1 font-mono text-[0.54rem] text-[#39D353]/80 border-b border-[#39D353]/20">
-                <span>GIT COMMIT LOG & TREE</span>
-                <span>{filteredProjects.length} REPOS FOUND</span>
-              </div>
-
-              {filteredProjects.map((p, i) => {
-                const isSelected = activeProjectIdx === i;
-                return (
-                  <div
-                    key={p.id}
-                    onClick={() => {
-                      setActiveProjectIdx(i);
-                      audioManager.play("keyclick");
-                    }}
-                    className="group active:scale-[0.99] transition-all cursor-pointer select-none"
-                    style={{
-                      background: isSelected ? "rgba(57, 211, 83, 0.08)" : "rgba(10, 16, 26, 0.6)",
-                      border: `1px solid ${isSelected ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.18)"}`,
-                      borderLeft: `4px solid ${isSelected ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.3)"}`,
-                      padding: "0.55rem 0.75rem",
-                      borderRadius: "2px",
-                      boxShadow: isSelected ? "0 0 14px rgba(57, 211, 83, 0.12)" : "none",
-                    }}
-                  >
-                    {/* Commit graph line & Repo name */}
-                    <div className="flex items-baseline justify-between gap-2">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <span className="text-[#39D353] font-mono text-[0.7rem] font-bold">
-                          {isSelected ? "▶" : "*"}
-                        </span>
-                        <span
-                          style={{
-                            fontFamily: "var(--font-space-mono), monospace",
-                            fontSize: "clamp(0.75rem, 1.5vw, 0.86rem)",
-                            fontWeight: 700,
-                            color: isSelected ? "#FFFFFF" : "var(--scene-fg)",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          {p.name}
-                        </span>
-                      </div>
-
-                      {/* Commit hash pill */}
-                      <span className="font-mono text-[0.54rem] text-[#39D353]/90 bg-[#39D353]/10 px-1.5 py-0.5 rounded border border-[#39D353]/30 shrink-0">
-                        {p.commitHash}
-                      </span>
-                    </div>
-
-                    {/* Metadata line: diff stats and branch */}
-                    <div className="flex items-center justify-between text-[0.52rem] font-mono text-[#888] mt-1.5 pt-1 border-t border-[#39D353]/10">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[#888]">branch:{p.branch}</span>
-                        <span className="text-[#39D353]">+{p.diffAdded}</span>
-                        <span className="text-[#F85149]">-{p.diffDeleted}</span>
-                      </div>
-                      <span className="text-[#666]">{p.year}</span>
-                    </div>
-                  </div>
-                );
-              })}
+          <>
+            {/* Mobile View Toggle Segment (< lg) */}
+            <div className="flex lg:hidden items-center gap-1.5 mb-2 font-mono text-[0.58rem]">
+              <button
+                onClick={() => {
+                  setMobileTab("list");
+                  audioManager.play("keyclick");
+                }}
+                className="flex-1 py-1.5 px-2 rounded border text-center font-bold active:scale-98 transition-all cursor-pointer"
+                style={{
+                  background: mobileTab === "list" ? "rgba(57, 211, 83, 0.18)" : "rgba(0,0,0,0.4)",
+                  borderColor: mobileTab === "list" ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.25)",
+                  color: mobileTab === "list" ? "#FFF" : "#888",
+                }}
+              >
+                ≡ COMMITS ({filteredProjects.length})
+              </button>
+              <button
+                onClick={() => {
+                  setMobileTab("detail");
+                  audioManager.play("keyclick");
+                }}
+                className="flex-1 py-1.5 px-2 rounded border text-center font-bold truncate active:scale-98 transition-all cursor-pointer"
+                style={{
+                  background: mobileTab === "detail" ? "rgba(57, 211, 83, 0.18)" : "rgba(0,0,0,0.4)",
+                  borderColor: mobileTab === "detail" ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.25)",
+                  color: mobileTab === "detail" ? "#FFF" : "#888",
+                }}
+              >
+                🔍 INSPECTOR: {currentProject.name}
+              </button>
             </div>
 
-            {/* Right Column: Repository Dossier & Inspector (6 Cols on desktop) */}
             <div
-              className="lg:col-span-6 flex flex-col justify-between overflow-y-auto"
+              className="grid grid-cols-1 lg:grid-cols-12 gap-3"
               style={{
-                background: "rgba(5, 9, 15, 0.85)",
-                border: "1px solid rgba(57, 211, 83, 0.3)",
-                padding: "clamp(0.75rem, 2vh, 1.1rem)",
-                borderRadius: "3px",
+                maxHeight: "clamp(300px, 52vh, 560px)",
+                alignItems: "stretch",
               }}
-              data-lenis-prevent="true"
             >
-              <div>
-                {/* Dossier Header */}
-                <div className="flex justify-between items-center pb-2 mb-2 border-b border-[#39D353]/25 font-mono">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[#DE9F43] text-[0.62rem] font-bold">[ INSPECTOR ]</span>
-                    <span className="text-[0.68rem] text-white font-bold tracking-wider uppercase">
-                      {currentProject.name}
-                    </span>
-                  </div>
-                  <span className="text-[0.52rem] text-[#888]">REF: HEAD·{currentProject.commitHash}</span>
+              {/* Left Column: Git Tree Log (6 Cols on desktop) */}
+              <div
+                className={`lg:col-span-6 flex-col gap-1.5 overflow-y-auto pr-1 ${
+                  mobileTab === "list" ? "flex" : "hidden lg:flex"
+                }`}
+                style={{
+                  WebkitOverflowScrolling: "touch",
+                }}
+                data-lenis-prevent="true"
+              >
+                <div className="flex justify-between items-center px-1 pb-1 font-mono text-[0.54rem] text-[#39D353]/80 border-b border-[#39D353]/20">
+                  <span>GIT COMMIT LOG & TREE</span>
+                  <span>{filteredProjects.length} REPOS FOUND</span>
                 </div>
+
+                {filteredProjects.map((p, i) => {
+                  const isSelected = activeProjectIdx === i;
+                  return (
+                    <div
+                      key={p.id}
+                      onClick={() => {
+                        setActiveProjectIdx(i);
+                        setMobileTab("detail");
+                        audioManager.play("keyclick");
+                      }}
+                      className="group active:scale-[0.99] transition-all cursor-pointer select-none"
+                      style={{
+                        background: isSelected ? "rgba(57, 211, 83, 0.08)" : "rgba(10, 16, 26, 0.6)",
+                        border: `1px solid ${isSelected ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.18)"}`,
+                        borderLeft: `4px solid ${isSelected ? "var(--scene-accent)" : "rgba(57, 211, 83, 0.3)"}`,
+                        padding: "0.55rem 0.75rem",
+                        borderRadius: "2px",
+                        boxShadow: isSelected ? "0 0 14px rgba(57, 211, 83, 0.12)" : "none",
+                      }}
+                    >
+                      {/* Commit graph line & Repo name */}
+                      <div className="flex items-baseline justify-between gap-2">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="text-[#39D353] font-mono text-[0.7rem] font-bold">
+                            {isSelected ? "▶" : "*"}
+                          </span>
+                          <span
+                            style={{
+                              fontFamily: "var(--font-space-mono), monospace",
+                              fontSize: "clamp(0.75rem, 1.5vw, 0.86rem)",
+                              fontWeight: 700,
+                              color: isSelected ? "#FFFFFF" : "var(--scene-fg)",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {p.name}
+                          </span>
+                        </div>
+
+                        {/* Commit hash pill */}
+                        <span className="font-mono text-[0.54rem] text-[#39D353]/90 bg-[#39D353]/10 px-1.5 py-0.5 rounded border border-[#39D353]/30 shrink-0">
+                          {p.commitHash}
+                        </span>
+                      </div>
+
+                      {/* Metadata line: diff stats and branch */}
+                      <div className="flex items-center justify-between text-[0.52rem] font-mono text-[#888] mt-1.5 pt-1 border-t border-[#39D353]/10">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[#888]">branch:{p.branch}</span>
+                          <span className="text-[#39D353]">+{p.diffAdded}</span>
+                          <span className="text-[#F85149]">-{p.diffDeleted}</span>
+                        </div>
+                        <span className="text-[#666]">{p.year}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Right Column: Repository Dossier & Inspector (6 Cols on desktop) */}
+              <div
+                className={`lg:col-span-6 flex-col justify-between overflow-y-auto ${
+                  mobileTab === "detail" ? "flex" : "hidden lg:flex"
+                }`}
+                style={{
+                  background: "rgba(5, 9, 15, 0.85)",
+                  border: "1px solid rgba(57, 211, 83, 0.3)",
+                  padding: "clamp(0.75rem, 2vh, 1.1rem)",
+                  borderRadius: "3px",
+                }}
+                data-lenis-prevent="true"
+              >
+                <div>
+                  {/* Dossier Header */}
+                  <div className="flex justify-between items-center pb-2 mb-2 border-b border-[#39D353]/25 font-mono">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          setMobileTab("list");
+                          audioManager.play("keyclick");
+                        }}
+                        className="lg:hidden text-[0.54rem] text-[#39D353] bg-[#39D353]/15 border border-[#39D353]/30 px-1.5 py-0.5 rounded cursor-pointer active:scale-95"
+                        title="Volver a lista de commits"
+                      >
+                        ← LISTA
+                      </button>
+                      <span className="text-[#DE9F43] text-[0.62rem] font-bold">[ INSPECTOR ]</span>
+                      <span className="text-[0.68rem] text-white font-bold tracking-wider uppercase">
+                        {currentProject.name}
+                      </span>
+                    </div>
+                    <span className="text-[0.52rem] text-[#888]">REF: HEAD·{currentProject.commitHash}</span>
+                  </div>
 
                 {/* Purpose / Architectural rationale */}
                 <div className="mb-3">
@@ -612,7 +697,8 @@ export default function TerminalScene() {
               </div>
             </div>
           </div>
-        )}
+        </>
+      )}
 
         {/* Quick Shell Commands Bar */}
         {showProjects && (
