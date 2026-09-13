@@ -4,12 +4,12 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { audioManager } from "./AudioManager";
-import FloatingSticker from "./FloatingSticker";
 
 // Escena 03 — Estación de trabajo Hacker / Git Terminal
 // Proyectos reales de GitHub de JuanFe (Lominono)
-// Estética Linux Arch / UNIX TTY con git log, diff stats y comandos reales
+// Estética Linux Arch / UNIX TTY con git log, diff stats y proyectos reales
 // Cero clichés de IA, cero gradientes morados, pura autenticidad de sysadmin y dev
+
 
 interface Project {
   id: string;
@@ -114,14 +114,6 @@ const CATEGORIES = [
 
 const TYPED_COMMAND = "$ git log --graph --all --oneline --decorate -n 5";
 
-function formatTimecode(totalSeconds: number): string {
-  const hrs = Math.floor(totalSeconds / 3600);
-  const mins = Math.floor((totalSeconds % 3600) / 60);
-  const secs = totalSeconds % 60;
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-}
-
 export default function TerminalScene() {
   const sectionRef = useRef<HTMLElement>(null);
   const [typedText, setTypedText] = useState("");
@@ -129,22 +121,13 @@ export default function TerminalScene() {
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const [activeCategory, setActiveCategory] = useState("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [terminalOutput, setTerminalOutput] = useState<string | null>(null);
   const [mobileTab, setMobileTab] = useState<"list" | "detail">("list");
-  const [tapeSeconds, setTapeSeconds] = useState(194); // 00:03:14
   const triggered = useRef(false);
-
-  // Dynamic real-time retro CRT timecode counter
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTapeSeconds((prev) => prev + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const filteredProjects = activeCategory === "all"
     ? PROJECTS
     : PROJECTS.filter((p) => p.category === activeCategory);
+
 
   const currentProject = filteredProjects[activeProjectIdx] || filteredProjects[0] || PROJECTS[0];
 
@@ -236,27 +219,6 @@ export default function TerminalScene() {
     setTimeout(() => setCopiedId(null), 1800);
   };
 
-  const handleRunCommand = (cmd: string) => {
-    audioManager.play("keyclick");
-    if (cmd === "git-status") {
-      setTerminalOutput(
-        "→ [git:status] On branch main · Your branch is up to date with 'origin/main' · Nothing to commit, working tree clean."
-      );
-    } else if (cmd === "git-log") {
-      setTerminalOutput(
-        "→ [git:log] * 7f2a1b9 (HEAD -> main) feat(portfolio): high-craft editorial engine · * 3c89df1 feat(samba): add android smb.conf generator"
-      );
-    } else if (cmd === "whoami") {
-      setTerminalOutput(
-        "→ [identity] juanfe @ devbox · 18 años · Santander & Ginebra · Sysadmin SMR & Full-Stack Creative Developer"
-      );
-    } else if (cmd === "uname") {
-      setTerminalOutput("→ [kernel] Linux devbox 6.12.9-arch1-1-lts x86_64 GNU/Linux · Uptime: 42 days");
-    } else if (cmd === "clear") {
-      setTerminalOutput(null);
-    }
-  };
-
   return (
     <section
       ref={sectionRef}
@@ -287,24 +249,21 @@ export default function TerminalScene() {
           boxShadow: "0 0 0 1px rgba(57, 211, 83, 0.15), 0 20px 50px rgba(0, 0, 0, 0.9)",
         }}
       >
-        {/* Retro OSD / VCR Monitor Status Bar */}
+        {/* UNIX Workstation Status Line */}
         <div
-          className="flex items-center justify-between font-mono text-[0.56rem] text-[#39D353]/90 pb-2 mb-2.5 border-b border-[#39D353]/25 vhs-osd-glow select-none"
-          style={{ letterSpacing: "0.08em" }}
+          className="flex items-center justify-between font-mono text-[0.56rem] text-[#39D353]/90 pb-2 mb-2.5 border-b border-[#39D353]/25 select-none"
+          style={{ letterSpacing: "0.06em" }}
         >
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 text-[#FF3B30] font-bold">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#FF3B30] animate-pulse" />
-              REC
-            </span>
-            <span className="font-bold text-white tracking-widest">{formatTimecode(tapeSeconds)}</span>
-            <span className="text-[#39D353]/60 hidden sm:inline">[SP · NTSC 4:3]</span>
+            <span className="inline-block w-2 h-2 rounded-full bg-[#39D353]" />
+            <span className="font-bold text-white tracking-wide">DEVBOX :: WORKSTATION</span>
+            <span className="text-[#39D353]/60 hidden sm:inline">Linux 6.12-lts (x86_64)</span>
           </div>
 
           <div className="flex items-center gap-2.5 text-[0.52rem]">
-            <span className="hidden sm:inline text-[#8E8696]">SONY PVM-1440 · RGB</span>
-            <span className="text-[#39D353] font-semibold">TRACKING: 98%</span>
-            <span className="text-[#39D353]/60">CH-03</span>
+            <span className="text-[#8E8696]">Santander, ES</span>
+            <span className="text-[#39D353] font-mono">STATUS: UP</span>
+            <span className="text-[#39D353]/60">TTY1</span>
           </div>
         </div>
 
@@ -700,51 +659,6 @@ export default function TerminalScene() {
         </>
       )}
 
-        {/* Quick Shell Commands Bar */}
-        {showProjects && (
-          <div style={{ marginTop: "0.75rem" }}>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="font-mono text-[0.52rem] text-[#777] uppercase mr-1">RUN:</span>
-              {[
-                { cmd: "git-status", label: "$ git status" },
-                { cmd: "git-log", label: "$ git log" },
-                { cmd: "whoami", label: "$ whoami" },
-                { cmd: "uname", label: "$ uname -a" },
-                { cmd: "clear", label: "$ clear" },
-              ].map((c) => (
-                <button
-                  key={c.cmd}
-                  onClick={() => handleRunCommand(c.cmd)}
-                  className="font-mono text-[0.52rem] py-0.5 px-2 rounded bg-white/[0.04] border border-[#39D353]/25 text-[#39D353] hover:bg-[#39D353]/15 active:scale-95 transition-all cursor-pointer"
-                >
-                  {c.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Terminal output box */}
-            {terminalOutput && (
-              <div
-                className="font-mono text-[0.62rem] p-2 rounded mt-2 border border-dashed border-[#39D353]/40 leading-relaxed text-[#E6EDF3] bg-black/60"
-              >
-                {terminalOutput}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Floating Tux Sticker — Desktop only to preserve mobile ergonomics */}
-        <div className="absolute -right-12 -bottom-10 z-20 hidden md:block">
-          <FloatingSticker
-            src="/tux-roses.png"
-            alt="Tux con rosas"
-            label="TUX · LINUX KERNEL"
-            width={95}
-            height={115}
-            initialRotate={8}
-            sound="keyclick"
-          />
-        </div>
       </div>
     </section>
   );

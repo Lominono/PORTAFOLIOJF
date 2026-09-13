@@ -591,10 +591,11 @@ body {
   }
 }
 
-/* Minimum 44×44px touch targets (Apple HIG / WCAG 2.5.8) */
+/* Comfortable touch targets on mobile */
 nav[aria-label="Escenas del portfolio"] button {
-  min-height: 44px;
+  min-height: 28px;
 }
+
 
 /* Prevent horizontal overflow on all scenes & ensure breathing room around top HUD and bottom nav */
 section[data-scene-id] {

@@ -22,9 +22,9 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
   {
     name: "TikTok",
     handle: "@yuanfer",
-    badge: "VÍDEOS & CONTENIDO",
+    badge: "Vídeos",
     link: "https://www.tiktok.com/@yuanfer",
-    actionText: "Seguir en TikTok ↗",
+    actionText: "Ver en TikTok ↗",
     icon: () => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .58.04.85.12V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.49 6.26 6.26 0 0 0 1.97-4.49V8.62a8.28 8.28 0 0 0 4.8 1.52V6.69z" />
@@ -34,9 +34,9 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
   {
     name: "Instagram",
     handle: "@Juanfer_ost",
-    badge: "HISTORIAS & DÍA A DÍA",
+    badge: "Historias & vida",
     link: "https://instagram.com/Juanfer_ost",
-    actionText: "Seguir en Instagram ↗",
+    actionText: "Ver en Instagram ↗",
     icon: () => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -48,7 +48,7 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
   {
     name: "GitHub",
     handle: "github.com/Lominono",
-    badge: "CÓDIGO & REPOSITORIOS",
+    badge: "Código & repos",
     link: "https://github.com/Lominono",
     actionText: "Ver repositorios ↗",
     icon: () => (
@@ -58,9 +58,9 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
     ),
   },
   {
-    name: "Email de Contacto",
+    name: "Email",
     handle: "juanfernandoospina005@gmail.com",
-    badge: "PROYECTOS & TRABAJO",
+    badge: "Contacto directo",
     link: "mailto:juanfernandoospina005@gmail.com",
     actionText: "Escribir email ↗",
     icon: () => (
@@ -71,6 +71,7 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
     ),
   },
 ];
+
 
 export default function CreditsScene() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -226,14 +227,14 @@ export default function CreditsScene() {
                     fontFamily: "var(--font-space-mono), monospace",
                     fontSize: "clamp(0.6rem, 1.3vw, 0.75rem)",
                     color: "var(--scene-accent, #E8A87C)",
-                    letterSpacing: "0.25em",
+                    letterSpacing: "0.2em",
                     textTransform: "uppercase",
                     fontWeight: 600,
                     display: "block",
                     marginBottom: "4px",
                   }}
                 >
-                  CONÉCTATE Y SÍGUEME
+                  CONTACTO & REDES
                 </span>
                 <h2
                   style={{
@@ -244,7 +245,7 @@ export default function CreditsScene() {
                     letterSpacing: "-0.02em",
                   }}
                 >
-                  Disponible en todas mis plataformas
+                  Hablemos de código, sistemas o proyectos
                 </h2>
               </div>
 
@@ -479,24 +480,9 @@ export default function CreditsScene() {
             </span>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-sm">
-              {/* Compartir Button */}
-              <button
-                onClick={async () => {
-                  try {
-                    if (navigator.share) {
-                      await navigator.share({
-                        title: "JuanFe - Portafolio Cinematográfico",
-                        text: "Descubre el portafolio interactivo de JuanFe.",
-                        url: window.location.origin,
-                      });
-                    } else {
-                      await navigator.clipboard.writeText(window.location.origin);
-                      alert("¡Enlace copiado al portapapeles! Listo para compartir.");
-                    }
-                  } catch (err) {
-                    console.log("Error al compartir", err);
-                  }
-                }}
+              {/* Escribir Email Directo */}
+              <a
+                href="mailto:juanfernandoospina005@gmail.com"
                 className="w-full sm:w-auto active:scale-95 transition-all duration-150 flex items-center justify-center gap-2"
                 style={{
                   fontFamily: "var(--font-space-mono), monospace",
@@ -508,20 +494,17 @@ export default function CreditsScene() {
                   border: "1px solid var(--scene-accent, #E8A87C)",
                   padding: "0.5rem 1.2rem",
                   borderRadius: "2px",
-                  cursor: "pointer",
-                  fontWeight: 600,
+                  fontWeight: 700,
+                  textDecoration: "none",
                 }}
-                aria-label="Compartir enlace o subir a historias"
+                aria-label="Escribir un email directo a JuanFe"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="18" cy="5" r="3" />
-                  <circle cx="6" cy="12" r="3" />
-                  <circle cx="18" cy="19" r="3" />
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
                 </svg>
-                Compartir Web
-              </button>
+                Escribir un email ↗
+              </a>
 
               {/* Rebobinar Button */}
               <button

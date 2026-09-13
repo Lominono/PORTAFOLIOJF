@@ -4,13 +4,13 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import FloatingSticker from "./FloatingSticker";
 import { audioManager } from "./AudioManager";
 
 // Escena 04 — Glitch / VHS — El salto geográfico
 // Bisagra narrativa: Ginebra (Valle del Cauca) → Santander (Cantabria)
-// Estética completa de videocasetera analógica (VCR / VHS NTSC)
-// OSD con código de tiempo en tiempo real, aberración cromática, scanlines y controles VCR táctiles
+// Estética pura de videocasetera analógica (VCR / VHS NTSC)
+// OSD con código de tiempo en tiempo real, aberración cromática, scanlines y textura magnética
+
 
 function formatTimecode(totalSeconds: number): string {
   const hrs = Math.floor(totalSeconds / 3600);
@@ -307,19 +307,6 @@ export default function VHSScene() {
           <span>8.026 KM EN LÍNEA RECTA</span>
         </div>
 
-        {/* Floating Reaching Emoji Sticker — Desktop/Tablet only to preserve mobile ergonomics */}
-        <div className="hidden sm:block absolute sm:-left-12 top-1/2 z-20">
-          <FloatingSticker
-            src="/reaching-emoji.png"
-            alt="El salto geográfico"
-            label="EL SALTO · 8026KM"
-            width={75}
-            height={75}
-            initialRotate={-12}
-            sound="static"
-            className="scale-85 sm:scale-100"
-          />
-        </div>
 
         {/* VHS CRT Monitor Bezel with authentic tube curvature and tactile drift */}
         <div
@@ -408,68 +395,15 @@ export default function VHSScene() {
           </div>
         </div>
 
-        {/* Apple-grade tactile VCR Transport Control Deck */}
+        {/* Tactile interaction hint */}
         <div
-          className="flex items-center gap-2 mt-3 p-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md"
-          style={{
-            fontFamily: "var(--font-space-mono), monospace",
-            fontSize: "0.52rem",
-          }}
+          className="mt-2.5 font-mono text-[0.52rem] text-[#8E8696] tracking-wider uppercase select-none flex items-center gap-1.5 opacity-75 hover:opacity-100 transition-opacity cursor-pointer"
+          onClick={triggerGlitch}
         >
-          {/* REW */}
-          <button
-            onClick={() => {
-              audioManager.play("keyclick");
-              setTapeSeconds((prev) => Math.max(0, prev - 5));
-            }}
-            className="apple-press px-2 py-1 rounded text-white/70 hover:text-white bg-white/[0.04] hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
-            title="Rebobinar 5 segundos"
-            aria-label="Rebobinar 5 segundos"
-          >
-            ⏪ -5s
-          </button>
-
-          {/* PLAY / PAUSE TOGGLE */}
-          <button
-            onClick={() => {
-              audioManager.play("keyclick");
-              setIsPlaying(!isPlaying);
-            }}
-            className="apple-press px-2.5 py-1 rounded font-bold transition-all cursor-pointer"
-            style={{
-              background: isPlaying ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 180, 0, 0.15)",
-              color: isPlaying ? "#00ff88" : "#ffb400",
-              border: `1px solid ${isPlaying ? "rgba(0, 255, 136, 0.35)" : "rgba(255, 180, 0, 0.35)"}`,
-            }}
-            title={isPlaying ? "Pausar reproducción VHS" : "Reanudar reproducción"}
-            aria-label={isPlaying ? "Pausar reproducción" : "Reanudar reproducción"}
-          >
-            {isPlaying ? "❚❚ PAUSA" : "▶ PLAY"}
-          </button>
-
-          {/* GLITCH / TRACKING BURST */}
-          <button
-            onClick={triggerGlitch}
-            className="apple-press px-2.5 py-1 rounded text-[#ff6b9d] bg-[#ff6b9d]/10 hover:bg-[#ff6b9d]/20 border border-[#ff6b9d]/30 font-bold active:scale-95 transition-all cursor-pointer"
-            title="Distorsionar cabezal analógico (glitch)"
-            aria-label="Distorsionar cabezal analógico"
-          >
-            ⚡ GLITCH
-          </button>
-
-          {/* FF */}
-          <button
-            onClick={() => {
-              audioManager.play("keyclick");
-              setTapeSeconds((prev) => prev + 5);
-            }}
-            className="apple-press px-2 py-1 rounded text-white/70 hover:text-white bg-white/[0.04] hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
-            title="Avanzar 5 segundos"
-            aria-label="Avanzar 5 segundos"
-          >
-            +5s ⏩
-          </button>
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#E53935] animate-pulse" />
+          <span>Toca la imagen para interferencia magnética</span>
         </div>
+
 
         {/* Narrative phrase */}
         <p

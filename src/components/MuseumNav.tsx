@@ -67,24 +67,22 @@ export default function MuseumNav() {
       aria-label="Escenas del portfolio"
       style={{
         position: "fixed",
-        bottom: "max(0.55rem, calc(env(safe-area-inset-bottom, 0px) + 0.35rem))",
+        bottom: "max(0.75rem, calc(env(safe-area-inset-bottom, 0px) + 0.45rem))",
         left: "50%",
         zIndex: 900,
         display: "flex",
         alignItems: "center",
-        gap: "4px",
-        padding: "0.22rem 0.55rem",
+        gap: "2px",
+        padding: "0.2rem 0.65rem",
         background: "var(--scene-hud-bg)",
         border: "1px solid var(--scene-border)",
         borderRadius: "9999px",
-        boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 8px 24px -4px rgba(0, 0, 0, 0.35)",
-        backdropFilter: "blur(20px) saturate(180%)",
-        WebkitBackdropFilter: "blur(20px) saturate(180%)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
         opacity: visible ? 1 : 0,
         transform: `translateX(-50%) translateY(${visible ? 0 : 6}px)`,
-        transition: "opacity 0.4s ease, transform 0.4s ease, background 0.75s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.75s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+        transition: "opacity 0.4s ease, transform 0.4s ease, background 0.75s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
         pointerEvents: visible ? "auto" : "none",
-        maxWidth: "calc(100vw - 2rem)",
       }}
     >
       {SCENES.map(({ id, label }, index) => {
@@ -97,22 +95,28 @@ export default function MuseumNav() {
             aria-current={isActive ? "true" : undefined}
             title={label}
             style={{
-              width: isActive ? "24px" : "9px",
-              height: "3px",
-              borderRadius: "2px",
-              backgroundColor: isActive ? "var(--scene-accent)" : "var(--scene-muted)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "transparent",
               border: "none",
-              padding: "20px 3px",
-              minHeight: "44px",
-              backgroundClip: "content-box",
-              boxSizing: "content-box",
+              padding: "8px 2.5px",
               cursor: "pointer",
-              opacity: isActive ? 1 : 0.35,
-              transition: "width 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.65s ease, opacity 0.25s ease",
-              flexShrink: 0,
               touchAction: "manipulation",
             }}
-          />
+          >
+            <span
+              style={{
+                display: "block",
+                width: isActive ? "22px" : "6px",
+                height: "2px",
+                borderRadius: "1px",
+                backgroundColor: isActive ? "var(--scene-accent)" : "var(--scene-muted)",
+                opacity: isActive ? 1 : 0.35,
+                transition: "width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s ease, opacity 0.25s ease",
+              }}
+            />
+          </button>
         );
       })}
     </nav>

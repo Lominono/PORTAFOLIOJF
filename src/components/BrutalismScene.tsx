@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import FloatingSticker from "./FloatingSticker";
+import { audioManager } from "./AudioManager";
 
 // Escena 02 — Brutalismo editorial
 // Tipografía monumental, contrastes de peso y bordes contundentes.
@@ -157,19 +157,6 @@ export default function BrutalismScene() {
         </span>
       </h2>
 
-      {/* Floating Flex Sticker — Adaptive on mobile & desktop */}
-      <div className="absolute right-4 sm:right-16 top-auto bottom-16 sm:top-1/4 sm:bottom-auto z-20">
-        <FloatingSticker
-          src="/flex-emoji.png"
-          alt="Fuerza y criterio"
-          label="DISCIPLINA · CRITERIO"
-          width={75}
-          height={75}
-          initialRotate={-10}
-          sound="stamp"
-          className="scale-85 sm:scale-100"
-        />
-      </div>
 
       {/* Attribution & context */}
       <p
